@@ -1,0 +1,10 @@
+# Hello world!
+
+_x = 10
+y = 10 + 12
+
+move to (  _x, y  )
+
+draw rectangle where
+  width = 100
+end

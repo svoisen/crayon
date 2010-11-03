@@ -1,0 +1,71 @@
+grammar Crayon
+  rule code
+    expression (newline expression)* newline
+  end
+
+  rule expression
+    (space statement)+ space
+  end
+
+  rule statement
+    assignment / equation / command / object / comment
+  end
+
+  rule object
+    number / var
+  end
+
+  rule assignment
+    var space "=" !"=" expression
+  end
+
+  rule equation
+    object space [\+\-\/\*] space expression
+  end
+
+  rule keyword
+    "draw" / "move" / "to" / "where" / "end"
+  end
+
+  rule command
+    move / draw
+  end
+
+  rule move
+    "move" space "to" space point
+  end
+
+  rule draw
+    "draw" space shape space "where" space newline
+      (assignment newline)* space
+    "end"
+  end
+
+  rule point
+    "(" space (number / var) "," space (number / var) space ")"
+  end
+
+  rule shape
+    "rectangle" / "circle" / "line"
+  end
+
+  rule var
+    !keyword [a-zA-Z_] [\w]*
+  end
+
+  rule number
+    [0-9]+
+  end
+
+  rule comment
+    '#' (!newline .)+ (newline / !.)
+  end
+
+  rule space
+    [ \t]*
+  end
+
+  rule newline
+    space ("\r\n"+ / [\r\n]+) space
+  end
+end
