@@ -1,0 +1,20 @@
+function main():*
+{
+	getlocal0
+	pushscope
+	getlocal0
+	pushbyte	1
+	setproperty	x
+  getlocal0
+	pushbyte	2
+	setproperty	y
+	getlocal0
+	findpropstrict	{package}::print
+	getlocal0
+	getproperty	x
+	getlocal0
+	getproperty	y
+	add
+	callpropvoid	print	1
+	returnvoid
+}

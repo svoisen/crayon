@@ -1,0 +1,99 @@
+grammar Crayon
+  rule script
+    expression remaining_expressions:(newline expression)* newline <Script>
+    {
+      def expressions
+        [expression] + remaining_expressions.elements.map {|e| e.expression}
+      end
+    }
+  end
+
+  rule expression
+    spaced_statements:(space statement)+ space <Expression>
+    {
+      def statements
+        spaced_statements.elements.map {|e| e.statement}
+      end
+    }
+  end
+
+  rule statement
+    assignment / call / equation / command / object / comment
+  end
+
+  rule object
+    number / var
+  end
+
+  rule assignment
+    var space "=" !"=" expression <Assignment>
+  end
+
+  rule call
+    function:var (space)? arglist <Call>
+  end
+
+  rule arglist
+    ":" (space)? arg:statement remaining_args:(space "," space arg:statement)*
+    {
+      def args
+        [arg] + remaining_args.elements.map {|e| e.arg}
+      end
+    }
+  end
+
+  rule equation
+    object space op:[\+\-\/\*] space expression <Equation>
+  end
+
+  rule keyword
+    "draw" / "move" / "to" / "where" / "end"
+  end
+
+  rule command
+    move / draw
+  end
+
+  rule move
+    "move" space "to" space point
+  end
+
+  rule draw
+    "draw" space shape space "where" space newline
+      (assignment newline)* space
+    "end"
+  end
+
+  rule point
+    "(" space (number / var) "," space (number / var) space ")"
+  end
+
+  rule shape
+    "rectangle" / "circle" / "line"
+  end
+
+  rule var
+    !keyword [a-zA-Z_] [\w]* <Variable>
+  end
+
+  rule number
+    [0-9]+ <Number>
+    {
+      def value
+        text_value.to_i
+      end
+    }
+  end
+
+  rule comment
+    '#' (!newline .)+ (newline / !.)
+  end
+
+  rule space
+    [ \t]*
+  end
+
+  rule newline
+    space ("\r\n"+ / [\r\n]+) space
+  end
+end

@@ -1,0 +1,132 @@
+#!/usr/bin/env ruby
+
+# == Synopsis
+#   Compiler for the Crayon programming language.
+#
+# == Usage
+#   crayonc.rb myscript.cyn
+#   crayonc.rb -f abs foo.cyn
+#   crayonc.rb --format abc bar.cyn
+#   
+# == Options
+#   -h, --help      Displays help message
+#   -v, --version   Displays the version
+#   -f, --format    Select output format, options are abc, abs or swf
+#   -V, --verbose   Verbose output
+#
+# == Author
+#   Sean Voisen
+#
+# == Copyright
+#   Copyright (C) 2010 Sean Voisen. Licensed under the MIT License:
+#   http://www.opensource.org/licenses/mit-license.php
+
+require 'optparse'
+require 'rdoc/usage'
+require 'ostruct'
+require 'date'
+
+class InvalidArgumentException < Exception; end
+
+class CrayonCompiler
+  VERSION = '0.0.1'
+
+  attr_reader :options
+
+  @@valid_formats = ["abs", "abc", "swf"]
+
+  def initialize(arguments, stdin)
+    @arguments = arguments
+    @stdin = stdin
+
+    # Setup any default options
+    @options = OpenStruct.new
+    @options.format = "swf"
+    @options.verbose = false
+  end
+
+  def run
+    if parsed_options? && arguments_valid?
+      puts "Compilation started at #{DateTime.now}\n\n" if @options.verbose
+
+      process_arguments
+      process_command
+
+      puts "\n\nCompilation finished at #{DateTime.now}" if @options.verbose
+    end
+  end
+
+  protected
+
+    def parsed_options?
+      opts = OptionParser.new
+
+      opts.on('-v', '--version') do  
+        print_version
+        exit 0
+      end
+
+      opts.on('-h', '--help') do
+        print_help
+      end
+
+      opts.on('-f [FORMAT]', '--format [FORMAT]') do |format|
+        @options.format = format
+      end
+
+      opts.on('-V', '--verbose') do 
+        @options.verbose = true
+      end
+
+      opts.parse!(@arguments) rescue return false
+
+      begin
+        process_options!
+      rescue InvalidArgumentException => e
+        puts e
+        return false
+      end
+
+      true
+    end
+
+    def process_options!
+      unless @@valid_formats.include? @options.format
+        raise InvalidArgumentException, "Invalid format \"#{@options.format}\". Valid formats are \"swf\", \"abs\", and \"abc\"."
+      end
+    end
+
+    def arguments_valid?
+    end
+
+    def process_arguments
+    end
+
+    def process_command
+    end
+
+    def print_options
+      puts "Options:\n"
+
+      @options.marshal_dump.each do |name, value|
+        puts "  #{name} = #{value}"
+      end
+    end
+
+    def print_help
+      print_version
+      RDoc::usage() # exits app
+    end
+
+    def print_version
+      puts "#{File.basename(__FILE__)} #{VERSION}"
+    end
+
+    def print_usage
+      # Print usage from above RDoc comments
+      RDoc::usage('usage')
+    end
+end
+
+compiler = CrayonCompiler.new(ARGV, STDIN)
+compiler.run

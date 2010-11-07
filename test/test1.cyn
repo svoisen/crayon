@@ -1,10 +1,4 @@
-# Hello world!
+x = 1
+y = 2
 
-_x = 10
-y = 10 + 12
-
-move to (  _x, y  )
-
-draw rectangle where
-  width = 100
-end
+print: x + y
