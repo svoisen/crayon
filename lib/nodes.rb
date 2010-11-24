@@ -5,19 +5,20 @@ module Crayon
     end
 
     def codegen(context)
+      raise "Method codegen not defined in #{self}"
     end
   end
   Node = Treetop::Runtime::SyntaxNode
 
   class Script < Node
     def compile(generator)
-      asm = generator.preamble(self)
+      code = generator.preamble(self)
       expressions.each do |e| 
         e.codegen(generator).each do |s|
-          asm << s unless s.nil?
+          code << s unless s.nil?
         end
       end
-      asm << generator.finish
+      code << generator.conclusion
     end
   end
 
@@ -29,8 +30,7 @@ module Crayon
 
   class Call < Node
     def codegen(generator)
-      argument_values = arglist.args.map {|arg| arg.codegen(generator)}
-      generator.call function.value, *argument_values
+      generator.call function.value, arglist.codegen(generator)
     end
   end
 
@@ -48,13 +48,29 @@ module Crayon
 
   class Variable < Node
     def codegen(generator)
-      generator.load_var(value)
+      generator.var(value)
+    end
+  end
+
+  class String < Node
+    def codegen(generator)
+      generator.string(value)
+    end
+  end
+
+  class Arglist < Node
+    def codegen(generator)
+      named_args = Hash.new
+      args.each do |var,val|
+        named_args[var.codegen(generator)] = val.codegen(generator)
+      end
+      generator.arglist(named_args)
     end
   end
 
   class Number < Node
     def codegen(generator)
-      generator.new_number(value)
+      generator.number(value)
     end
   end
 end

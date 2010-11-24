@@ -28,7 +28,7 @@ require 'ostruct'
 require 'date'
 require 'treetop'
 
-require 'lib/generator'
+require 'lib/as3generator'
 require 'lib/nodes'
 
 # Use compiled grammar if it exists, otherwise load grammar definition
@@ -123,7 +123,7 @@ module Crayon
       end
 
       def compile(code)
-        generator = Crayon::Generator.new
+        generator = Crayon::AS3Generator.new
         parser = CrayonParser.new
 
         if node = parser.parse(code)

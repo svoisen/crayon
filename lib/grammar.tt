@@ -18,62 +18,60 @@ grammar Crayon
   end
 
   rule statement
-    assignment / call / equation / command / object / comment
+    assignment / if / comparison / call / equation / object / comment
   end
 
   rule object
-    number / var
-  end
-
-  rule assignment
-    var space "=" !"=" expression <Assignment>
+    number / string / var / point 
   end
 
   rule call
-    function:var (space)? arglist <Call>
+    function:var space arglist <Call>
+  end
+
+  rule comparison
+    object space op:("=" / "!=" / ">" / "<" / ">=" / "<=" / "and" / "or") space expression
+  end
+
+  rule if
+    "if" space condition:expression space newline
+      expressions:(expression space newline)* 
+    "end"
   end
 
   rule arglist
-    ":" (space)? arg:statement remaining_args:(space "," space arg:statement)*
+    ":" space arg:assignment remaining_args:(space "," space arg:assignment)* <Arglist> 
     {
       def args
-        [arg] + remaining_args.elements.map {|e| e.arg}
+        {arg.var => arg.expression}
       end
+    } /
+    ":" space newline 
+      arg:assignment
+      remaining_args:(space newline arg:assignment)* newline 
+    "end" <Arglist> 
+    {
+    } /
+    ":" space arg:(assignment / equation / object) <Arglist>
+    {
     }
   end
 
   rule equation
+    # TODO: Fix operator precedence
     object space op:[\+\-\/\*] space expression <Equation>
   end
 
+  rule assignment
+    var space "<-" !"<-" expression <Assignment>
+  end
+
   rule keyword
-    "draw" / "move" / "to" / "where" / "end"
-  end
-
-  rule command
-    move / draw
-  end
-
-  rule move
-    "move" space "to" space point
-  end
-
-  rule draw
-    "draw" space shape space "where" space newline
-      (assignment newline)* space
-    "end"
+    "end" / "times" / "if" / "else" / "while" / "and" / "or"
   end
 
   rule point
     "(" space (number / var) "," space (number / var) space ")"
-  end
-
-  rule shape
-    "rectangle" / "circle" / "line"
-  end
-
-  rule var
-    !keyword [a-zA-Z_] [\w]* <Variable>
   end
 
   rule number
@@ -81,6 +79,19 @@ grammar Crayon
     {
       def value
         text_value.to_i
+      end
+    }
+  end
+
+  rule var
+    !keyword [a-zA-Z_] [\w]* <Variable>
+  end
+
+  rule string
+    '"' (!'"' . / '\"')* '"' <String>
+    {
+      def value
+        text_value.gsub('"', '')
       end
     }
   end
