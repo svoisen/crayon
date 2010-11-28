@@ -1,2 +1,12 @@
-moveTo: (50, 50)
+move: (50, 50)
 draw: shape <- "circle", radius <- 25 + 25
+
+move: (100, 200)
+
+10 times
+  draw:
+    shape <- "circle"
+    radius <- 25
+    color <- 0x00FF00
+  end
+end

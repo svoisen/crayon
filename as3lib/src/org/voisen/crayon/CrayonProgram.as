@@ -24,7 +24,7 @@ package org.voisen.crayon
     {
     }
 
-    protected function moveTo(params:Object):void
+    protected function move(params:Object):void
     {
       var g:Graphics = graphics;
       
@@ -58,7 +58,7 @@ package org.voisen.crayon
           g.drawCircle( curX, curY, params.radius || 0 );
           break;
 
-        case "square":
+        case "rectangle":
           g.drawRect( curX, curY, params.width || 0, params.height || 0 );
           break;
 

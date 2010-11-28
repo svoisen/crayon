@@ -4,6 +4,9 @@ require 'lib/generator'
 module Crayon
   class AS3Generator < Generator
     def preamble(node)
+      # Indent level after last line in preamble
+      @indent = 6
+
       format([
         "package",
         "{",
@@ -29,10 +32,19 @@ module Crayon
       name
     end
 
+    def loop(count, expressions)
+      format([
+        "for(var __i:int = 0; __i < #{count}; __i++)",
+        "{",
+        format(expressions, 2, true),
+        "}"
+      ], @indent)
+    end
+
     def call(function_name, arglist)
       format([
         "#{function_name}(#{arglist});"
-      ], @indent, true)
+      ], @indent, false, true)
     end
 
     def arglist(args)

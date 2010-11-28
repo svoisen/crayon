@@ -18,7 +18,7 @@ grammar Crayon
   end
 
   rule statement
-    assignment / if / comparison / call / equation / object / comment
+    assignment / if / loop / comparison / call / equation / object / comment
   end
 
   rule object
@@ -27,6 +27,17 @@ grammar Crayon
 
   rule call
     function:var space arglist <Call>
+  end
+
+  rule loop
+    count:number space "times" space newline
+      body:(expression space newline)*
+    "end" <Loop>
+    {
+      def expressions
+        body.elements.map {|e| e.expression} 
+      end
+    }
   end
 
   rule comparison
@@ -84,16 +95,17 @@ grammar Crayon
   end
 
   rule number
-    [0-9]+ <Number>
+    [0-9]+ !var <Number>
     {
       def value
         text_value.to_i
       end
-    }
+    } /
+    "0" [xX] [A-Fa-f0-9]+ <Number>
   end
 
   rule var
-    !keyword [a-zA-Z_] [\w]* <Variable>
+    !keyword [a-zA-Z] [\w]* <Variable>
   end
 
   rule string

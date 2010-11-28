@@ -2,13 +2,13 @@ module Crayon
   class Generator
     def initialize(name)
       @name = name
-      @indent = 6
+      @indent = 0
     end
 
-    def format(code, indent=0, append_newline=false)
+    def format(code, indent=0, nested=false, append_newline=false)
       prefix = ''
       indent.times {prefix << ' '} 
-      prefix << code.join("\n") << (append_newline ? "\n" : '')
+      code.map{|s| prefix + (nested ? s.lstrip : s)}.join("\n") << (append_newline ? "\n" : '')
     end
   end
 end

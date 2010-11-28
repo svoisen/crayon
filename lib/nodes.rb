@@ -54,6 +54,12 @@ module Crayon
     end
   end
 
+  class Loop < Node
+    def codegen(generator)
+      generator.loop(count.codegen(generator), expressions.map{|e| e.codegen(generator).last})
+    end
+  end
+
   class Variable < Node
     def codegen(generator)
       generator.var(value)
