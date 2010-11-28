@@ -1,12 +1,22 @@
-move: (50, 50)
-draw: shape <- "circle", radius <- 25 + 25
-
-move: (100, 200)
+x <- 10 
+y <- 10 
 
 10 times
   draw:
     shape <- "circle"
-    radius <- 25
+    radius <- 5
     color <- 0x00FF00
+  end
+
+  x <- x + 10
+  y <- y + 10
+end
+
+draw_circles:
+  params:
+    number <- 10 
+  end
+
+  body:
   end
 end

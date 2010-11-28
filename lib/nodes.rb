@@ -20,7 +20,7 @@ module Crayon
 
   class Script < Node
     def compile(generator)
-      code = generator.preamble(self)
+      code = generator.preamble
       expressions.each do |e| 
         e.codegen(generator).each do |s|
           code << s unless s.nil?

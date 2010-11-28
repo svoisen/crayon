@@ -24,6 +24,11 @@ package org.voisen.crayon
     {
     }
 
+    protected function clear():void
+    {
+      graphics.clear();
+    }
+
     protected function move(params:Object):void
     {
       var g:Graphics = graphics;
@@ -67,6 +72,10 @@ package org.voisen.crayon
           break;
       }
       g.endFill();
+    }
+
+    protected function random(min:Number, max:Number):Number
+    {
     }
   }
 }

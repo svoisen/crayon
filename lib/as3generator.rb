@@ -3,7 +3,7 @@ require 'lib/generator'
 
 module Crayon
   class AS3Generator < Generator
-    def preamble(node)
+    def preamble
       # Indent level after last line in preamble
       @indent = 6
 
@@ -14,18 +14,26 @@ module Crayon
         "",
         "  import org.voisen.crayon.CrayonProgram;",
         "",
+        "  [SWF(width='800', height='600', frameRate='30')]",
         "  public class #{@name} extends CrayonProgram",
         "  {",
         "    public function #{@name}()",
         "    {",
-        ""
-      ])      
+      ], 0, "\n" )      
     end
 
     def assign(name, value)
-      format([
-        "var #{name} = #{value};"
-      ], @indent)
+      output = if( in_scope?(name) )
+                 "#{name} = #{value};"
+               else
+                 add_to_scope(name)
+                 "var #{name}:* = #{value};"
+               end
+      
+      format([output], @indent, "\n")
+    end
+
+    def function(name)
     end
 
     def var(name)
@@ -36,15 +44,15 @@ module Crayon
       format([
         "for(var __i:int = 0; __i < #{count}; __i++)",
         "{",
-        format(expressions, 2, true),
+        format(expressions, 2, "", ""),
         "}"
-      ], @indent)
+      ], @indent, "\n")
     end
 
     def call(function_name, arglist)
       format([
         "#{function_name}(#{arglist});"
-      ], @indent, false, true)
+      ], @indent, "\n")
     end
 
     def arglist(args)
@@ -70,7 +78,6 @@ module Crayon
 
     def conclusion
       format([
-        "",
         "    }",
         "  }",
         "}"
