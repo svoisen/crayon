@@ -4,13 +4,16 @@ require 'lib/generator'
 module Crayon
   class AS3Generator < Generator
     def preamble(node)
-      @indent = 6
       format([
         "package",
         "{",
-        "  public class Crayon extends CrayonProgram",
+        "  import flash.geom.Point;",
+        "",
+        "  import org.voisen.crayon.CrayonProgram;",
+        "",
+        "  public class #{@name} extends CrayonProgram",
         "  {",
-        "    public function Crayon()",
+        "    public function #{@name}()",
         "    {",
         ""
       ])      
@@ -28,16 +31,21 @@ module Crayon
 
     def call(function_name, arglist)
       format([
-        "callWithNamedParams(#{function_name}, #{arglist});"
-      ], @indent)
+        "#{function_name}(#{arglist});"
+      ], @indent, true)
     end
 
     def arglist(args)
-      args.to_json
+      substitutions = {'"' => '', '\"' => '"'}
+      args.to_json.gsub(/\"|\\\"/){|match| substitutions[match]}
     end
 
     def calculate(operator, operand1, operand2)
       "#{operand1} #{operator} #{operand2}"
+    end
+
+    def point(x, y)
+      "new Point(#{x}, #{y})"
     end
 
     def number(value)

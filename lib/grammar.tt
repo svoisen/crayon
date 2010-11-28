@@ -43,7 +43,9 @@ grammar Crayon
     ":" space arg:assignment remaining_args:(space "," space arg:assignment)* <Arglist> 
     {
       def args
-        {arg.var => arg.expression}
+        args = {arg.var => arg.expression}
+        remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
+        args
       end
     } /
     ":" space newline 
@@ -51,14 +53,21 @@ grammar Crayon
       remaining_args:(space newline arg:assignment)* newline 
     "end" <Arglist> 
     {
+      def args
+        args = {arg.var => arg.expression}
+        remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
+        args
+      end
     } /
-    ":" space arg:(assignment / equation / object) <Arglist>
+    ":" space arg:expression <Arglist>
     {
+      def args
+        {"__default" => arg}
+      end
     }
   end
 
   rule equation
-    # TODO: Fix operator precedence
     object space op:[\+\-\/\*] space expression <Equation>
   end
 
@@ -71,7 +80,7 @@ grammar Crayon
   end
 
   rule point
-    "(" space (number / var) "," space (number / var) space ")"
+    "(" space x:(number / var) "," space y:(number / var) space ")" <Point>
   end
 
   rule number

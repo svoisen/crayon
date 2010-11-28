@@ -1,3 +1,11 @@
+# Duck typing avoids issues when calling codegen
+# on non-Node objects
+class String
+  def codegen(generator)
+    self
+  end
+end
+
 module Crayon
   class ::Treetop::Runtime::SyntaxNode
     def value
@@ -52,6 +60,12 @@ module Crayon
     end
   end
 
+  class Point < Node
+    def codegen(generator)
+      generator.point(x.codegen(generator), y.codegen(generator))
+    end
+  end
+
   class String < Node
     def codegen(generator)
       generator.string(value)
@@ -62,7 +76,7 @@ module Crayon
     def codegen(generator)
       named_args = Hash.new
       args.each do |var,val|
-        named_args[var.codegen(generator)] = val.codegen(generator)
+        named_args[var.codegen(generator)] = val.codegen(generator).last
       end
       generator.arglist(named_args)
     end

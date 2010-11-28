@@ -1,1 +1,2 @@
-x <- "circle"
+moveTo: (50, 50)
+draw: shape <- "circle", radius <- 25 + 25

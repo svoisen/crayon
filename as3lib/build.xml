@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Crayon AS3 Library" basedir="." default="main">
+
+  <property file="./build.properties" description="Properties for builds" />
+
+  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+  <target name="main">
+    <compc
+      output="./bin/Crayon.swc"
+      include-classes="org.voisen.crayon.CrayonProgram">
+      <source-path path-element="./src" />
+    </compc>
+  </target>
+</project>
+        

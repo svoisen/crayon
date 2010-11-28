@@ -118,12 +118,17 @@ module Crayon
       end
 
       def process_command
+        filename = File.basename(@source).split('.').first
+        dirname = File.dirname(@source)
+        outname = dirname + '/' + filename 
+
         code = IO.read(@source)
-        puts compile(code)
+        File.open(outname + '.as', 'w') {|f| f.write(compile(filename, code))}
+        `mxmlc -library-path+=./as3lib/bin #{outname}.as`
       end
 
-      def compile(code)
-        generator = Crayon::AS3Generator.new
+      def compile(name, code)
+        generator = Crayon::AS3Generator.new(name)
         parser = CrayonParser.new
 
         if node = parser.parse(code)
