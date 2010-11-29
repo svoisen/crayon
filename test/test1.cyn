@@ -1,22 +1,13 @@
-x <- 10 
-y <- 10 
+set x to 10 
+set y to 10 
 
-10 times
-  draw:
-    shape <- "circle"
-    radius <- 5
-    color <- 0x00FF00
+repeat 10 times
+  draw with
+    shape as "circle"
+    radius as 5
+    color as 0x00FF00
   end
 
-  x <- x + 10
-  y <- y + 10
-end
-
-draw_circles:
-  params:
-    number <- 10 
-  end
-
-  body:
-  end
+  set x to x + 10
+  set y to y + 10
 end

@@ -3,10 +3,11 @@ require 'lib/generator'
 
 module Crayon
   class AS3Generator < Generator
-    def preamble
-      # Indent level after last line in preamble
-      @indent = 6
+    def generate(expressions)
+      preamble << format(expressions, 3) << conclusion
+    end
 
+    def preamble
       format([
         "package",
         "{",
@@ -15,22 +16,21 @@ module Crayon
         "  import org.voisen.crayon.CrayonProgram;",
         "",
         "  [SWF(width='800', height='600', frameRate='30')]",
-        "  public class #{@name} extends CrayonProgram",
+        "  public class #{program_name} extends CrayonProgram",
         "  {",
-        "    public function #{@name}()",
+        "    public function #{program_name}()",
         "    {",
-      ], 0, "\n" )      
+        ""
+      ])      
     end
 
     def assign(name, value)
-      output = if( in_scope?(name) )
-                 "#{name} = #{value};"
-               else
-                 add_to_scope(name)
-                 "var #{name}:* = #{value};"
-               end
-      
-      format([output], @indent, "\n")
+      if in_scope?(name)
+        "#{name} = #{value};"
+      else
+        add_to_scope(name)
+        "var #{name}:* = #{value};"
+      end
     end
 
     def function(name)
@@ -44,15 +44,13 @@ module Crayon
       format([
         "for(var __i:int = 0; __i < #{count}; __i++)",
         "{",
-        format(expressions, 2, "", ""),
+        format(expressions, 1),
         "}"
-      ], @indent, "\n")
+      ])
     end
 
     def call(function_name, arglist)
-      format([
-        "#{function_name}(#{arglist});"
-      ], @indent, "\n")
+      "#{function_name}(#{arglist});"
     end
 
     def arglist(args)
@@ -64,8 +62,7 @@ module Crayon
       "#{operand1} #{operator} #{operand2}"
     end
 
-    def point(x, y)
-      "new Point(#{x}, #{y})"
+    def array
     end
 
     def number(value)
@@ -78,6 +75,7 @@ module Crayon
 
     def conclusion
       format([
+        "",
         "    }",
         "  }",
         "}"

@@ -20,13 +20,7 @@ module Crayon
 
   class Script < Node
     def compile(generator)
-      code = generator.preamble
-      expressions.each do |e| 
-        e.codegen(generator).each do |s|
-          code << s unless s.nil?
-        end
-      end
-      code << generator.conclusion
+      generator.generate(expressions.map{|e| e.codegen(generator).last})
     end
   end
 
@@ -66,10 +60,12 @@ module Crayon
     end
   end
 
-  class Point < Node
+  class List < Node
     def codegen(generator)
-      generator.point(x.codegen(generator), y.codegen(generator))
     end
+  end
+
+  class Function < Node
   end
 
   class String < Node

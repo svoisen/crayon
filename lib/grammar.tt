@@ -18,19 +18,15 @@ grammar Crayon
   end
 
   rule statement
-    assignment / if / loop / comparison / call / equation / object / comment
+    assignment / conditional / loop / comparison / function / call / equation / object / comment
   end
 
   rule object
-    number / string / var / point 
-  end
-
-  rule call
-    function:var space arglist <Call>
+    number / string / var / list 
   end
 
   rule loop
-    count:number space "times" space newline
+    "repeat" space count:(number / var) space "times" space newline
       body:(expression space newline)*
     "end" <Loop>
     {
@@ -41,17 +37,21 @@ grammar Crayon
   end
 
   rule comparison
-    object space op:("=" / "!=" / ">" / "<" / ">=" / "<=" / "and" / "or") space expression
+    object space op:("=" / "≠" / ">" / "<" / "≥" / "≤" / "and" / "or") space expression
   end
 
-  rule if
+  rule conditional
     "if" space condition:expression space newline
-      expressions:(expression space newline)* 
+      body:(expression space newline)* 
     "end"
   end
 
+  rule call
+    function:var space arglist <Call>
+  end
+
   rule arglist
-    ":" space arg:assignment remaining_args:(space "," space arg:assignment)* <Arglist> 
+    "with" space arg:argument space "," remaining_args:(space "," space arg:argument)* <Arglist> 
     {
       def args
         args = {arg.var => arg.expression}
@@ -59,9 +59,9 @@ grammar Crayon
         args
       end
     } /
-    ":" space newline 
-      arg:assignment
-      remaining_args:(space newline arg:assignment)* newline 
+    "with" space newline 
+      arg:argument
+      remaining_args:(space newline arg:argument)* newline 
     "end" <Arglist> 
     {
       def args
@@ -69,13 +69,17 @@ grammar Crayon
         remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
         args
       end
-    } /
-    ":" space arg:expression <Arglist>
-    {
-      def args
-        {"__default" => arg}
-      end
     }
+  end
+
+  rule argument
+    var space "as" space expression
+  end
+
+  rule function
+    "function" space name:var space "uses" space arg:var remaining_args:(space "," space arg:var)* space newline
+      body:(expression space newline)*
+    "end" <Function>
   end
 
   rule equation
@@ -83,15 +87,15 @@ grammar Crayon
   end
 
   rule assignment
-    var space "<-" !"<-" expression <Assignment>
+    "set" space var space "to" !"to" space expression <Assignment>
   end
 
   rule keyword
-    "end" / "times" / "if" / "else" / "while" / "and" / "or"
+    "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "uses" / "times" / "if" / "else" / "while" / "and" / "or"
   end
 
-  rule point
-    "(" space x:(number / var) "," space y:(number / var) space ")" <Point>
+  rule list
+    "(" space items:(object)* space ")" <List>
   end
 
   rule number

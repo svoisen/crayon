@@ -74,8 +74,14 @@ package org.voisen.crayon
       g.endFill();
     }
 
+    protected function print(val:*):void
+    {
+      trace( val );
+    }
+
     protected function random(min:Number, max:Number):Number
     {
+      return Math.random()*(max - min) + min;
     }
   }
 }

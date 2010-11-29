@@ -1,15 +1,28 @@
 module Crayon
   class Generator
-    def initialize(name)
-      @name = name
-      @indent = 0
+    attr_reader :program_name
+
+    def initialize(program_name)
+      @tab_width = 2
+      @program_name = program_name
       @vars_in_scope = []
     end
 
-    def format(code, indent=0, append_with='', join_with="\n")
+    private
+
+    def format(code, level=0, glue="\n", appendix='')
+      indent(code, level).join(glue) << appendix
+    end
+
+    # Indents an array of code blocks to a specific indentation
+    # level, where level is the number of tabs (as spaces) to 
+    # indent
+    def indent(code, level=0)
       prefix = ''
-      indent.times {prefix << ' '} 
-      code.map{|line| prefix + line}.join(join_with) << append_with
+      (level * @tab_width).times {prefix << ' '}
+      code.map do |block| 
+        block.split("\n").map{|line| prefix + line}.join("\n")
+      end
     end
 
     def add_to_scope(var)
