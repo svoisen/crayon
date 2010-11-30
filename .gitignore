@@ -1,2 +1,5 @@
 *.DS_Store
 *.swp
+*.swf
+*.swc
+test/*.as

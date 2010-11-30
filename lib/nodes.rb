@@ -62,6 +62,7 @@ module Crayon
 
   class List < Node
     def codegen(generator)
+      generator.array(items.map{|i| i.codegen(generator).last})
     end
   end
 
@@ -78,6 +79,8 @@ module Crayon
     def codegen(generator)
       named_args = Hash.new
       args.each do |var,val|
+        # TODO: This shouldn't be empty, so there is a problem with the grammar
+        next if var.empty? or val.empty?
         named_args[var.codegen(generator)] = val.codegen(generator).last
       end
       generator.arglist(named_args)

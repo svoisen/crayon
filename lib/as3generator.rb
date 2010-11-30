@@ -26,14 +26,18 @@ module Crayon
 
     def assign(name, value)
       if in_scope?(name)
-        "#{name} = #{value};"
+        "#{name} = #{value}"
       else
         add_to_scope(name)
-        "var #{name}:* = #{value};"
+        "var #{name}:* = #{value}"
       end
     end
 
     def function(name)
+    end
+
+    def array(items)
+      "[" + items.join(",") + "]"
     end
 
     def var(name)
@@ -50,7 +54,7 @@ module Crayon
     end
 
     def call(function_name, arglist)
-      "#{function_name}(#{arglist});"
+      "#{function_name}(#{arglist})"
     end
 
     def arglist(args)
@@ -60,9 +64,6 @@ module Crayon
 
     def calculate(operator, operand1, operand2)
       "#{operand1} #{operator} #{operand2}"
-    end
-
-    def array
     end
 
     def number(value)

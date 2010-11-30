@@ -51,23 +51,31 @@ grammar Crayon
   end
 
   rule arglist
-    "with" space arg:argument space "," remaining_args:(space "," space arg:argument)* <Arglist> 
+    default_arg:expression? space "with" space arg:argument remaining_args:(space "," space arg:argument)* <Arglist> 
     {
       def args
         args = {arg.var => arg.expression}
+        args.merge!({"__default" => default_arg}) if defined? default_arg
         remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
         args
       end
     } /
-    "with" space newline 
+    default_arg:expression? space "with" space newline 
       arg:argument
       remaining_args:(space newline arg:argument)* newline 
     "end" <Arglist> 
     {
       def args
         args = {arg.var => arg.expression}
+        args.merge!({"__default" => default_arg}) if defined? default_arg
         remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
         args
+      end
+    } /
+    default_arg:expression space <Arglist>
+    {
+      def args
+        {"__default" => default_arg}
       end
     }
   end
@@ -95,7 +103,12 @@ grammar Crayon
   end
 
   rule list
-    "(" space items:(object)* space ")" <List>
+    "(" space item:expression tail:(space "," space item:expression)* space ")" <List>
+    {
+      def items
+        [item] + tail.elements.map{|e| e.item}
+      end
+    }
   end
 
   rule number
