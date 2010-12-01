@@ -21,6 +21,8 @@
 #   Copyright (C) 2010 Sean Voisen. Licensed under the MIT License:
 #   http://www.opensource.org/licenses/mit-license.php
 
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+
 require 'rubygems'
 require 'optparse'
 require 'rdoc/usage'
@@ -28,15 +30,8 @@ require 'ostruct'
 require 'date'
 require 'treetop'
 
-require 'lib/as3generator'
-require 'lib/nodes'
-
-# Use compiled grammar if it exists, otherwise load grammar definition
-if File.file?(File.dirname(__FILE__) + "/lib/grammar.rb")
-  require 'lib/grammar'
-else
-  Treetop.load File.dirname(__FILE__) + "/lib/grammar.tt"
-end
+require 'generator/as3_generator'
+require 'parser/crayon'
 
 module Crayon
 
@@ -73,7 +68,7 @@ module Crayon
       end
     end
 
-    protected
+    private
 
       def parsed_options?
         opts = OptionParser.new
@@ -124,12 +119,12 @@ module Crayon
 
         code = IO.read(@source)
         File.open(outname + '.as', 'w') {|f| f.write(compile(filename, code))}
-        `mxmlc -library-path+=./as3lib/bin #{outname}.as`
+        `mxmlc -library-path+=../as3lib/bin #{outname}.as`
       end
 
       def compile(name, code)
-        generator = Crayon::AS3Generator.new(name)
-        parser = CrayonParser.new
+        generator = Generator::AS3Generator.new(name)
+        parser = Parser::CrayonParser.new
 
         if node = parser.parse(code)
           node.compile(generator)

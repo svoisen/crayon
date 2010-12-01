@@ -2,4 +2,4 @@
 *.swp
 *.swf
 *.swc
-test/*.as
+examples/*.as
