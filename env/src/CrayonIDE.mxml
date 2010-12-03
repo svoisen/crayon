@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:components="org.voisen.crayon.view.components.*" 
+					   xmlns:swiz="http://swiz.swizframework.org" 
+					   xmlns:beans="org.voisen.crayon.beans.*">
+	<fx:Declarations>
+		<swiz:Swiz>
+			<swiz:beanProviders>
+				<beans:ApplicationBeans />
+				<beans:EditorBeans />
+			</swiz:beanProviders>
+			<swiz:config>
+				<swiz:SwizConfig
+					viewPackages="org.voisen.crayon.view"
+					eventPackages="org.voisen.wordnet.event"
+					strict="true" />
+			</swiz:config>
+		</swiz:Swiz>
+	</fx:Declarations>
+	
+	<fx:Style source="styles/application.css" />
+	
+	<mx:VDividedBox width="100%" height="100%">
+		<components:TextEditor width="100%" height="100%" gutterStyleName="editorGutter" />
+		<components:Console width="100%" height="200" />
+	</mx:VDividedBox>
+</s:WindowedApplication>
