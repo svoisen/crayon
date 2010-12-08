@@ -7,17 +7,28 @@ require 'parser/crayon'
 module Crayon
 
   describe Parser::CrayonParser do
+
+    before(:all) do
+      @parser = Parser::CrayonParser.new
+    end
+
     it "should allow comments" do
-      parser = Parser::CrayonParser.new
-      node = parser.parse("# Hi")
-      node.should_not be_nil
+      @parser.parse("# Hello world!").should_not be_nil
     end
 
     it "should parse simple loops" do
-      parser = Parser::CrayonParser.new
-      node = parser.parse("repeat 10 times with i\r\nend")
-      node.should_not be_nil
+      @parser.parse("repeat 10 times\nend").should_not be_nil
     end
+
+    it "should parse simple loops with counters" do
+    end
+
+    it "should parse 'for-style' loops" do
+    end
+
+    it "should parse while loops" do
+    end
+
   end
 
 end
