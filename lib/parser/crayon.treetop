@@ -28,6 +28,10 @@ module Crayon
         var / number / string / list / boolean
       end
 
+      rule numeric
+        var / number / equation
+      end
+
       rule comparison
         object space? op:("=" / "≠" / ">" / "<" / "≥" / "≤" / "and" / "or") space? expression
       end

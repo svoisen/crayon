@@ -21,12 +21,18 @@ module Crayon
     end
 
     it "should parse simple loops with counters" do
+      @parser.parse("repeat 10 times with i\nend").should_not be_nil
     end
 
-    it "should parse 'for-style' loops" do
+    it "should parse loops with start/end" do
+      @parser.parse("repeat i from 0 to 10\nend").should_not be_nil
     end
 
     it "should parse while loops" do
+      @parser.parse("repeat while i < 10\nend").should_not be_nil
+    end
+
+    it "should parse if statements" do
     end
 
   end
