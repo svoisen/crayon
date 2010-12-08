@@ -12,7 +12,7 @@ module Crayon
       include Functions
 
       rule script
-        expression remaining_expressions:(newline expression)* newline <Script>
+        newline* expression remaining_expressions:(newline expression)* newline* <Script>
         {
           def expressions
             [expression] + remaining_expressions.elements.map {|e| e.expression}
@@ -21,16 +21,7 @@ module Crayon
       end
 
       rule expression
-        spaced_statements:(space statement)+ space <Expression>
-        {
-          def statements
-            spaced_statements.elements.map {|e| e.statement}
-          end
-        }
-      end
-
-      rule statement
-        assignment / conditional / loop / comparison / function / call / equation / object / comment
+        assignment / conditional / loop / call / comparison / function / equation / object / comment
       end
 
       rule object
@@ -38,65 +29,15 @@ module Crayon
       end
 
       rule comparison
-        object space op:("=" / "≠" / ">" / "<" / "≥" / "≤" / "and" / "or") space expression
-      end
-
-      rule conditional
-        "if" space condition:expression space newline
-          body:(expression space newline)* 
-        "end"
-      end
-
-      rule call
-        function:var space arglist <Call>
-      end
-
-      rule arglist
-        default_arg:expression? space "with" space arg:argument remaining_args:(space "," space arg:argument)* <Arglist> 
-        {
-          def args
-            args = {arg.var => arg.expression}
-            args.merge!({"__default" => default_arg}) if defined? default_arg
-            remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
-            args
-          end
-        } /
-        default_arg:expression? space "with" space newline 
-          arg:argument
-          remaining_args:(space newline arg:argument)* newline 
-        "end" <Arglist> 
-        {
-          def args
-            args = {arg.var => arg.expression}
-            args.merge!({"__default" => default_arg}) if defined? default_arg
-            remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
-            args
-          end
-        } /
-        default_arg:expression space <Arglist>
-        {
-          def args
-            {"__default" => default_arg}
-          end
-        }
-      end
-
-      rule argument
-        var space "as" space expression
-      end
-
-      rule function
-        "function" space name:var space "uses" space arg:var remaining_args:(space "," space arg:var)* space newline
-          body:(expression space newline)*
-        "end" <Function>
+        object space? op:("=" / "≠" / ">" / "<" / "≥" / "≤" / "and" / "or") space? expression
       end
 
       rule equation
-        object space op:[\+\-\/\*] space expression <Equation>
+        object space? op:[\+\-\/\*] space? expression <Equation>
       end
 
       rule assignment
-        "set" space var space "to" !"to" space expression <Assignment>
+        "set" space var space "to" space expression <Assignment>
       end
 
       rule keyword
@@ -112,11 +53,11 @@ module Crayon
       end
 
       rule space
-        [ \t]*
+        [ \t]+
       end
 
       rule newline
-        space ("\r\n"+ / [\r\n]+) space
+        space? [\r\n]+ space?
       end
     end
 

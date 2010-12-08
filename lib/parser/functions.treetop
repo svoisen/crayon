@@ -2,9 +2,42 @@ module Crayon
   module Parser
 
     grammar Functions
-      rule definition
-        "function" space var space "uses" space param:var params:("," space var)* newline
-        "end"
+      rule call
+        function:var space arglist <Call>
+      end
+
+      rule arglist
+        default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
+        {
+          def args
+            args = {arg.var => arg.expression}
+            args.merge!({"__default" => default_arg.expression}) if defined? default_arg
+            remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
+            args
+          end
+        } /
+        default_arg:(expression space)? "with" newline 
+          arg:argument newline
+          remaining_args:(argument newline)*
+        "end" <Arglist> 
+        {
+          def args
+            args = {arg.var => arg.expression}
+            args.merge!({"__default" => default_arg.expression}) if defined? default_arg
+            remaining_args.elements.each {|e| args.merge!({e.argument.var => e.argument.expression})}
+            args
+          end
+        } 
+      end
+
+      rule argument
+        var space "as" space expression
+      end
+
+      rule function
+        "function" space name:var space "uses" space arg:var remaining_args:(space? "," space? arg:var)* newline
+          body:(expression newline)*
+        "end" <Function>
       end
     end
 

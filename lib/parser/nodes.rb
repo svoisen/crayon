@@ -20,7 +20,7 @@ module Crayon
 
     class Script < Node
       def compile(generator)
-        generator.generate(expressions.map{|e| e.codegen(generator).last})
+        generator.generate(expressions.map{|e| e.codegen(generator)})
       end
     end
 
@@ -38,19 +38,19 @@ module Crayon
 
     class Assignment < Node
       def codegen(generator)
-        generator.assign var.value, expression.codegen(generator).last
+        generator.assign var.value, expression.codegen(generator)
       end
     end
 
     class Equation < Node
       def codegen(generator)
-        generator.calculate op.value, object.codegen(generator), expression.codegen(generator).last
+        generator.calculate op.value, object.codegen(generator), expression.codegen(generator)
       end
     end
 
     class Loop < Node
       def codegen(generator)
-        generator.loop(count.codegen(generator), expressions.map{|e| e.codegen(generator).last})
+        generator.loop(count.codegen(generator), expressions.map{|e| e.codegen(generator)})
       end
     end
 
@@ -62,11 +62,20 @@ module Crayon
 
     class List < Node
       def codegen(generator)
-        generator.array(items.map{|i| i.codegen(generator).last})
+        generator.array(items.map{|i| i.codegen(generator)})
       end
     end
 
     class Function < Node
+      def codegen(generator)
+        ""
+      end
+    end
+
+    class Conditional < Node
+      def codegen(generator)
+        ""
+      end
     end
 
     class String < Node
@@ -81,7 +90,7 @@ module Crayon
         args.each do |var,val|
           # TODO: This shouldn't be empty, so there is a problem with the grammar
           next if var.empty? or val.empty?
-          named_args[var.codegen(generator)] = val.codegen(generator).last
+          named_args[var.codegen(generator)] = val.codegen(generator)
         end
         generator.arglist(named_args)
       end

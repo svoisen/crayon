@@ -10,14 +10,12 @@ module Crayon
     it "should allow comments" do
       parser = Parser::CrayonParser.new
       node = parser.parse("# Hi")
-      puts parser.failure_reason
       node.should_not be_nil
     end
 
     it "should parse simple loops" do
       parser = Parser::CrayonParser.new
       node = parser.parse("repeat 10 times with i\r\nend")
-      puts parser.failure_reason
       node.should_not be_nil
     end
   end

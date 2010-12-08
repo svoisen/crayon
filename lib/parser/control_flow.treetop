@@ -3,8 +3,8 @@ module Crayon
 
     grammar ControlFlow
       rule loop
-        "repeat" space count:(number / var) space "times" counter:(space "with" space var)? space newline
-          body:(expression space newline)*
+        "repeat" space count:(number / var) space "times" counter:(space "with" space var)? newline
+          body:(expression newline)*
         "end" <Loop>
         {
           def expressions
@@ -13,6 +13,11 @@ module Crayon
         }
       end
 
+      rule conditional
+        "if" space condition:expression newline
+          body:(expression newline)* 
+        "end" <Conditional>
+      end
     end
 
   end
