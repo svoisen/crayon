@@ -29,6 +29,10 @@ module Crayon
           end
         }
       end
+
+      rule boolean
+        "true" / "false"
+      end
     end
 
   end

@@ -1,11 +1,15 @@
 require 'parser/nodes'
 require 'parser/object_types'
+require 'parser/control_flow'
+require 'parser/functions'
 
 module Crayon
   module Parser
 
     grammar Crayon
       include ObjectTypes
+      include ControlFlow
+      include Functions
 
       rule script
         expression remaining_expressions:(newline expression)* newline <Script>
@@ -30,18 +34,7 @@ module Crayon
       end
 
       rule object
-        number / string / var / list 
-      end
-
-      rule loop
-        "repeat" space count:(number / var) space "times" space newline
-          body:(expression space newline)*
-        "end" <Loop>
-        {
-          def expressions
-            body.elements.map {|e| e.expression} 
-          end
-        }
+        var / number / string / list / boolean
       end
 
       rule comparison
@@ -107,7 +100,7 @@ module Crayon
       end
 
       rule keyword
-        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "uses" / "times" / "if" / "else" / "while" / "and" / "or"
+        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "uses" / "times" / "if" / "else" / "while" / "and" / "or" / "true" / "false"
       end
 
       rule var

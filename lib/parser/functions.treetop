@@ -1,0 +1,12 @@
+module Crayon
+  module Parser
+
+    grammar Functions
+      rule definition
+        "function" space var space "uses" space param:var params:("," space var)* newline
+        "end"
+      end
+    end
+
+  end
+end
