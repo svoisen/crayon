@@ -7,6 +7,12 @@ module Crayon
       end
 
       rule arglist
+        default_arg:expression space? <Arglist>
+        {
+          def args
+            {"__default" => default_arg}
+          end
+        } /
         default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
         {
           def args
@@ -27,7 +33,7 @@ module Crayon
             remaining_args.elements.each {|e| args.merge!({e.argument.var => e.argument.expression})}
             args
           end
-        } 
+        }
       end
 
       rule argument

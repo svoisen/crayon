@@ -3,17 +3,25 @@ module Crayon
 
     grammar ControlFlow
       rule loop
-        "repeat" space count:numeric space "times" counter:(space "with" space var)? newline
+        "repeat" space "while" space condition:expression newline
           body:(expression newline)*
-        "end" <Loop>
+        "end" <WhileLoop>
+        {
+          def expressions
+            body.elements.map {|e| e.expression}
+          end
+        } /
+        "repeat" space i_end:numeric space "times" counter:(space "with" space var)? newline
+          body:(expression newline)*
+        "end" <CountLoop>
         {
           def expressions
             body.elements.map {|e| e.expression} 
           end
         } /
-        "repeat" space var space "from" space start:numeric space "to" space end:numeric newline
+        "repeat" space var space "from" space i_start:numeric space "to" space i_end:numeric newline
           body:(expression newline)*
-        "end" <Loop>
+        "end" <CountLoop>
         {
           def expressions
             body.elements.map {|e| e.expression}
@@ -24,7 +32,19 @@ module Crayon
       rule conditional
         "if" space condition:expression newline
           body:(expression newline)* 
+          elseif*
+          else?
         "end" <Conditional>
+      end
+
+      rule elseif
+        "else if" space condition:expression newline
+          body:(expression newline)*
+      end
+
+      rule else
+        "else" newline
+          body:(expression newline)*
       end
     end
 

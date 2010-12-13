@@ -48,9 +48,19 @@ module Crayon
       end
     end
 
-    class Loop < Node
+    class CountLoop < Node
       def codegen(generator)
-        generator.loop(count.codegen(generator), expressions.map{|e| e.codegen(generator)})
+        generator.loop(var.empty? ? "__i" : var.codegen(generator), 
+                       i_start.empty? ? 0 : i_start.codegen(generator), 
+                       i_end.codegen(generator), 
+                       !i_start.empty?, 
+                       expressions.map{|e| e.codegen(generator)})
+      end
+    end
+
+    class WhileLoop < Node
+      def codegen(generator)
+        generator.while()
       end
     end
 

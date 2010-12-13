@@ -46,9 +46,9 @@ module Crayon
         name
       end
 
-      def loop(count, expressions)
+      def loop(i, i_start, i_end, inclusive, expressions)
         format([
-          "for(var __i:int = 0; __i < #{count}; __i++)",
+          "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
           "{",
           format(expressions, 1),
           "}"

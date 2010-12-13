@@ -16,6 +16,10 @@ module Crayon
       @parser.parse("# Hello world!").should_not be_nil
     end
 
+    it "should parse simple function calls" do
+      @parser.parse("print y").should_not be_nil
+    end
+
     it "should parse simple loops" do
       @parser.parse("repeat 10 times\nend").should_not be_nil
     end
@@ -33,6 +37,11 @@ module Crayon
     end
 
     it "should parse if statements" do
+      @parser.parse("if x < 10\nend").should_not be_nil
+    end
+
+    it "should parse if ... else statements" do
+      @parser.parse("if x ≥ y\nprint y\nelse\nprint x\nend").should_not be_nil
     end
 
   end
