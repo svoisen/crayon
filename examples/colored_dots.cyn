@@ -1,0 +1,34 @@
+#
+# colored_dots.cyn
+#
+# A sample Crayon program that draws rows of
+# randomly colored dots across the canvas.
+#
+# Copyright (C) Sean Voisen
+#
+
+set x to 10 
+set y to 10 
+
+function draw_dot uses center
+  draw circle with
+    radius as 10
+    color as random with min as 0, max as 0xFFFFFF
+    center as center
+  end
+end
+
+on frame do
+  draw_dot with center as (x, y)
+  
+  if x + 20 > width of canvas
+    set x to 0
+    if y + 20 > height of canvas
+      on frame do nothing
+    else
+      set y to y + 20
+    end
+  else
+    set x to x + 20
+  end
+end

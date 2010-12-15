@@ -1,0 +1,17 @@
+module Crayon
+  module Parser
+
+    grammar Events
+      rule event
+        "on" space event_name space "do" newline
+          body:(expression newline)*
+        "end"
+      end
+
+      rule event_name
+        ("mouse" space ("up" / "down")) / "frame"
+      end
+    end
+
+  end
+end

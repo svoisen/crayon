@@ -21,7 +21,7 @@
 #   Copyright (C) 2010 Sean Voisen. Licensed under the MIT License:
 #   http://www.opensource.org/licenses/mit-license.php
 
-$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+$: << File.expand_path(File.dirname(__FILE__)) + "/../lib"
 
 require 'rubygems'
 require 'optparse'
@@ -98,11 +98,11 @@ module Crayon
 
       def arguments_valid?
         unless @arguments.length == 1 
-          raise InvalidArgumentException, "No source file specified"
+          raise InvalidArgumentError, "No source file specified"
         end
         
         unless File.file? @arguments[0] 
-          raise InvalidArgumentException, "Cannot find source file #{@arguments[0]}"
+          raise InvalidArgumentError, "Cannot find source file #{@arguments[0]}"
         end
 
         true
@@ -119,7 +119,7 @@ module Crayon
 
         code = IO.read(@source)
         File.open(outname + '.as', 'w') {|f| f.write(compile(filename, code))}
-        `mxmlc -library-path+=../as3lib/bin #{outname}.as`
+        `mxmlc -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3lib/bin #{outname}.as`
       end
 
       def compile(name, code)

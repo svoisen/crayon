@@ -34,17 +34,32 @@ module Crayon
           body:(expression newline)* 
           elseif*
           else?
-        "end" <Conditional>
+        "end" <If>
+        {
+          def expressions
+            body.elements.map {|e| e.expression}
+          end
+        }
       end
 
       rule elseif
         "else if" space condition:expression newline
-          body:(expression newline)*
+          body:(expression newline)* <ElseIf>
+        {
+          def expressions
+            body.elements.map {|e| e.expression}
+          end
+        }
       end
 
       rule else
         "else" newline
-          body:(expression newline)*
+          body:(expression newline)* <Else>
+        {
+          def expresions
+            body.elements.map {|e| e.expression}
+          end
+        }
       end
     end
 

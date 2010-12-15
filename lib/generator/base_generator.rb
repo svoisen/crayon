@@ -7,7 +7,7 @@ module Crayon
       def initialize(program_name)
         @tab_width = 2
         @program_name = program_name
-        @vars_in_scope = []
+        @scope_stack = Array.new
       end
 
       private
@@ -27,16 +27,21 @@ module Crayon
           end
         end
 
+        def start_scope
+          @current_scope = Array.new
+          @scope_stack.push(@current_scope)
+        end
+
+        def end_scope
+          @scope_stack.pop()
+        end
+
         def add_to_scope(var)
-          @vars_in_scope.push(var)
+          @current_scope.push(var)
         end
 
         def in_scope?(var)
-          @vars_in_scope.include?(var)
-        end
-
-        def reset_scope
-          @vars_in_scope = []
+          @current_scope.include?(var)
         end
     end
 

@@ -44,6 +44,10 @@ module Crayon
       @parser.parse("if x ≥ y\nprint y\nelse\nprint x\nend").should_not be_nil
     end
 
+    it "should parse function defintions" do
+      @parser.parse("function hello_world uses x, y\nend")
+    end
+
   end
 
 end

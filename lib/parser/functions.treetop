@@ -44,6 +44,15 @@ module Crayon
         "function" space name:var space "uses" space arg:var remaining_args:(space? "," space? arg:var)* newline
           body:(expression newline)*
         "end" <Function>
+        {
+          def args
+            [arg] + remaining_args.elements.map {|e| e.arg}
+          end
+
+          def expressions
+            body.elements.map {|e| e.expression}
+          end
+        }
       end
     end
 

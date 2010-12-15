@@ -42,6 +42,12 @@ module Crayon
       end
     end
 
+    class Comparison < Node
+      def codegen(generator)
+        generator.compare op.value, object.codegen(generator), expression.codegen(generator) 
+      end
+    end
+
     class Equation < Node
       def codegen(generator)
         generator.calculate op.value, object.codegen(generator), expression.codegen(generator)
@@ -60,7 +66,7 @@ module Crayon
 
     class WhileLoop < Node
       def codegen(generator)
-        generator.while()
+        generator.while(condition.codegen(generator), expressions.map{|e| e.codegen(generator)})
       end
     end
 
@@ -78,14 +84,20 @@ module Crayon
 
     class Function < Node
       def codegen(generator)
-        ""
+        generator.function name.codegen(generator), args.map{|a| a.codegen(generator)}, expressions.map{|e| e.codegen(generator)}
       end
     end
 
-    class Conditional < Node
+    class If < Node
       def codegen(generator)
-        ""
+        generator.if condition.codegen(generator), expressions.map{|e| e.codegen(generator)}
       end
+    end
+
+    class ElseIf < Node
+    end
+
+    class Else < Node
     end
 
     class String < Node

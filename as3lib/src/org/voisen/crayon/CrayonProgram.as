@@ -7,8 +7,11 @@ package org.voisen.crayon
 
   public class CrayonProgram extends Sprite
   {
+    protected var canvas:Object;
+
     public function CrayonProgram()
     {
+      canvas = {width:stage.stageWidth, height:stage.stageHeight};
     }
 
     protected function clear():void
