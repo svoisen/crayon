@@ -4,6 +4,7 @@ require 'rubygems'
 require 'treetop'
 require 'parser/crayon'
 require 'generator/as3_generator'
+require 'snippets'
 
 module Crayon
 
@@ -15,8 +16,12 @@ module Crayon
     end
 
     it "should generate basic function calls" do
-      node = @parser.parse("print x")
-      node.expressions.first.codegen(@generator).should == "print({__default:x})"
+      node = @parser.parse(SIMPLE_FUNC_CALL)
+      node.expressions.first.codegen(@generator).should == "print({__default:y})"
+    end
+
+    it "should generate if statements" do
+      node = @parser.parse("")
     end
 
   end

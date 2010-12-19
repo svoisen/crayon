@@ -3,6 +3,7 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../lib")
 require 'rubygems'
 require 'treetop'
 require 'parser/crayon'
+require 'snippets'
 
 module Crayon
 
@@ -13,7 +14,7 @@ module Crayon
     end
 
     it "should allow comments" do
-      @parser.parse("# Hello world!").should_not be_nil
+      @parser.parse(COMMENT).should_not be_nil
     end
 
     it "should parse simple function calls" do

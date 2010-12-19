@@ -1,5 +1,5 @@
 #
-# colored_dots.cyn
+# colored_dots.crayon
 #
 # A sample Crayon program that draws rows of
 # randomly colored dots across the canvas.
@@ -23,11 +23,13 @@ on frame do
   
   if x + 20 > width of canvas
     set x to 0
+
     if y + 20 > height of canvas
       on frame do nothing
     else
       set y to y + 20
     end
+
   else
     set x to x + 20
   end

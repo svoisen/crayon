@@ -3,7 +3,14 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
 	xmlns:swiz="http://swiz.swizframework.org" 
-	xmlns:models="org.voisen.crayon.view.components.models.*">
+	xmlns:model="org.voisen.crayon.view.component.model.*" 
+	xmlns:controller="org.voisen.crayon.controller.*" 
+	xmlns:viewModel="org.voisen.crayon.view.model.*">
 	
-	<models:TextEditorModel />
+	<!-- Presentation Models -->
+	<viewModel:EditorViewModel />
+	
+	<!-- Controller -->
+	<controller:EditorController />
+
 </swiz:BeanProvider>

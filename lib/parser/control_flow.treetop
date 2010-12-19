@@ -30,6 +30,10 @@ module Crayon
       end
 
       rule conditional
+        iff / unles
+      end
+
+      rule iff
         "if" space condition:expression newline
           body:(expression newline)* 
           elseif*
@@ -60,6 +64,12 @@ module Crayon
             body.elements.map {|e| e.expression}
           end
         }
+      end
+
+      rule unles
+        "unless" space condition:expression newline
+          body:(expression newline)*
+        "end" <Unless>
       end
     end
 

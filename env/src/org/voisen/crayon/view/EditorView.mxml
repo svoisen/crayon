@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:component="org.voisen.crayon.view.component.*">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.voisen.crayon.view.model.EditorViewModel;
+			
+			[Inject]
+			public var model:EditorViewModel;
+		]]>
+	</fx:Script>
+	<component:TextEditor width="100%" height="100%" gutterStyleName="editorGutter" openFileClick="model.openFile();" />
 </s:Group>
