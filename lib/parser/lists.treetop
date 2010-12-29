@@ -1,0 +1,24 @@
+module Crayon
+  module Parser
+
+    grammar Lists
+      rule list
+        "(" space item:expression tail:(space "," space item:expression)* space ")" <List>
+        {
+          def items
+            [item] + tail.elements.map{|e| e.item}
+          end
+        }
+      end
+
+      rule list_item
+        "item" space item:var space "of" space list:var
+      end
+
+      rule list_length
+        "length"
+      end
+    end
+
+  end
+end

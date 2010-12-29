@@ -1,5 +1,6 @@
 require 'parser/nodes'
-require 'parser/object_types'
+require 'parser/objects'
+require 'parser/lists'
 require 'parser/control_flow'
 require 'parser/functions'
 require 'parser/events'
@@ -8,10 +9,11 @@ module Crayon
   module Parser
 
     grammar Crayon
-      include ObjectTypes
+      include Objects
       include ControlFlow
       include Functions
       include Events
+      include Lists
 
       rule script
         newline* expression remaining_expressions:(newline expression)* newline* <Script>

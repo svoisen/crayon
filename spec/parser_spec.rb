@@ -17,12 +17,24 @@ module Crayon
       @parser.parse(COMMENT).should_not be_nil
     end
 
+    it "should parse variable assignments" do
+      @parser.parse(VAR_ASSIGN).should_not be_nil
+    end
+
     it "should parse simple function calls" do
-      @parser.parse("print y").should_not be_nil
+      @parser.parse(SIMPLE_FUNC_CALL).should_not be_nil
+    end
+
+    it "should parse single line function calls" do
+      @parser.parse(SINGLE_LINE_FUNC_CALL).should_not be_nil
+    end
+
+    it "should parse multi-line function calls" do
+      @parser.parse(MULTILINE_FUNC_CALL).should_not be_nil
     end
 
     it "should parse simple loops" do
-      @parser.parse("repeat 10 times\nend").should_not be_nil
+      @parser.parse(SIMPLE_LOOP).should_not be_nil
     end
 
     it "should parse simple loops with counters" do

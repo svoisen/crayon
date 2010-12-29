@@ -20,7 +20,7 @@ module Crayon
       node.expressions.first.codegen(@generator).should == "print({__default:y})"
     end
 
-    it "should generate if statements" do
+    it "" do
       node = @parser.parse("")
     end
 

@@ -2,7 +2,8 @@ package org.voisen.crayon.view.model
 {
 	import flash.events.IEventDispatcher;
 	
-	import org.voisen.crayon.event.CrayonFileEvent;
+	import org.voisen.crayon.event.EditorEvent;
+	import org.voisen.crayon.view.component.IEditor;
 
 	public class EditorViewModel
 	{
@@ -13,9 +14,12 @@ package org.voisen.crayon.view.model
 		{
 		}
 		
-		public function openFile():void
+		public function openFile( editor:IEditor ):void
 		{
-			dispatcher.dispatchEvent( new CrayonFileEvent( CrayonFileEvent.SHOW_OPEN_FILE_DIALOG ) );
+			var event:EditorEvent = new EditorEvent( EditorEvent.OPEN_FILE );
+			event.editor = editor;
+			
+			dispatcher.dispatchEvent( event );
 		}
 	}
 }
