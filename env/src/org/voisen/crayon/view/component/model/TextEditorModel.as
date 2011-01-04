@@ -3,6 +3,7 @@ package org.voisen.crayon.view.component.model
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.filesystem.File;
 	
 	import org.voisen.crayon.view.component.TextEditor;
 	import org.voisen.crayon.view.component.event.TextEditorEvent;
@@ -11,15 +12,30 @@ package org.voisen.crayon.view.component.model
 	{
 		protected var view:TextEditor;
 		
+		protected var _filePath:String;
+		
+		protected var dirtyFlag:Boolean;
+		
+		protected var _newBufferFlag:Boolean;
+		
 		public function TextEditorModel( view:TextEditor )
 		{
 			this.view = view;
+			
+			dirtyFlag = false;
+			
+			_newBufferFlag = true;
+			
+			filePath = File.documentsDirectory.resolvePath( "untitled.crayon" ).nativePath;
 		}
 		
 		public function update():void
 		{
+			dirtyFlag = true;
+			
 			dispatchEvent( new Event( "lineCountChanged" ) );
 			dispatchEvent( new Event( "verticalScrollPositionChanged" ) );
+			dispatchEvent( new Event( "fileNameChanged" ) );
 		}
 		
 		[Bindable("verticalScrollPositionChanged")]
@@ -42,6 +58,34 @@ package org.voisen.crayon.view.component.model
 			}
 			
 			return count + 1;
+		}
+
+		[Bindable]
+		public function get filePath():String
+		{
+			return _filePath;
+		}
+
+		public function set filePath( value:String ):void
+		{
+			_filePath = value;
+			dispatchEvent( new Event( "fileNameChanged" ) );
+		}
+		
+		[Bindable("fileNameChanged")]
+		public function get fileName():String
+		{
+			return new File().resolvePath( filePath ).name + (dirtyFlag ? " *" : "");
+		}
+		
+		public function get newBuffer():Boolean
+		{
+			return _newBufferFlag;
+		}
+		
+		public function set newBuffer( value:Boolean ):void
+		{
+			_newBufferFlag = value;
 		}
 	}
 }

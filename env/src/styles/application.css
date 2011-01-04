@@ -18,6 +18,13 @@
 	fontFamily: mono;
 	fontSize: 12;
 	focusSkin: ClassReference("null");
+	borderVisible: false;
+}
+
+.editorHeader
+{
+	fontSize: 20;
+	color: #666666;
 }
 
 .editor
@@ -25,5 +32,15 @@
 	fontFamily: mono;
 	fontSize: 12;
 	focusSkin: ClassReference("null");
+	borderVisible: false;
 }
 
+.consoleOutput
+{
+	contentBackgroundColor: #333333;
+	color: #ffffff;
+	fontFamily: mono;
+	fontSize: 12;
+	focusSkin: ClassReference("null");
+	borderVisible: false;
+}

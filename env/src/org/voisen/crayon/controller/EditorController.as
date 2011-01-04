@@ -6,37 +6,68 @@ package org.voisen.crayon.controller
 	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
 	
+	import mx.logging.ILogger;
+	
+	import org.voisen.crayon.business.FileIODelegate;
+	import org.voisen.crayon.event.FileIOEvent;
+	import org.voisen.crayon.util.LogUtil;
 	import org.voisen.crayon.view.component.IEditor;
+	import org.voisen.crayon.view.model.EditorViewModel;
 
 	public class EditorController
 	{
+		private static const LOG:ILogger = LogUtil.getLogger( EditorController );
+		
+		[Inject]
+		public var editorViewModel:EditorViewModel;
+		
 		[EventHandler( event="EditorEvent.OPEN_FILE", properties="editor" )]
 		public function openFile( editor:IEditor ):void
 		{	
-			try
+			LOG.debug( "openFile" );
+			
+			var delegate:FileIODelegate = new FileIODelegate();
+			var selectHandler:Function = 
+				function( event:FileIOEvent ):void
+				{
+					editor.initializeBuffer( event.file.nativePath, delegate.readFileToString( event.file ) );
+				};
+			
+			delegate.addEventListener( FileIOEvent.FILE_SELECTED, selectHandler );
+			delegate.browseForFileToOpen();
+		}
+		
+		[EventHandler( event="EditorEvent.SAVE_FILE", properties="editor" )]
+		public function saveFile( editor:IEditor ):void
+		{
+			LOG.debug( "saveFile" );
+			
+			var delegate:FileIODelegate = new FileIODelegate();
+			
+			if( editor.newBuffer )
 			{
-				var file:File = new File();
-				var openHandler:Function = 
-					function( event:Event ):void
+				LOG.debug( "New buffer; prompting for filename" );
+				var selectHandler:Function =
+					function( event:FileIOEvent ):void
 					{
-						var stream:FileStream = new FileStream();
-						stream.open( event.target as File, FileMode.READ );
-						editor.buffer = stream.readUTFBytes( stream.bytesAvailable );
+						delegate.saveFile( event.file.nativePath, editor.buffer );
 					};
-				file.addEventListener( Event.SELECT, openHandler );
-				
-				file.browseForOpen( "Open Crayon Sketch", [new FileFilter( "Crayon source file", "*.crayon" )] );
+				delegate.addEventListener( FileIOEvent.FILE_SELECTED, selectHandler );
+				delegate.browseForFileToSave();
 			}
-			catch( e:Error )
+			else
 			{
-				// TODO: Handle error
-				trace( e.message );
+				delegate.saveFile( editor.filePath, editor.buffer );
 			}
 		}
 		
-		public function saveFile( text:String ):void
+		[EventHandler( event="ConsoleEvent.SHOW_TEXT", properties="text" )]
+		public function showInConsole( text:String ):void
 		{
+			LOG.debug( "showCompilerError" );
 			
+			editorViewModel.showConsole();
+			editorViewModel.consoleText = text;
 		}
 	}
 }

@@ -1,12 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 creationComplete="init()" 
+		 implements="org.voisen.crayon.view.component.IConsole">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
+	<fx:Metadata>
+		[Style(name="outputStyleName", inherit="no", type="String")]
+	</fx:Metadata>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:TextArea id="output" height="100%" width="100%" />
+	<fx:Script>
+		<![CDATA[
+			import org.voisen.crayon.view.component.model.ConsoleModel;
+			
+			[Bindable]
+			private var model:ConsoleModel;
+			
+			private function init():void
+			{
+				model = new ConsoleModel();
+			}
+			
+			public function appendText( text:String ):void
+			{
+				output.appendText( text );
+				scrollToBottom();
+			}
+			
+			public function get text():String
+			{
+				return output.text;
+			}
+			
+			public function set text( value:String ):void
+			{
+				output.text = value;
+				scrollToBottom();
+			}
+			
+			protected function scrollToBottom():void
+			{
+				output.scroller.verticalScrollBar.value = output.scroller.verticalScrollBar.maximum;
+			}
+		]]>
+	</fx:Script>
+	<s:TextArea id="output" height="100%" width="100%" editable="false" styleName="{getStyle('outputStyleName')}" />
 </s:Group>

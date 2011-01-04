@@ -2,9 +2,10 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 xmlns:component="org.voisen.crayon.view.component.*">
+		 xmlns:component="org.voisen.crayon.view.component.*"
+		 currentState="{model.currentState}">
 	<s:layout>
-		<s:BasicLayout/>
+		<s:VerticalLayout gap="0" />
 	</s:layout>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -14,14 +15,32 @@
 			import org.voisen.crayon.view.model.EditorViewModel;
 			
 			[Inject]
+			[Bindable]
 			public var model:EditorViewModel;
 		]]>
 	</fx:Script>
-	<component:TextEditor id="editor" width="100%" height="100%" gutterStyleName="editorGutter" editorStyleName="editor" />
-	<s:HGroup id="buttons" width="100%" bottom="10" paddingLeft="10" paddingRight="10">
+	<s:states>
+		<s:State name="hideConsole" />
+		<s:State name="showConsole" />
+	</s:states>
+	<component:TextEditor 
+		id="editor" 
+		width="100%" 
+		height="100%" 
+		gutterStyleName="editorGutter" 
+		editorStyleName="editor" 
+		headerStyleName="editorHeader" />
+	<component:Console 
+		id="console" 
+		includeIn="showConsole" 
+		width="100%" 
+		height="200" 
+		text="{model.consoleText}" 
+		outputStyleName="consoleOutput" />
+	<s:HGroup id="buttons" width="100%" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
 		<s:Button id="openButton" label="Open ..." click="model.openFile( editor );" />
-		<s:Button id="saveButton" label="Save" />
+		<s:Button id="saveButton" label="Save" click="model.saveFile( editor );" />
 		<mx:Spacer width="100%" />
-		<s:Button id="runButton" label="Run" />
+		<s:Button id="runButton" label="Run" click="model.runFile( editor );" />
 	</s:HGroup>
 </s:Group>

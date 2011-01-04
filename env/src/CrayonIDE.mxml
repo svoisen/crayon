@@ -5,7 +5,8 @@
 					   xmlns:component="org.voisen.crayon.view.component.*" 
 					   xmlns:swiz="http://swiz.swizframework.org" 
 					   xmlns:beans="org.voisen.crayon.beans.*" 
-					   xmlns:view="org.voisen.crayon.view.*">
+					   xmlns:view="org.voisen.crayon.view.*"
+					   applicationComplete="init()">
 	<fx:Declarations>
 		<swiz:Swiz>
 			<swiz:beanProviders>
@@ -20,6 +21,16 @@
 			</swiz:config>
 		</swiz:Swiz>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.voisen.crayon.event.InitializationEvent;
+			
+			private function init():void
+			{
+				dispatchEvent( new InitializationEvent( InitializationEvent.APP_INIT, stage ) );
+			}
+		]]>
+	</fx:Script>
 	
 	<fx:Style source="styles/application.css" />
 	
