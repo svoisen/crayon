@@ -6,13 +6,27 @@
 	xmlns:controller="org.voisen.crayon.controller.*" 
 	xmlns:model="org.voisen.crayon.model.*" 
 	xmlns:business="org.voisen.crayon.business.*" 
-	xmlns:menuModel="org.voisen.crayon.view.menu.model.*">
+	xmlns:menuModel="org.voisen.crayon.view.menu.model.*" 
+	xmlns:menu="org.voisen.crayon.view.menu.*" 
+	xmlns:signal="org.voisen.crayon.signal.*">
 	
 	<!-- Controller -->
 	<controller:ApplicationController />
 	
 	<!-- Model -->
 	<model:ApplicationModel />
+	
+	<!-- Signal Bus -->
+	<signal:ApplicationSignalBus />
+	
+	<!-- Delegates -->
+	<business:CompilerDelegate />
+	<business:FileIODelegate />
+	<business:LogDelegate />
+	<business:MenuDelegate />
+	
+	<!-- Menus -->
+	<menu:FileMenu />
 	
 	<!-- View Models -->
 	<menuModel:FileMenuModel />

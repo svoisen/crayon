@@ -10,6 +10,9 @@ package org.voisen.crayon.business
 
 	public class MenuDelegate
 	{
+		[Inject]
+		public var fileMenu:FileMenu;
+		
 		public function setupMenus( stage:Stage ):void
 		{
 			if( NativeApplication.supportsMenu )
@@ -27,13 +30,13 @@ package org.voisen.crayon.business
 		{
 			var menu:NativeMenu = NativeApplication.nativeApplication.menu;
 			
-			menu.getItemAt( 0 ).submenu = new ApplicationMenu();
-			menu.getItemAt( 1 ).submenu = new FileMenu();
+			//menu.getItemAt( 0 ).submenu = new ApplicationMenu();
+			menu.getItemAt( 1 ).submenu = fileMenu;
 		}
 		
 		protected function setupWindowMenus( stage:Stage ):void
 		{
-			
+			var menu:NativeMenu = stage.nativeWindow.menu;
 		}
 	}
 }

@@ -16,18 +16,20 @@
 			<swiz:config>
 				<swiz:SwizConfig
 					viewPackages="org.voisen.crayon.view"
-					eventPackages="org.voisen.crayon.event"
 					strict="true" />
 			</swiz:config>
 		</swiz:Swiz>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			import org.voisen.crayon.event.InitializationEvent;
+			import org.voisen.crayon.signal.ApplicationSignalBus;
+			
+			[Inject]
+			public var signalBus:ApplicationSignalBus;
 			
 			private function init():void
 			{
-				dispatchEvent( new InitializationEvent( InitializationEvent.APP_INIT, stage ) );
+				signalBus.initializeApplicationSignal.dispatch( stage );
 			}
 		]]>
 	</fx:Script>

@@ -6,7 +6,6 @@ package org.voisen.crayon.view.component.model
 	import flash.filesystem.File;
 	
 	import org.voisen.crayon.view.component.TextEditor;
-	import org.voisen.crayon.view.component.event.TextEditorEvent;
 
 	public class TextEditorModel extends EventDispatcher
 	{
@@ -35,6 +34,12 @@ package org.voisen.crayon.view.component.model
 			
 			dispatchEvent( new Event( "lineCountChanged" ) );
 			dispatchEvent( new Event( "verticalScrollPositionChanged" ) );
+			dispatchEvent( new Event( "fileNameChanged" ) );
+		}
+		
+		public function markAsSaved():void
+		{
+			dirtyFlag = false;
 			dispatchEvent( new Event( "fileNameChanged" ) );
 		}
 		

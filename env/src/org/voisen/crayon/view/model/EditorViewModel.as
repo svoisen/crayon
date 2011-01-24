@@ -3,8 +3,7 @@ package org.voisen.crayon.view.model
 	import flash.events.IEventDispatcher;
 	import flash.filesystem.File;
 	
-	import org.voisen.crayon.event.EditorEvent;
-	import org.voisen.crayon.event.SketchEvent;
+	import org.voisen.crayon.model.ApplicationModel;
 	import org.voisen.crayon.view.component.IEditor;
 
 	public class EditorViewModel
@@ -12,9 +11,14 @@ package org.voisen.crayon.view.model
 		[Dispatcher]
 		public var dispatcher:IEventDispatcher;
 		
+		[Inject]
+		public var model:ApplicationModel;
+		
 		protected var _currentState:String;
 		
 		protected var _consoleText:String;
+		
+		protected var _selectedEditor:IEditor;
 		
 		public function EditorViewModel()
 		{
@@ -29,30 +33,6 @@ package org.voisen.crayon.view.model
 		public function hideConsole():void
 		{
 			currentState = "";
-		}
-		
-		public function openFile( editor:IEditor ):void
-		{
-			var event:EditorEvent = new EditorEvent( EditorEvent.OPEN_FILE );
-			event.editor = editor;
-			
-			dispatcher.dispatchEvent( event );
-		}
-		
-		public function saveFile( editor:IEditor ):void
-		{
-			var event:EditorEvent = new EditorEvent( EditorEvent.SAVE_FILE );
-			event.editor = editor;
-			
-			dispatcher.dispatchEvent( event );
-		}
-		
-		public function runFile( editor:IEditor ):void
-		{
-			var event:SketchEvent = new SketchEvent( SketchEvent.RUN_SKETCH );
-			event.sketch = editor.buffer;
-			
-			dispatcher.dispatchEvent( event );
 		}
 
 		[Bindable]
@@ -76,5 +56,19 @@ package org.voisen.crayon.view.model
 		{
 			_consoleText = value;
 		}
+
+		[Bindable]
+		public function get selectedEditor():IEditor
+		{
+			return _selectedEditor;
+		}
+
+		public function set selectedEditor(value:IEditor):void
+		{
+			_selectedEditor = value;
+			
+			model.currentEditor = value;
+		}
+
 	}
 }

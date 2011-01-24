@@ -9,65 +9,91 @@ package org.voisen.crayon.controller
 	import mx.logging.ILogger;
 	
 	import org.voisen.crayon.business.FileIODelegate;
-	import org.voisen.crayon.event.FileIOEvent;
+	import org.voisen.crayon.signal.EditorSignalBus;
 	import org.voisen.crayon.util.LogUtil;
 	import org.voisen.crayon.view.component.IEditor;
 	import org.voisen.crayon.view.model.EditorViewModel;
 
 	public class EditorController
 	{
-		private static const LOG:ILogger = LogUtil.getLogger( EditorController );
-		
 		[Inject]
 		public var editorViewModel:EditorViewModel;
 		
-		[EventHandler( event="EditorEvent.OPEN_FILE", properties="editor" )]
+		[Inject]
+		public var fileDelegate:FileIODelegate;
+		
+		[Inject]
+		public var signalBus:EditorSignalBus;
+		
+		private static const LOG:ILogger = LogUtil.getLogger( EditorController );
+		
+		[PostConstruct]
+		public function setupSignalBus():void
+		{
+			signalBus.openFileSignal.add( openFile );
+			signalBus.saveFileSignal.add( saveFile );
+			signalBus.showInConsoleSignal.add( showInConsole );
+			signalBus.createSketchSignal.add( createSketch );
+		}
+		
+		[PreDestroy]
+		public function clearSignalBus():void
+		{
+			signalBus.openFileSignal.remove( openFile );
+			signalBus.saveFileSignal.remove( saveFile );
+			signalBus.showInConsoleSignal.remove( showInConsole );
+			signalBus.createSketchSignal.remove( createSketch );
+		}
+		
 		public function openFile( editor:IEditor ):void
 		{	
 			LOG.debug( "openFile" );
 			
-			var delegate:FileIODelegate = new FileIODelegate();
 			var selectHandler:Function = 
-				function( event:FileIOEvent ):void
+				function( file:File ):void
 				{
-					editor.initializeBuffer( event.file.nativePath, delegate.readFileToString( event.file ) );
+					editor.initializeBuffer( file.nativePath, fileDelegate.readFileToString( file ) );
+					fileDelegate.fileSelectedSignal.removeAll();
 				};
 			
-			delegate.addEventListener( FileIOEvent.FILE_SELECTED, selectHandler );
-			delegate.browseForFileToOpen();
+			fileDelegate.fileSelectedSignal.add( selectHandler );
+			fileDelegate.browseForFileToOpen();
 		}
 		
-		[EventHandler( event="EditorEvent.SAVE_FILE", properties="editor" )]
 		public function saveFile( editor:IEditor ):void
 		{
 			LOG.debug( "saveFile" );
-			
-			var delegate:FileIODelegate = new FileIODelegate();
 			
 			if( editor.newBuffer )
 			{
 				LOG.debug( "New buffer; prompting for filename" );
 				var selectHandler:Function =
-					function( event:FileIOEvent ):void
+					function( file:File ):void
 					{
-						delegate.saveFile( event.file.nativePath, editor.buffer );
+						fileDelegate.saveFile( file.nativePath, editor.buffer );
+						fileDelegate.fileSelectedSignal.removeAll();
 					};
-				delegate.addEventListener( FileIOEvent.FILE_SELECTED, selectHandler );
-				delegate.browseForFileToSave();
+				fileDelegate.fileSelectedSignal.add( selectHandler );
+				fileDelegate.browseForFileToSave();
 			}
 			else
 			{
-				delegate.saveFile( editor.filePath, editor.buffer );
+				fileDelegate.saveFile( editor.filePath, editor.buffer );
+				editor.markAsSaved();
 			}
 		}
 		
-		[EventHandler( event="ConsoleEvent.SHOW_TEXT", properties="text" )]
 		public function showInConsole( text:String ):void
 		{
 			LOG.debug( "showCompilerError" );
 			
 			editorViewModel.showConsole();
 			editorViewModel.consoleText = text;
+		}
+		
+		public function createSketch():void
+		{
+			LOG.debug( "createSketch" );
 		}
 	}
 }

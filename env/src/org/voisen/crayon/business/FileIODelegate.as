@@ -9,11 +9,13 @@ package org.voisen.crayon.business
 	
 	import mx.logging.ILogger;
 	
-	import org.voisen.crayon.event.FileIOEvent;
+	import org.osflash.signals.Signal;
 	import org.voisen.crayon.util.LogUtil;
 
 	public class FileIODelegate extends EventDispatcher
 	{
+		public const fileSelectedSignal:Signal = new Signal( File );
+		
 		private static const LOG:ILogger = LogUtil.getLogger( FileIODelegate );
 		
 		public function browseForFileToSave():void
@@ -105,10 +107,8 @@ package org.voisen.crayon.business
 		
 		protected function handleFileSelection( event:Event ):void
 		{
-			var fileEvent:FileIOEvent = new FileIOEvent( FileIOEvent.FILE_SELECTED );
-			fileEvent.file = event.target as File;
-			LOG.debug( "File selected: " + fileEvent.file.nativePath );
-			dispatchEvent( fileEvent );
+			LOG.debug( "File selected: " + (event.target as File).nativePath );
+			fileSelectedSignal.dispatch( event.target as File );
 		}
 	}
 }

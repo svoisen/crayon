@@ -6,5 +6,6 @@ package org.voisen.crayon.view.component
 		function get buffer():String;
 		function get filePath():String;
 		function get newBuffer():Boolean;
+		function markAsSaved():void;
 	}
 }

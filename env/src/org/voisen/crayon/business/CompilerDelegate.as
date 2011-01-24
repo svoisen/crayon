@@ -11,11 +11,17 @@ package org.voisen.crayon.business
 	
 	import mx.logging.ILogger;
 	
-	import org.voisen.crayon.event.CompilerEvent;
+	import org.osflash.signals.Signal;
 	import org.voisen.crayon.util.LogUtil;
 
 	public class CompilerDelegate extends EventDispatcher
 	{
+		public const errorSignal:Signal = new Signal( String );
+		
+		public const outputSignal:Signal = new Signal( String );
+		
+		public const successSignal:Signal = new Signal();
+		
 		protected static const CRAYONC:String = "/Users/svoisen/Projects/Personal/crayon/bin/crayonc";
 		
 		private static const LOG:ILogger = LogUtil.getLogger( CompilerDelegate );
@@ -51,6 +57,13 @@ package org.voisen.crayon.business
 			process.start( processInfo );
 		}
 		
+		public function clearSignals():void
+		{
+			errorSignal.removeAll();
+			outputSignal.removeAll();
+			successSignal.removeAll();
+		}
+		
 		protected function handleStandardOutput( event:ProgressEvent ):void
 		{
 			LOG.debug( "handleStandardOutput" );
@@ -59,6 +72,8 @@ package org.voisen.crayon.business
 			var output:String = process.standardOutput.readUTFBytes( process.standardOutput.bytesAvailable );
 			
 			LOG.info( output );
+			
+			outputSignal.dispatch( output );
 		}
 		
 		protected function handleStandardError( event:ProgressEvent ):void
@@ -72,9 +87,7 @@ package org.voisen.crayon.business
 			
 			LOG.error( output );
 			
-			var compilerEvent:CompilerEvent = new CompilerEvent( CompilerEvent.COMPILER_ERROR );
-			compilerEvent.output = output;
-			dispatchEvent( compilerEvent );
+			errorSignal.dispatch( output );
 		}
 		
 		protected function handleIOError( event:IOErrorEvent ):void
