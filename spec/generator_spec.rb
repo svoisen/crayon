@@ -9,6 +9,9 @@ require 'snippets'
 module Crayon
 
   describe Generator::AS3Generator do
+    def generate(code)
+      @parser.parse(code).expressions.first.codegen(@generator)
+    end
 
     before(:all) do
       @parser = Parser::CrayonParser.new
@@ -16,12 +19,30 @@ module Crayon
     end
 
     it "should generate basic function calls" do
-      node = @parser.parse(SIMPLE_FUNC_CALL)
-      node.expressions.first.codegen(@generator).should == "print({__default:y})"
+      generate(SIMPLE_FUNC_CALL).should == "print({__default:y})"
     end
 
-    it "" do
-      node = @parser.parse("")
+    it "should generate variable assignments" do
+      generate(VAR_ASSIGN).should == "var x:* = 10"
+    end
+
+    it "should generate list assignements" do
+    end
+
+    it "should generate basic if statements" do
+      generate(IF).should == "if(x < 10)\n{\n\n}"
+    end
+
+    it "should generate while loops" do
+      generate(WHILE_LOOP).should == "while(x < 10)\n{\n\n}"
+    end
+
+    it "should generate code to access list items by number" do
+      generate(LIST_ITEM_NUMBER).should == "list[5]"
+    end
+
+    it "should generate code to access list items by variable" do
+      generate(LIST_ITEM_VAR).should == "list[i]"
     end
 
   end

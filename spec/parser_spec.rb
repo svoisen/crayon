@@ -8,57 +8,76 @@ require 'snippets'
 module Crayon
 
   describe Parser::CrayonParser do
+    def parse(code)
+      @parser.parse(code)
+    end
 
     before(:all) do
       @parser = Parser::CrayonParser.new
     end
 
     it "should allow comments" do
-      @parser.parse(COMMENT).should_not be_nil
+      parse(COMMENT).should_not be_nil
+    end
+
+    it "should allow empty comments" do
+      parse(EMPTY_COMMENT).should_not be_nil
     end
 
     it "should parse variable assignments" do
-      @parser.parse(VAR_ASSIGN).should_not be_nil
+      parse(VAR_ASSIGN).should_not be_nil
     end
 
     it "should parse simple function calls" do
-      @parser.parse(SIMPLE_FUNC_CALL).should_not be_nil
+      parse(SIMPLE_FUNC_CALL).should_not be_nil
     end
 
     it "should parse single line function calls" do
-      @parser.parse(SINGLE_LINE_FUNC_CALL).should_not be_nil
+      parse(SINGLE_LINE_FUNC_CALL).should_not be_nil
     end
 
     it "should parse multi-line function calls" do
-      @parser.parse(MULTILINE_FUNC_CALL).should_not be_nil
+      parse(MULTILINE_FUNC_CALL).should_not be_nil
     end
 
     it "should parse simple loops" do
-      @parser.parse(SIMPLE_LOOP).should_not be_nil
+      parse(SIMPLE_LOOP).should_not be_nil
     end
 
     it "should parse simple loops with counters" do
-      @parser.parse("repeat 10 times with i\nend").should_not be_nil
+      parse(SIMPLE_COUNTER_LOOP).should_not be_nil
     end
 
     it "should parse loops with start/end" do
-      @parser.parse("repeat i from 0 to 10\nend").should_not be_nil
+      parse(LOOP).should_not be_nil
     end
 
     it "should parse while loops" do
-      @parser.parse("repeat while i < 10\nend").should_not be_nil
+      parse(WHILE_LOOP).should_not be_nil
     end
 
     it "should parse if statements" do
-      @parser.parse("if x < 10\nend").should_not be_nil
+      parse(IF).should_not be_nil
     end
 
     it "should parse if ... else statements" do
-      @parser.parse("if x ≥ y\nprint y\nelse\nprint x\nend").should_not be_nil
+      parse("if x ≥ y\nprint y\nelse\nprint x\nend").should_not be_nil
     end
 
     it "should parse function defintions" do
-      @parser.parse("function hello_world uses x, y\nend")
+      parse("function hello_world uses x, y\nend").should_not be_nil
+    end
+
+    it "should parse object properties" do
+      parse(OBJECT_PROPERTY).should_not be_nil
+    end
+
+    it "should parse list item access by number" do
+      parse(LIST_ITEM_NUMBER).should_not be_nil
+    end
+
+    it "should parse list item access by variable" do
+      parse(LIST_ITEM_VAR).should_not be_nil
     end
 
   end

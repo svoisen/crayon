@@ -34,14 +34,16 @@ module Crayon
 
         def end_scope
           @scope_stack.pop()
+          @current_scope = @scope_stack.last
         end
 
         def add_to_scope(var)
+          start_scope if @current_scope.nil?
           @current_scope.push(var)
         end
 
         def in_scope?(var)
-          @current_scope.include?(var)
+          @current_scope.nil? ? false : @current_scope.include?(var)
         end
     end
 

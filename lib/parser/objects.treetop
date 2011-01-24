@@ -24,6 +24,10 @@ module Crayon
       rule boolean
         "true" / "false"
       end
+
+      rule object_property
+        property:var space "of" space object:var
+      end
     end
 
   end

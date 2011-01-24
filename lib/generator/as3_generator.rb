@@ -50,6 +50,10 @@ module Crayon
         "[" + items.join(",") + "]"
       end
 
+      def array_item(index, array)
+        "#{array}[#{index}]"
+      end
+
       def var(name)
         name
       end

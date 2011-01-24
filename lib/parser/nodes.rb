@@ -82,6 +82,12 @@ module Crayon
       end
     end
 
+    class ListItem < Node
+      def codegen(generator)
+        generator.array_item(item.codegen(generator), list.codegen(generator))
+      end
+    end
+
     class Function < Node
       def codegen(generator)
         generator.function name.codegen(generator), args.map{|a| a.codegen(generator)}, expressions.map{|e| e.codegen(generator)}

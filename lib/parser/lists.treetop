@@ -12,11 +12,7 @@ module Crayon
       end
 
       rule list_item
-        "item" space item:var space "of" space list:var
-      end
-
-      rule list_length
-        "length"
+        "item" space item:(var / number) space "of" space list:var <ListItem>
       end
     end
 
