@@ -16,6 +16,10 @@ module Crayon
       @parser = Parser::CrayonParser.new
     end
 
+    it "should allow block comments" do
+      parse("# hello\n\n# goodbye").should_not be_nil
+    end
+
     it "should allow comments" do
       parse(COMMENT).should_not be_nil
     end
@@ -26,6 +30,10 @@ module Crayon
 
     it "should parse variable assignments" do
       parse(VAR_ASSIGN).should_not be_nil
+    end
+
+    it "should parse list assignments" do
+      parse(ARRAY_ASSIGN).should_not be_nil
     end
 
     it "should parse simple function calls" do

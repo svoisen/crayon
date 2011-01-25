@@ -27,6 +27,7 @@ module Crayon
     end
 
     it "should generate list assignements" do
+      generate(ARRAY_ASSIGN).should == "var a:* = [1,2,3,4,5,6,7]"
     end
 
     it "should generate basic if statements" do

@@ -25,15 +25,15 @@ module Crayon
       end
 
       rule expression
-        assignment / conditional / loop / call / comparison / function / event / equation / object / comment
+        assignment / conditional / loop / call / comparison / function / event / equation / object 
       end
 
       rule object
-        var / number / string / list / boolean / list_item / object_property
+        property / var / number / string / list / boolean / list_item 
       end
 
       rule numeric
-        var / number / equation
+        property / var / number / equation 
       end
 
       rule comparison
@@ -57,7 +57,7 @@ module Crayon
       end
 
       rule comment
-        '#' newline / '#' (!newline .)+ (newline / !.)
+        '#' newline / '#' (!newline .)+ (newline / !.) 
       end
 
       rule space

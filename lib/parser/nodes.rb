@@ -56,11 +56,17 @@ module Crayon
 
     class CountLoop < Node
       def codegen(generator)
-        generator.loop(var.empty? ? "__i" : var.codegen(generator), 
-                       i_start.empty? ? 0 : i_start.codegen(generator), 
+        generator.loop((!defined? counter or counter.var.empty?) ? "__i" : counter.var.codegen(generator),
+                       (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
                        i_end.codegen(generator), 
-                       !i_start.empty?, 
+                       (defined? i_start and !i_start.empty?), 
                        expressions.map{|e| e.codegen(generator)})
+      end
+    end
+
+    class Property < Node
+      def codegen(generator)
+        generator.property(property.codegen(generator), object.codegen(generator))
       end
     end
 

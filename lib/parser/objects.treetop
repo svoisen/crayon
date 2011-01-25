@@ -25,8 +25,8 @@ module Crayon
         "true" / "false"
       end
 
-      rule object_property
-        property:var space "of" space object:var
+      rule property
+        property:var space "of" space object:var <Property>
       end
     end
 

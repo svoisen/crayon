@@ -98,6 +98,10 @@ module Crayon
         "#{operand1} #{operator} #{operand2}"
       end
 
+      def property(property, object)
+        "#{object}.#{property}"
+      end
+
       def number(value)
         value.to_s
       end
