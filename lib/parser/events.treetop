@@ -4,7 +4,7 @@ module Crayon
     grammar Events
       rule event
         "on" space event_name space "do" newline
-          body:(expression newline)*
+          body:(statement newline)*
         "end"
       end
 

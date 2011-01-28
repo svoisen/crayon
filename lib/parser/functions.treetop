@@ -3,22 +3,16 @@ module Crayon
 
     grammar Functions
       rule call
-        function:var space arglist <Call>
+        function:identifier space arglist <Call>
       end
 
       rule arglist
-        default_arg:expression space? <Arglist>
-        {
-          def args
-            {"__default" => default_arg}
-          end
-        } /
         default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
         {
           def args
-            args = {arg.var => arg.expression}
+            args = {arg.identifier => arg.expression}
             args.merge!({"__default" => default_arg.expression}) if defined? default_arg
-            remaining_args.elements.each {|e| args.merge!({e.arg.var => e.arg.expression})}
+            remaining_args.elements.each {|e| args.merge!({e.arg.identifier => e.arg.expression})}
             args
           end
         } /
@@ -28,29 +22,35 @@ module Crayon
         "end" <Arglist> 
         {
           def args
-            args = {arg.var => arg.expression}
+            args = {arg.identifier => arg.expression}
             args.merge!({"__default" => default_arg.expression}) if defined? default_arg
-            remaining_args.elements.each {|e| args.merge!({e.argument.var => e.argument.expression})}
+            remaining_args.elements.each {|e| args.merge!({e.argument.identifier => e.argument.expression})}
             args
+          end
+        } /
+        default_arg:expression space? <Arglist>
+        {
+          def args
+            {"__default" => default_arg}
           end
         }
       end
 
       rule argument
-        var space "as" space expression
+        identifier space "as" space expression
       end
 
       rule function
-        "function" space name:var space "uses" space arg:var remaining_args:(space? "," space? arg:var)* newline
-          body:(expression newline)*
+        "function" space name:identifier space "uses" space arg:identifier remaining_args:(space? "," space? arg:identifier)* newline
+          body:(statement newline)*
         "end" <Function>
         {
           def args
             [arg] + remaining_args.elements.map {|e| e.arg}
           end
 
-          def expressions
-            body.elements.map {|e| e.expression}
+          def statements
+            body.elements.map {|s| s.statement}
           end
         }
       end

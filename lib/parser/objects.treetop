@@ -26,7 +26,7 @@ module Crayon
       end
 
       rule property
-        property:var space "of" space object:var <Property>
+        property:identifier space "of" space object:var <Property>
       end
     end
 

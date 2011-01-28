@@ -12,7 +12,7 @@ module Crayon
       end
 
       rule list_item
-        "item" space item:(var / number) space "of" space list:var <ListItem>
+        "item" space item:(identifier / number) space "of" space list:varprop <ListItem>
       end
     end
 

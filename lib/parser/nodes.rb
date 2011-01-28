@@ -2,6 +2,10 @@ class String
   def codegen(generator)
     self
   end
+
+  def value
+    self
+  end
 end
 
 class ::Treetop::Runtime::SyntaxNode
@@ -10,7 +14,7 @@ class ::Treetop::Runtime::SyntaxNode
   end
 
   def codegen(context)
-    raise "Method codegen not defined in #{self}"
+    raise "Method codegen not defined in #{self} : #{value}"
   end
 end
 
@@ -20,13 +24,13 @@ module Crayon
 
     class Script < Node
       def compile(generator)
-        generator.generate(expressions.map{|e| e.codegen(generator)})
+        generator.generate(statements.map{|s| s.codegen(generator)})
       end
     end
 
-    class Expression < Node
+    class Object < Node
       def codegen(generator)
-        statements.map {|s| s.codegen(generator)}
+        object.codegen(generator)
       end
     end
 
@@ -38,47 +42,47 @@ module Crayon
 
     class Assignment < Node
       def codegen(generator)
-        generator.assign var.value, expression.codegen(generator)
+        generator.assign varprop.codegen(generator), expression.codegen(generator)
       end
     end
 
     class Comparison < Node
       def codegen(generator)
-        generator.compare op.value, object.codegen(generator), expression.codegen(generator) 
+        generator.compare compareop.value, object.codegen(generator), expression.codegen(generator) 
       end
     end
 
     class Equation < Node
       def codegen(generator)
-        generator.calculate op.value, object.codegen(generator), expression.codegen(generator)
+        generator.calculate mathop.value, object.codegen(generator), expression.codegen(generator)
       end
     end
 
     class CountLoop < Node
       def codegen(generator)
-        generator.loop((!defined? counter or counter.var.empty?) ? "__i" : counter.var.codegen(generator),
+        generator.loop((!defined? counter or counter.varprop.empty?) ? "__i" : counter.varprop.codegen(generator),
                        (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
                        i_end.codegen(generator), 
                        (defined? i_start and !i_start.empty?), 
-                       expressions.map{|e| e.codegen(generator)})
+                       statements.map{|s| s.codegen(generator)})
       end
     end
 
     class Property < Node
       def codegen(generator)
-        generator.property(property.codegen(generator), object.codegen(generator))
+        generator.property(property.value, object.codegen(generator))
       end
     end
 
     class WhileLoop < Node
       def codegen(generator)
-        generator.while(condition.codegen(generator), expressions.map{|e| e.codegen(generator)})
+        generator.while(condition.codegen(generator), statements.map{|s| s.codegen(generator)})
       end
     end
 
     class Variable < Node
       def codegen(generator)
-        generator.var(value)
+        generator.var(identifier.value)
       end
     end
 
@@ -96,13 +100,13 @@ module Crayon
 
     class Function < Node
       def codegen(generator)
-        generator.function name.codegen(generator), args.map{|a| a.codegen(generator)}, expressions.map{|e| e.codegen(generator)}
+        generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator)}
       end
     end
 
     class If < Node
       def codegen(generator)
-        generator.if condition.codegen(generator), expressions.map{|e| e.codegen(generator)}
+        generator.if condition.codegen(generator), statements.map{|s| s.codegen(generator)}
       end
     end
 
@@ -121,10 +125,10 @@ module Crayon
     class Arglist < Node
       def codegen(generator)
         named_args = Hash.new
-        args.each do |var,val|
+        args.each do |id,val|
           # TODO: This shouldn't be empty, so there is a problem with the grammar
-          next if var.empty? or val.empty?
-          named_args[var.codegen(generator)] = val.codegen(generator)
+          next if id.empty? or val.empty?
+          named_args[id.value] = val.codegen(generator)
         end
         generator.arglist(named_args)
       end

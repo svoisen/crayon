@@ -12,8 +12,8 @@ module Crayon
   LOOP = "repeat i from 0 to 10\nend"
   WHILE_LOOP = "repeat while x < 10\nend"
   IF = "if x < 10\nend"
-  OBJECT_PROPERTY = "length of list"
-  LIST_ITEM_NUMBER = "item 5 of list"
-  LIST_ITEM_VAR = "item i of list"
+  OBJECT_PROPERTY = "print length of list"
+  LIST_ITEM_NUMBER = "print item 5 of list"
+  LIST_ITEM_VAR = "print item i of list"
 
 end

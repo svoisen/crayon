@@ -10,7 +10,7 @@ module Crayon
 
   describe Generator::AS3Generator do
     def generate(code)
-      @parser.parse(code).expressions.first.codegen(@generator)
+      @parser.parse(code).statements.first.codegen(@generator)
     end
 
     before(:all) do

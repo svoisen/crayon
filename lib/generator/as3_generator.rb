@@ -4,6 +4,8 @@ require 'generator/base_generator'
 module Crayon
   module Generator
 
+    class SyntaxError < RuntimeError; end
+
     class AS3Generator < BaseGenerator
       def initialize(program_name)
         super(program_name)
@@ -12,15 +14,20 @@ module Crayon
       end
 
       def generate(expressions)
-        preamble << constructor(expressions) << "\n\n" << format(@functions, 3) << conclusion
+        preamble << constructor(expressions) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3) << conclusion
       end
 
-      def assign(name, value)
-        if in_scope?(name)
-          "#{name} = #{value}"
+      def assign(varprop, value)
+        chain = varprop.split('.')
+        var = chain.first
+
+        if in_scope?(var)
+          "#{varprop} = #{value}"
+        elsif chain.length == 1
+          add_to_scope(var)
+          "var #{var}:* = #{value}"
         else
-          add_to_scope(name)
-          "var #{name}:* = #{value}"
+          raise SyntaxError, "Access of undefined variable #{var}"
         end
       end
 
