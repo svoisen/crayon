@@ -69,7 +69,7 @@ module Crayon
     end
 
     it "should parse if ... else statements" do
-      parse("IF_ELSE").should_not be_nil
+      parse(IF_ELSE).should_not be_nil
     end
 
     it "should parse function defintions" do
