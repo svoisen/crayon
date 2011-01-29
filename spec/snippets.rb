@@ -1,6 +1,7 @@
 module Crayon
 
   EMPTY_COMMENT = "# \n"
+  BLOCK_COMMENT = "#\n# hello\n# goodbye\n#"
   COMMENT = "# Hello world!"
   VAR_ASSIGN = "set x to 10"
   ARRAY_ASSIGN = "set a to (1, 2, 3, 4, 5, 6, 7)"
@@ -12,6 +13,7 @@ module Crayon
   LOOP = "repeat i from 0 to 10\nend"
   WHILE_LOOP = "repeat while x < 10\nend"
   IF = "if x < 10\nend"
+  IF_ELSE = "if x ≥ y\nprint y\nelse\nprintx\nend"
   OBJECT_PROPERTY = "print length of list"
   LIST_ITEM_NUMBER = "print item 5 of list"
   LIST_ITEM_VAR = "print item i of list"

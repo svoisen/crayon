@@ -19,15 +19,15 @@ module Crayon
     end
 
     it "should generate basic function calls" do
-      generate(SIMPLE_FUNC_CALL).should == "print({__default:y})"
+      generate(SIMPLE_FUNC_CALL).should == "print({__default:y});"
     end
 
     it "should generate variable assignments" do
-      generate(VAR_ASSIGN).should == "var x:* = 10"
+      generate(VAR_ASSIGN).should == "var x:* = 10;"
     end
 
     it "should generate list assignements" do
-      generate(ARRAY_ASSIGN).should == "var a:* = [1,2,3,4,5,6,7]"
+      generate(ARRAY_ASSIGN).should == "var a:* = [1,2,3,4,5,6,7];"
     end
 
     it "should generate basic if statements" do
@@ -39,11 +39,11 @@ module Crayon
     end
 
     it "should generate code to access list items by number" do
-      generate(LIST_ITEM_NUMBER).should == "list[5]"
+      generate(LIST_ITEM_NUMBER).should == "print({__default:list[5]});"
     end
 
     it "should generate code to access list items by variable" do
-      generate(LIST_ITEM_VAR).should == "list[i]"
+      generate(LIST_ITEM_VAR).should == "print({__default:list[i]});"
     end
 
   end

@@ -16,14 +16,10 @@ module Crayon
       include Lists
 
       rule script
-        # Comments consume newlines (since a comment is a # followed by any character up to a newline), so consider
-        # them as a special case compared to statements
-        newline* first_statement:statement remaining_statements:(newline statement)* newline* <Script>
+        newline* statement remaining_statements:(newline statement)* newline* <Script>
         {
           def statements
-            #statement = !(defined? first_statement.statement).nil? ? [first_statement.statement] : []
-            statement = [first_statement]
-            statement + remaining_statements.elements.map{|s| !(defined? s.statement).nil? ? s.statement : nil}.compact
+            [statement] + remaining_statements.elements.map{|s| s.statement}
           end
         }
       end
@@ -93,7 +89,7 @@ module Crayon
       end
 
       rule comment
-        '#' newline / '#' (!newline .)+ (newline / !.) 
+        '#' (!newline .)* <Comment>
       end
 
       rule space

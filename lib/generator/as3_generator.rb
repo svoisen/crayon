@@ -22,10 +22,10 @@ module Crayon
         var = chain.first
 
         if in_scope?(var)
-          "#{varprop} = #{value}"
+          "#{varprop} = #{value};"
         elsif chain.length == 1
           add_to_scope(var)
-          "var #{var}:* = #{value}"
+          "var #{var}:* = #{value};"
         else
           raise SyntaxError, "Access of undefined variable #{var}"
         end
@@ -93,7 +93,7 @@ module Crayon
       end
 
       def call(function_name, arglist)
-        "#{function_name}(#{arglist})"
+        "#{function_name}(#{arglist});"
       end
 
       def arglist(args)

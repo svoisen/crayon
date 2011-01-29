@@ -23,7 +23,7 @@ module Crayon
           prefix = ''
           (level * @tab_width).times {prefix << ' '}
           code.map do |block| 
-            block.split("\n").map{|line| prefix + line}.join("\n")
+            block.split("\n").map{|line| line.length == 0 ? nil : prefix + line}.compact.join("\n")
           end
         end
 

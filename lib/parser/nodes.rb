@@ -139,5 +139,11 @@ module Crayon
         generator.number(value)
       end
     end
+
+    class Comment < Node
+      def codegen(generator)
+        ""
+      end
+    end
   end
 end

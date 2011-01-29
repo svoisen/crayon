@@ -4,7 +4,7 @@
 # A sample Crayon program that draws rows of
 # randomly colored dots across the canvas.
 #
-# Copyright (C) Sean Voisen
+# Copyright (C) 2011 Sean Voisen
 #
 
 set x to 10 

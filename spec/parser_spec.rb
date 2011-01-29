@@ -17,7 +17,7 @@ module Crayon
     end
 
     it "should allow block comments" do
-      parse("# hello\n\n# goodbye").should_not be_nil
+      parse(BLOCK_COMMENT).should_not be_nil
     end
 
     it "should allow comments" do
@@ -69,7 +69,7 @@ module Crayon
     end
 
     it "should parse if ... else statements" do
-      parse("if x ≥ y\nprint y\nelse\nprint x\nend").should_not be_nil
+      parse("IF_ELSE").should_not be_nil
     end
 
     it "should parse function defintions" do
