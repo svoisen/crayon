@@ -11,7 +11,7 @@ module Crayon
         {
           def args
             args = {arg.identifier => arg.expression}
-            args.merge!({"__default" => default_arg.expression}) if defined? default_arg
+            args.merge!({"__default" => default_arg.expression}) if defined? default_arg.expression
             remaining_args.elements.each {|e| args.merge!({e.arg.identifier => e.arg.expression})}
             args
           end
@@ -23,7 +23,7 @@ module Crayon
         {
           def args
             args = {arg.identifier => arg.expression}
-            args.merge!({"__default" => default_arg.expression}) if defined? default_arg
+            args.merge!({"__default" => default_arg.expression}) if defined? default_arg.expression
             remaining_args.elements.each {|e| args.merge!({e.argument.identifier => e.argument.expression})}
             args
           end

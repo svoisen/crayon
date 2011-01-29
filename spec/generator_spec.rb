@@ -46,5 +46,9 @@ module Crayon
       generate(LIST_ITEM_VAR).should == "print({__default:list[i]});"
     end
 
+    it "should generate function calls without default parameters" do
+      generate(FUNC_CALL_NO_DEFAULT).should == "draw_circle({center:[50,50]});"
+    end
+
   end
 end
