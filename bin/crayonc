@@ -4,15 +4,14 @@
 #   Compiler for the Crayon programming language.
 #
 # == Usage
-#   crayonc.rb myscript.cyn
-#   crayonc.rb -f abs foo.cyn
-#   crayonc.rb --format abc bar.cyn
+#   crayonc.rb myscript.crayon
 #   
 # == Options
 #   -h, --help        Displays help message
 #   -v, --version     Displays the version
 #   -k, --keep-temp   Keep temporary files 
 #   -V, --verbose     Verbose output
+#   --with-mxmlc      Specify the location of the mxmlc compiler
 #
 # == Author
 #   Sean Voisen
@@ -56,12 +55,12 @@ module Crayon
     def run
       begin
         if parsed_options? && arguments_valid?
-          puts "Compilation started at #{DateTime.now}\n\n" if @options.verbose
+          puts "Compilation started at #{DateTime.now}\n" if @options.verbose
 
           process_arguments
           process_command
 
-          puts "\n\nCompilation finished at #{DateTime.now}" if @options.verbose
+          puts "Compilation finished at #{DateTime.now}" if @options.verbose
         end
       rescue InvalidArgumentError => e
         puts e
@@ -89,6 +88,10 @@ module Crayon
 
         opts.on('-V', '--verbose') do 
           @options.verbose = true
+        end
+
+        opts.on('--with-mxmlc [PATH]') do |path|
+          @options.mxmlc_path = path
         end
 
         opts.parse!(@arguments) rescue return false
@@ -119,7 +122,11 @@ module Crayon
 
         code = IO.read(@source)
         File.open(outname + '.as', 'w') {|f| f.write(compile(filename, code))}
-        `mxmlc -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3lib/bin #{outname}.as`
+        `mxmlc -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3lib/bin #{outname}.as -o #{outname}.swf -debug=true -static-link-runtime-shared-libraries=true`
+
+        unless @options.keep_temp
+          File.delete("#{outname}.as")
+        end
       end
 
       def compile(name, code)
