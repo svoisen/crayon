@@ -13,6 +13,18 @@ The same program can also be written in multiline format:
       center as (100, 100)
     end
 
+Drawing 100 randomly placed circles requires only a little more work
+
+    repeat 100 times
+      set x to random with min as 0, max as width of canvas
+      set y to random with min as 0, max as height of canvas
+      draw "circle" with 
+        color as "red"
+        radius as 10
+        center as (x, y)
+      end
+    end
+
 Language Features
 -----------------
 
@@ -35,3 +47,10 @@ Crayon includes a traditional command line compiler for those who wish to forgo 
 The compiler supports a limited set of advanced options. To get a complete list of the compiler options, use the built-in help:
 
     crayonc -h
+
+How It Works
+------------
+
+### The Compiler
+
+The Crayon compiler is actually a source-to-source translator written in the Ruby programming language. Crayon source code is translated into ActionScript 3, which is in turn compiled using traditional ActionScript compilation tools (mxmlc or asc). This means that the focus of Crayon is on language ease and simplicity, not necessarily, producing optimized bytecode. Nevertheless, the goal of the translator/compiler is to produce as optimal AS3 output as possible given the constraints of the features of the Crayon language - named parameters, dynamic typing, etc.
