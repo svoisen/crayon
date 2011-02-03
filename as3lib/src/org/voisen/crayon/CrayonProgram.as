@@ -5,6 +5,8 @@ package org.voisen.crayon
   import flash.events.Event;
   import flash.geom.Point;
 
+  import org.voisen.crayon.color.Colors;
+
   public class CrayonProgram extends Sprite
   {
     protected var canvas:Object;
@@ -24,7 +26,7 @@ package org.voisen.crayon
       setupParams( "shape", params );
 
       var g:Graphics = graphics;
-      g.beginFill( params.color || 0x000000 );
+      g.beginFill( (params.color is String ? Colors.getColorValue( params.color ) : params.color) || 0x000000 );
       switch( params.shape )
       {
         case "circle":
