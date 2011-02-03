@@ -1,0 +1,21 @@
+#
+# random_circles.crayon
+#
+# Draws 100 randomly placed circles.
+#
+# Copyright (C) 2011 Sean Voisen.
+#
+
+function draw_circle uses center
+  draw "circle" with
+    radius as 10
+    color as "cornflower_blue"
+    center as center
+  end
+end
+
+repeat 100 times
+  set x to random with min as 0, max as width of canvas
+  set y to random with min as 0, max as height of canvas
+  draw_circle with center as (x, y)
+end

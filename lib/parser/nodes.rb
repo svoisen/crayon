@@ -40,6 +40,12 @@ module Crayon
       end
     end
 
+    class InlineCall < Node
+      def codegen(generator)
+        generator.call function.value, inline_arglist.codegen(generator)
+      end
+    end
+
     class Assignment < Node
       def codegen(generator)
         generator.assign varprop.codegen(generator), expression.codegen(generator)
@@ -60,7 +66,7 @@ module Crayon
 
     class CountLoop < Node
       def codegen(generator)
-        generator.loop((!defined? counter or counter.varprop.empty?) ? "__i" : counter.varprop.codegen(generator),
+        generator.loop((!defined? counter or !defined? counter.varprop) ? "__i" : counter.varprop.codegen(generator),
                        (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
                        i_end.codegen(generator), 
                        (defined? i_start and !i_start.empty?), 

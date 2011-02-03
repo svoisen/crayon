@@ -36,6 +36,14 @@ module Crayon
       parse(ARRAY_ASSIGN).should_not be_nil
     end
 
+    it "should parse equation assignments" do
+      parse(EQUATION_ASSIGN).should_not be_nil
+    end
+
+    it "should parse function result assignments" do
+      parse(FUNC_RESULT_ASSIGN).should_not be_nil
+    end
+
     it "should parse simple function calls" do
       parse(SIMPLE_FUNC_CALL).should_not be_nil
     end

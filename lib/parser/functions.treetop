@@ -3,19 +3,15 @@ module Crayon
 
     grammar Functions
       rule call
-        function:identifier space arglist <Call>
+        function:identifier space arglist <Call> 
+      end
+
+      rule inline_call
+        function:identifier space inline_arglist <InlineCall>
       end
 
       rule arglist
-        default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
-        {
-          def args
-            args = {arg.identifier => arg.expression}
-            args.merge!({"__default" => default_arg.expression}) if defined? default_arg.expression
-            remaining_args.elements.each {|e| args.merge!({e.arg.identifier => e.arg.expression})}
-            args
-          end
-        } /
+        inline_arglist /
         default_arg:(expression space)? "with" newline 
           arg:argument newline
           remaining_args:(argument newline)*
@@ -32,6 +28,18 @@ module Crayon
         {
           def args
             {"__default" => default_arg}
+          end
+        }
+      end
+
+      rule inline_arglist
+        default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
+        {
+          def args
+            args = {arg.identifier => arg.expression}
+            args.merge!({"__default" => default_arg.expression}) if defined? default_arg.expression
+            remaining_args.elements.each {|e| args.merge!({e.arg.identifier => e.arg.expression})}
+            args
           end
         }
       end

@@ -38,6 +38,10 @@ module Crayon
       generate(WHILE_LOOP).should == "while(x < 10)\n{\n\n}"
     end
 
+    it "should generate simple loops" do
+      generate(SIMPLE_LOOP).should == "for(var __i:int = 0; __i < 10; __i++)\n{\n\n}"
+    end
+
     it "should generate code to access list items by number" do
       generate(LIST_ITEM_NUMBER).should == "print({__default:list[5]});"
     end

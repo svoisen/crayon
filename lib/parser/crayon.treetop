@@ -25,11 +25,11 @@ module Crayon
       end
 
       rule statement
-        comment / assignment / conditional / loop / function / event / call
+        comment / assignment / conditional / loop / function / event / call 
       end
 
       rule expression
-        object !(space? operator) <Object> / comparison / equation 
+        inline_call / object !(space? operator) <Object> / comparison / equation
       end
 
       rule object
@@ -45,11 +45,11 @@ module Crayon
       end
 
       rule comparison
-        object space? compareop space? expression <Comparison>
+        object space? !keyword compareop space? expression <Comparison>
       end
 
       rule equation
-        object space? mathop space? expression <Equation>
+        object space? !keyword mathop space? expression <Equation>
       end
 
       rule operator

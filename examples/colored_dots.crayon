@@ -11,15 +11,15 @@ set x to 10
 set y to 10 
 
 function draw_dot uses center
-  draw circle with
+  do draw "circle" with
     radius as 10
     color as random with min as 0, max as 0xFFFFFF
     center as center
   end
 end
 
-on frame do
-  draw_dot with center as (x, y)
+on frame
+  do draw_dot with center as (x, y)
   
   if x + 20 > width of canvas
     set x to 0
