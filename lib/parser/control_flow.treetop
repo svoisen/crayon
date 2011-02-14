@@ -36,7 +36,7 @@ module Crayon
       rule iff
         "if" space condition:expression newline
           body:(statement newline)* 
-          elsif:elseif*
+          elseif:elseif?
           els:else?
         "end" <If>
         {
@@ -47,8 +47,9 @@ module Crayon
       end
 
       rule elseif
-        "else if" space condition:expression newline
-          body:(statement newline)* <ElseIf>
+        "else" space "if" space condition:expression newline
+          body:(statement newline)* 
+         elseif:elseif? <ElseIf>
         {
           def statements
             body.elements.map {|s| s.statement}

@@ -38,6 +38,14 @@ module Crayon
       generate(IF_ELSE).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse\n{\n  print({__default:x});\n}"
     end
 
+    it "should generate if ... else if statements" do
+      generate(IF_ELSE_IF).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse if(x < y)\n{\n  print({__default:x});\n}"
+    end
+
+    it "should generate if ... else if ... else if statements" do
+      generate(IF_ELSE_IF_ELSE_IF).should == "if(x > y)\n{\n  print({__default:x});\n}\nelse if(x < y)\n{\n  print({__default:y});\n}\nelse if(x == y)\n{\n  print({__default:0});\n}"
+    end
+
     it "should generate while loops" do
       generate(WHILE_LOOP).should == "while(x < 10)\n{\n\n}"
     end

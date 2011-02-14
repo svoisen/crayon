@@ -126,13 +126,23 @@ module Crayon
       def codegen(generator, terminate=false)
         code = generator.if condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
         if defined? els and !els.empty?
-          code += els.codegen(generator, true)
+          code += els.codegen(generator)
+        end
+        if defined? elseif and !elseif.empty?
+          code += elseif.codegen(generator)
         end
         code
       end
     end
 
     class ElseIf < Node
+      def codegen(generator, terminate=false)
+        code = generator.elseif condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+        if defined? elseif and !elseif.empty?
+          code += elseif.codegen(generator)
+        end
+        code
+      end
     end
 
     class Else < Node

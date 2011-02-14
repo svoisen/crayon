@@ -84,6 +84,16 @@ module Crayon
         ])
       end
 
+      def elseif(condition, statements)
+        format([
+          "",
+          "else if(#{condition})",
+          "{",
+          format(statements, 1),
+          "}"
+        ])
+      end
+
       def loop(i, i_start, i_end, inclusive, statements)
         format([
           "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
@@ -165,6 +175,7 @@ module Crayon
           case op
           when "≤" then "<="
           when "≥" then ">="
+          when "=" then "=="
           else op
           end
         end
