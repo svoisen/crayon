@@ -10,7 +10,7 @@ module Crayon
 
   describe Generator::AS3Generator do
     def generate(code)
-      @parser.parse(code).statements.first.codegen(@generator)
+      @parser.parse(code).statements.first.codegen(@generator, true)
     end
 
     before(:all) do
@@ -26,12 +26,16 @@ module Crayon
       generate(VAR_ASSIGN).should == "var x:* = 10;"
     end
 
-    it "should generate list assignements" do
+    it "should generate list assignments" do
       generate(ARRAY_ASSIGN).should == "var a:* = [1,2,3,4,5,6,7];"
     end
 
     it "should generate basic if statements" do
       generate(IF).should == "if(x < 10)\n{\n\n}"
+    end
+
+    it "should generate if else statements" do
+      generate(IF_ELSE).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse\n{\n  print({__default:x});\n}"
     end
 
     it "should generate while loops" do

@@ -13,19 +13,19 @@ module Crayon
         @functions = Array.new
       end
 
-      def generate(expressions)
-        preamble << constructor(expressions) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3) << conclusion
+      def generate(statements)
+        preamble << constructor(statements) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3) << conclusion
       end
 
-      def assign(varprop, value)
+      def assign(varprop, value, terminate)
         chain = varprop.split('.')
         var = chain.first
 
         if in_scope?(var)
-          "#{varprop} = #{value};"
+          "#{varprop} = #{value}" + (terminate ? ";" : "")
         elsif chain.length == 1
           add_to_scope(var)
-          "var #{var}:* = #{value};"
+          "var #{var}:* = #{value}" + (terminate ? ";" : "")
         else
           raise SyntaxError, "Access of undefined variable #{var}"
         end
@@ -53,8 +53,8 @@ module Crayon
         return ""
       end
 
-      def array(items)
-        "[" + items.join(",") + "]"
+      def array(items, terminate)
+        "[" + items.join(",") + "]" + (terminate ? ";" : "")
       end
 
       def array_item(index, array)
@@ -65,35 +65,45 @@ module Crayon
         name
       end
 
-      def if(condition, expressions)
+      def if(condition, statements)
         format([
           "if(#{condition})",
           "{",
-          format(expressions, 1),
+          format(statements, 1),
           "}"
         ])
       end
 
-      def loop(i, i_start, i_end, inclusive, expressions)
+      def else(statements)
+        format([
+          "",
+          "else",
+          "{",
+          format(statements, 1),
+          "}"
+        ])
+      end
+
+      def loop(i, i_start, i_end, inclusive, statements)
         format([
           "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
           "{",
-          format(expressions, 1),
+          format(statements, 1),
           "}"
         ])
       end
 
-      def while(condition, expressions)
+      def while(condition, statements)
         format([
           "while(#{condition})",
           "{",
-          format(expressions, 1),
+          format(statements, 1),
           "}"
         ])
       end
 
-      def call(function_name, arglist)
-        "#{function_name}(#{arglist});"
+      def call(function_name, arglist, terminate)
+        "#{function_name}(#{arglist})" + (terminate ? ";" : "")
       end
 
       def arglist(args)
@@ -134,11 +144,11 @@ module Crayon
          ])      
         end
 
-        def constructor(expressions)
+        def constructor(statements)
           format([
             "public function #{program_name}()",
             "{",
-            format(expressions, 1),
+            format(statements, 1),
             "}",
           ], 3)
         end
