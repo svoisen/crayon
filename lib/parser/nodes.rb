@@ -54,7 +54,7 @@ module Crayon
 
     class InlineCall < Node
       def codegen(generator, terminate=false)
-        generator.call function.value, inline_arglist.codegen(generator)
+        generator.call function.value, inline_arglist.codegen(generator), terminate
       end
     end
 

@@ -41,7 +41,7 @@ module Crayon
     end
 
     it "should parse function result assignments" do
-      parse(FUNC_RESULT_ASSIGN).should_not be_nil
+      parse(FUNC_RETURN_ASSIGN).should_not be_nil
     end
 
     it "should parse simple function calls" do

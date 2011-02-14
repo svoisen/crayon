@@ -66,5 +66,9 @@ module Crayon
       generate(FUNC_CALL_NO_DEFAULT).should == "draw_circle({center:[50,50]});"
     end
 
+    it "should generate code to assign function results to variables" do
+      generate(FUNC_RETURN_ASSIGN).should == "var result:* = random({max:100,min:0});"
+    end
+
   end
 end
