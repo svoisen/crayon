@@ -25,7 +25,7 @@ module Crayon
       end
 
       rule statement
-        comment / assignment / conditional / loop / function / event / call 
+        comment / assignment / conditional / loop / function / start_event / stop_event / call 
       end
 
       rule expression
@@ -74,7 +74,7 @@ module Crayon
 
       rule identifier
         # This can be generated the same as a variable if need be
-        !keyword [a-zA-Z] [\w]* <Variable>
+        !(keyword (space / newline)) [a-zA-Z] [\w]* <Variable>
         {
           def identifier
             text_value

@@ -2,10 +2,12 @@ module Crayon
   module Parser
 
     grammar Events
-      rule event
-        "on" space event_name space "do" newline
-          body:(statement newline)*
-        "end"
+      rule start_event
+        "do" space function:identifier space "on" space event_name
+      end
+
+      rule stop_event
+        "stop" space "doing" space function:identifier space "on" space event_name
       end
 
       rule event_name

@@ -80,6 +80,10 @@ module Crayon
       parse(IF).should_not be_nil
     end
 
+    it "should parse inline if statements" do
+      parse(INLINE_IF).should_not be_nil
+    end
+
     it "should parse if ... else statements" do
       parse(IF_ELSE).should_not be_nil
     end

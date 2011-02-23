@@ -137,6 +137,10 @@ module Crayon
         "\"#{value}\""
       end
 
+      def boolean(value)
+        value
+      end
+
       private
 
         def preamble

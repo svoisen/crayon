@@ -22,7 +22,7 @@ module Crayon
       end
 
       rule boolean
-        "true" / "false"
+        "false" <Boolean> / "true" <Boolean>
       end
 
       rule property

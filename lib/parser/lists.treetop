@@ -3,7 +3,7 @@ module Crayon
 
     grammar Lists
       rule list
-        "(" space? item:expression tail:(space? "," space? item:expression)* space? ")" <List>
+        "[" space? item:expression tail:(space? "," space? item:expression)* space? "]" <List>
         {
           def items
             [item] + tail.elements.map{|e| e.item}

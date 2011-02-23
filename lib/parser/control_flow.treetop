@@ -43,7 +43,8 @@ module Crayon
           def statements
             body.elements.map {|s| s.statement}
           end
-        }
+        } /
+        expression space "if" space condition:expression <InlineIf> 
       end
 
       rule elseif

@@ -34,6 +34,10 @@ module Crayon
       generate(IF).should == "if(x < 10)\n{\n\n}"
     end
 
+    it "should generate inline if statements" do
+      generate(INLINE_IF).should == "if(true)\n{\n  print({__default:\"hello\"});\n}"
+    end
+
     it "should generate if else statements" do
       generate(IF_ELSE).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse\n{\n  print({__default:x});\n}"
     end

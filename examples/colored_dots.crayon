@@ -11,26 +11,26 @@ set x to 10
 set y to 10 
 
 function draw_dot uses center
-  do draw "circle" with
+  draw "circle" with
     radius as 10
     color as random with min as 0, max as 0xFFFFFF
     center as center
   end
 end
 
-on frame
-  do draw_dot with center as (x, y)
+function draw_dots
+  draw_dot with center as [x, y]
   
   if x + 20 > width of canvas
     set x to 0
+    set y to y + 20
 
-    if y + 20 > height of canvas
-      on frame do nothing
-    else
-      set y to y + 20
+    if y > height of canvas
+      stop doing draw_dots on frame
     end
-
   else
     set x to x + 20
   end
 end
+
+do draw_dots on frame

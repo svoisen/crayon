@@ -135,6 +135,12 @@ module Crayon
       end
     end
 
+    class InlineIf < Node
+      def codegen(generator, terminate=false)
+        generator.if condition.codegen(generator), expression.codegen(generator, true)
+      end
+    end
+
     class ElseIf < Node
       def codegen(generator, terminate=false)
         code = generator.elseif condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
@@ -154,6 +160,12 @@ module Crayon
     class String < Node
       def codegen(generator, terminate=false)
         generator.string value
+      end
+    end
+
+    class Boolean < Node
+      def codegen(generator, terminate=false)
+        generator.boolean value
       end
     end
 
