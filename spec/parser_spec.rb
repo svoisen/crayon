@@ -96,6 +96,10 @@ module Crayon
       parse(IF_ELSE_IF_ELSE_IF).should_not be_nil
     end
 
+    it "should parse unless statements" do
+      parse(UNLESS).should_not be_nil
+    end
+
     it "should parse function defintions" do
       parse("function hello_world uses x, y\nend").should_not be_nil
     end
