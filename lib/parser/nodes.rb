@@ -157,6 +157,18 @@ module Crayon
       end
     end
 
+    class Unless < Node
+      def codegen(generator, terminate=false)
+        generator.unless condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+      end
+    end
+
+    class InlineUnless < Node
+      def codegen(generator, terminate=false)
+        generator.unless condition.codegen(generator), expression.codegen(generator, true)
+      end
+    end
+
     class String < Node
       def codegen(generator, terminate=false)
         generator.string value

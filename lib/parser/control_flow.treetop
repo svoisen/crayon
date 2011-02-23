@@ -72,6 +72,12 @@ module Crayon
         "unless" space condition:expression newline
           body:(statement newline)*
         "end" <Unless>
+        {
+          def statements
+            body.elements.map {|s| s.statement}
+          end
+        } /
+        expression space "unless" space condition:expression <InlineUnless> 
       end
     end
 

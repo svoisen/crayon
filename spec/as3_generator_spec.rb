@@ -50,6 +50,14 @@ module Crayon
       generate(IF_ELSE_IF_ELSE_IF).should == "if(x > y)\n{\n  print({__default:x});\n}\nelse if(x < y)\n{\n  print({__default:y});\n}\nelse if(x == y)\n{\n  print({__default:0});\n}"
     end
 
+    it "should generate unless statements" do
+      generate(UNLESS).should == "if(!(x < 10))\n{\n\n}"
+    end
+
+    it "should generate inline unless statements" do
+      generate(INLINE_UNLESS).should == "if(!(true))\n{\n  print({__default:\"hello\"});\n}"
+    end
+
     it "should generate while loops" do
       generate(WHILE_LOOP).should == "while(x < 10)\n{\n\n}"
     end

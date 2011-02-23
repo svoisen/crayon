@@ -65,6 +65,15 @@ module Crayon
         name
       end
 
+      def unless(condition, statements)
+        format([
+          "if(!(#{condition}))",
+          "{",
+          format(statements, 1),
+          "}"
+        ])
+      end
+
       def if(condition, statements)
         format([
           "if(#{condition})",
