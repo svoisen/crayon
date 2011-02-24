@@ -82,5 +82,13 @@ module Crayon
       generate(FUNC_RETURN_ASSIGN).should == "var result:* = random({max:100,min:0});"
     end
 
+    it "should generate code for functions without parameters" do
+      @parser.parse(FUNCTION_WITHOUT_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world():*\n{\n\n  print({__default:\"hello world\"});\n}"
+    end
+
+    it "should generate code for functions with parameters" do
+      @parser.parse(FUNCTION_WITH_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
+    end
+
   end
 end

@@ -35,16 +35,20 @@ module Crayon
         "#{first} #{map_op(op)} #{second}"
       end
 
-      def function(name, params = [], body = [])
+      def function(name, params = [], body = [], closure=false)
+        code = format([
+                 (closure ? "" : "private ") + "function #{name}(#{"params:Object" if params != []}):*",
+                 "{",
+                 format(params.map{|name| add_to_scope(name); "var #{name}:* = params.#{name};"}, 1),
+                 format(body, 1),
+                 "}"
+               ])
+
+        return code if closure
+
         start_scope
         @functions.push(
-          format([
-            "private function #{name}(params:Object):void",
-            "{",
-            format(params.map{|name| add_to_scope(name); "var #{name}:* = params.#{name};"}, 1),
-            format(body, 1),
-            "}"
-          ])
+          code  
         )
         end_scope
 

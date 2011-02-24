@@ -117,8 +117,9 @@ module Crayon
     end
 
     class Function < Node
-      def codegen(generator, terminate=false)
-        generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator)}
+      # TODO: Closures should probably be automatically determined somehow ...
+      def codegen(generator, terminate=false, closure=false)
+        generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}, closure
       end
     end
 

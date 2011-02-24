@@ -27,5 +27,7 @@ module Crayon
   LIST_ITEM_VAR = "print item i of list"
   START_EVENT = "do my_function on frame"
   STOP_EVENT = "stop doing my_function on frame"
+  FUNCTION_WITH_PARAMS = "function hello_world uses saying\nprint saying\nend"
+  FUNCTION_WITHOUT_PARAMS = "function hello_world\nprint \"hello world\"\nend"
 
 end

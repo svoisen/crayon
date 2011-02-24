@@ -104,8 +104,12 @@ module Crayon
       parse(UNLESS).should_not be_nil
     end
 
-    it "should parse function defintions" do
-      parse("function hello_world uses x, y\nend").should_not be_nil
+    it "should parse function defintions that have parameters" do
+      parse(FUNCTION_WITH_PARAMS).should_not be_nil
+    end
+
+    it "should parse function definitions that have no parameters" do
+      parse(FUNCTION_WITHOUT_PARAMS).should_not be_nil
     end
 
     it "should parse object properties" do

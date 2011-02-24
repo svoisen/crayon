@@ -60,6 +60,18 @@ module Crayon
           def statements
             body.elements.map {|s| s.statement}
           end
+        } /
+        "function" space name:identifier newline
+          body:(statement newline)*
+        "end" <Function>
+        {
+          def args
+            []
+          end
+
+          def statements
+            body.elements.map {|s| s.statement}
+          end
         }
       end
     end
