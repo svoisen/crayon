@@ -138,7 +138,7 @@ module Crayon
 
     class InlineIf < Node
       def codegen(generator, terminate=false)
-        generator.if condition.codegen(generator), expression.codegen(generator, true)
+        generator.if condition.codegen(generator), line_statement.codegen(generator, true)
       end
     end
 
@@ -167,6 +167,18 @@ module Crayon
     class InlineUnless < Node
       def codegen(generator, terminate=false)
         generator.unless condition.codegen(generator), expression.codegen(generator, true)
+      end
+    end
+
+    class EventStart < Node
+      def codegen(generator, terminate=false)
+        generator.add_listener function.codegen(generator), event_name.value
+      end
+    end
+
+    class EventStop < Node
+      def codegen(generator, terminate=false)
+        generator.remove_listener function.codegen(generator), event_name.value
       end
     end
 

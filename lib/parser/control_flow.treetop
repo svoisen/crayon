@@ -44,7 +44,7 @@ module Crayon
             body.elements.map {|s| s.statement}
           end
         } /
-        expression space "if" space condition:expression <InlineIf> 
+        line_statement space "if" space condition:expression <InlineIf> 
       end
 
       rule elseif

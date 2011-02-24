@@ -28,6 +28,10 @@ module Crayon
         comment / assignment / conditional / loop / function / start_event / stop_event / call 
       end
 
+      rule line_statement
+        assignment / start_event / stop_event / inline_call / object
+      end
+
       rule expression
         inline_call / object !(space? operator) <Object> / comparison / equation
       end

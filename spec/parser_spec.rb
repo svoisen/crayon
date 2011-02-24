@@ -124,6 +124,14 @@ module Crayon
       parse(LIST_ITEM_VAR).should_not be_nil
     end
 
+    it "should parse start handling events" do
+      parse(EVENT_START).should_not be_nil
+    end
+
+    it "should parse stop handling events" do
+      parse(EVENT_STOP).should_not be_nil
+    end
+
   end
 
 end

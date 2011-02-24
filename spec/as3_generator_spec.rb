@@ -90,5 +90,13 @@ module Crayon
       @parser.parse(FUNCTION_WITH_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
     end
 
+    it "should generate code to listen for events" do
+      generate(EVENT_START).should == "addEventListener(Event.ENTER_FRAME, my_function);"
+    end
+
+    it "should generate code to stop listening for events" do
+      generate(EVENT_STOP).should == "removeEventListener(Event.ENTER_FRAME, my_function);"
+    end
+
   end
 end

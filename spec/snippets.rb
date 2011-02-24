@@ -29,5 +29,7 @@ module Crayon
   STOP_EVENT = "stop doing my_function on frame"
   FUNCTION_WITH_PARAMS = "function hello_world uses saying\nprint saying\nend"
   FUNCTION_WITHOUT_PARAMS = "function hello_world\nprint \"hello world\"\nend"
+  EVENT_START = "do my_function on frame"
+  EVENT_STOP = "stop doing my_function on frame"
 
 end

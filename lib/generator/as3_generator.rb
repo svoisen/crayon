@@ -14,7 +14,7 @@ module Crayon
       end
 
       def generate(statements)
-        preamble << constructor(statements) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3) << conclusion
+        preamble << constructor(statements) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3, "\n\n") << conclusion
       end
 
       def assign(varprop, value, terminate)
@@ -125,6 +125,14 @@ module Crayon
         ])
       end
 
+      def add_listener(function, event_name)
+        "addEventListener(#{map_event(event_name)}, #{function});"
+      end
+
+      def remove_listener(function, event_name)
+        "removeEventListener(#{map_event(event_name)}, #{function});"
+      end
+
       def call(function_name, arglist, terminate)
         "#{function_name}(#{arglist})" + (terminate ? ";" : "")
       end
@@ -194,6 +202,15 @@ module Crayon
           when "≥" then ">="
           when "=" then "=="
           else op
+          end
+        end
+
+        def map_event(event_name)
+          case event_name
+          when "frame" then "Event.ENTER_FRAME"
+          when "mouse up" then "MouseEvent.MOUSE_UP"
+          when "mouse down" then "MouseEvent.MOUSE_DOWN"
+          else event_name
           end
         end
     end
