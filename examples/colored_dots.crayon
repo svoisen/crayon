@@ -18,18 +18,14 @@ function draw_dot uses center
   end
 end
 
-function draw_dots
+function draw_dots 
   draw_dot with center as [x, y]
-  
-  if x + 20 > width of canvas
-    set x to 0
-    set y to y + 20
+  set x to x + 20
 
-    if y > height of canvas
-      stop doing draw_dots on frame
-    end
-  else
-    set x to x + 20
+  if x > width of canvas
+    set x to 10
+    set y to y + 20
+    stop doing draw_dots on frame if y > height of canvas
   end
 end
 

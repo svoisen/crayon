@@ -54,7 +54,7 @@ module Crayon
       def function(name, params = [], body = [], closure=false)
         start_scope
         code = format([
-                 (closure ? "" : "private ") + "function #{name}(#{"params:Object" if params != []}):*",
+                 (closure ? "" : "private ") + "function #{name}(params:Object):*",
                  "{",
                  format(params.map{|name| add_to_scope(name); "var #{name}:* = params.#{name};"}, 1),
                  format(body, 1),
