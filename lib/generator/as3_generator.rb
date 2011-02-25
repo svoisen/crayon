@@ -7,25 +7,41 @@ module Crayon
     class SyntaxError < RuntimeError; end
 
     class AS3Generator < BaseGenerator
+      attr_reader :functions
+      attr_reader :class_vars
+
       def initialize(program_name)
         super(program_name)
 
+        reset
+      end
+
+      def reset
         @functions = Array.new
+        @class_vars = Array.new
       end
 
       def generate(statements)
-        preamble << constructor(statements) << (@functions.length > 0 ? "\n\n" : "") << format(@functions, 3, "\n\n") << conclusion
+        preamble << format(@class_vars.map{|v| v[:declaration]}, 3) << (@class_vars.length > 0 ? "\n\n" : "") << 
+          constructor(@class_vars.map{|v| v[:initializer]} + statements) << (@functions.length > 0 ? "\n\n" : "") << 
+          format(@functions, 3, "\n\n") << conclusion
       end
 
       def assign(varprop, value, terminate)
         chain = varprop.split('.')
-        var = chain.first
+        var = map_var(chain.first)
 
         if in_scope?(var)
           "#{varprop} = #{value}" + (terminate ? ";" : "")
         elsif chain.length == 1
           add_to_scope(var)
-          "var #{var}:* = #{value}" + (terminate ? ";" : "")
+          if @scope_stack.length == 1
+            @class_vars.push({:declaration => "private var #{var}:*;", :initializer => "#{var} = #{value};"})
+            # Return empty string in this case so class var is not added inline
+            ""
+          else
+            "var #{var}:* = #{value}" + (terminate ? ";" : "")
+          end
         else
           raise SyntaxError, "Access of undefined variable #{var}"
         end
@@ -36,6 +52,7 @@ module Crayon
       end
 
       def function(name, params = [], body = [], closure=false)
+        start_scope
         code = format([
                  (closure ? "" : "private ") + "function #{name}(#{"params:Object" if params != []}):*",
                  "{",
@@ -43,18 +60,15 @@ module Crayon
                  format(body, 1),
                  "}"
                ])
+        end_scope
 
         return code if closure
 
-        start_scope
-        @functions.push(
-          code  
-        )
-        end_scope
+        @functions.push(code)
 
         # Return empty string to avoid function being
         # placed in constructor body
-        return ""
+        ""
       end
 
       def array(items, terminate)
@@ -66,7 +80,7 @@ module Crayon
       end
 
       def var(name)
-        name
+        map_var(name)
       end
 
       def unless(condition, statements)
@@ -108,12 +122,15 @@ module Crayon
       end
 
       def loop(i, i_start, i_end, inclusive, statements)
-        format([
+        start_scope
+        code = format([
           "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
           "{",
           format(statements, 1),
           "}"
         ])
+        end_scope
+        code
       end
 
       def while(condition, statements)
@@ -169,6 +186,8 @@ module Crayon
             "package",
             "{",
             "  import flash.geom.Point;",
+            "  import flash.events.Event;",
+            "  import flash.events.MouseEvent;",
             "",
             "  import org.voisen.crayon.CrayonProgram;",
             "",
@@ -180,12 +199,15 @@ module Crayon
         end
 
         def constructor(statements)
-          format([
+          start_scope
+          code = format([
             "public function #{program_name}()",
             "{",
             format(statements, 1),
             "}",
           ], 3)
+          end_scope
+          code
         end
 
         def conclusion
@@ -211,6 +233,14 @@ module Crayon
           when "mouse up" then "MouseEvent.MOUSE_UP"
           when "mouse down" then "MouseEvent.MOUSE_DOWN"
           else event_name
+          end
+        end
+
+        def map_var(var)
+          case var
+          when "x" then "__x"
+          when "y" then "__y"
+          else var
           end
         end
     end

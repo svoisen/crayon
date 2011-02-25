@@ -10,6 +10,7 @@ module Crayon
 
   describe Generator::AS3Generator do
     def generate(code)
+      @generator.reset
       @parser.parse(code).statements.first.codegen(@generator, true)
     end
 
@@ -19,19 +20,23 @@ module Crayon
     end
 
     it "should generate basic function calls" do
-      generate(SIMPLE_FUNC_CALL).should == "print({__default:y});"
+      generate(SIMPLE_FUNC_CALL).should == "print({__default:__y});"
     end
 
     it "should generate variable assignments" do
-      generate(VAR_ASSIGN).should == "var x:* = 10;"
+      generate(VAR_ASSIGN)
+      @generator.class_vars.first[:initializer].should == "__x = 10;"
+      @generator.class_vars.first[:declaration].should == "private var __x:*;"
     end
 
     it "should generate list assignments" do
-      generate(ARRAY_ASSIGN).should == "var a:* = [1,2,3,4,5,6,7];"
+      generate(ARRAY_ASSIGN)
+      @generator.class_vars.first[:initializer].should == "a = [1,2,3,4,5,6,7];"
+      @generator.class_vars.first[:declaration].should == "private var a:*;"
     end
 
     it "should generate basic if statements" do
-      generate(IF).should == "if(x < 10)\n{\n\n}"
+      generate(IF).should == "if(__x < 10)\n{\n\n}"
     end
 
     it "should generate inline if statements" do
@@ -39,19 +44,19 @@ module Crayon
     end
 
     it "should generate if else statements" do
-      generate(IF_ELSE).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse\n{\n  print({__default:x});\n}"
+      generate(IF_ELSE).should == "if(__x >= __y)\n{\n  print({__default:__y});\n}\nelse\n{\n  print({__default:__x});\n}"
     end
 
     it "should generate if ... else if statements" do
-      generate(IF_ELSE_IF).should == "if(x >= y)\n{\n  print({__default:y});\n}\nelse if(x < y)\n{\n  print({__default:x});\n}"
+      generate(IF_ELSE_IF).should == "if(__x >= __y)\n{\n  print({__default:__y});\n}\nelse if(__x < __y)\n{\n  print({__default:__x});\n}"
     end
 
     it "should generate if ... else if ... else if statements" do
-      generate(IF_ELSE_IF_ELSE_IF).should == "if(x > y)\n{\n  print({__default:x});\n}\nelse if(x < y)\n{\n  print({__default:y});\n}\nelse if(x == y)\n{\n  print({__default:0});\n}"
+      generate(IF_ELSE_IF_ELSE_IF).should == "if(__x > __y)\n{\n  print({__default:__x});\n}\nelse if(__x < __y)\n{\n  print({__default:__y});\n}\nelse if(__x == __y)\n{\n  print({__default:0});\n}"
     end
 
     it "should generate unless statements" do
-      generate(UNLESS).should == "if(!(x < 10))\n{\n\n}"
+      generate(UNLESS).should == "if(!(__x < 10))\n{\n\n}"
     end
 
     it "should generate inline unless statements" do
@@ -59,7 +64,7 @@ module Crayon
     end
 
     it "should generate while loops" do
-      generate(WHILE_LOOP).should == "while(x < 10)\n{\n\n}"
+      generate(WHILE_LOOP).should == "while(__x < 10)\n{\n\n}"
     end
 
     it "should generate simple loops" do
@@ -79,7 +84,9 @@ module Crayon
     end
 
     it "should generate code to assign function results to variables" do
-      generate(FUNC_RETURN_ASSIGN).should == "var result:* = random({max:100,min:0});"
+      generate(FUNC_RETURN_ASSIGN)
+      @generator.class_vars.first[:initializer].should == "result = random({max:100,min:0});"
+      @generator.class_vars.first[:declaration].should == "private var result:*;"
     end
 
     it "should generate code for functions without parameters" do

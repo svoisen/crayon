@@ -1,10 +1,15 @@
 package org.voisen.crayon
 {
   import flash.display.Sprite;
+  import flash.display.Stage;
   import flash.display.Graphics;
-  import flash.events.Event;
-  import flash.geom.Point;
+  import flash.display.StageScaleMode;
+  import flash.display.StageAlign;
 
+  import flash.events.Event;
+
+  import flash.geom.Point;
+  
   import org.voisen.crayon.color.Colors;
 
   public class CrayonProgram extends Sprite
@@ -13,7 +18,8 @@ package org.voisen.crayon
 
     public function CrayonProgram()
     {
-      canvas = {width:stage.stageWidth, height:stage.stageHeight};
+      setupCanvas();
+      stage.addEventListener( Event.RESIZE, handleStageResize );
     }
 
     protected function clear():void
@@ -30,16 +36,18 @@ package org.voisen.crayon
       switch( params.shape )
       {
         case "circle":
-          if( !params.center )
-          {
-            params.center = [0, 0];
-          }
-
           g.drawCircle( params.center[0], params.center[1], params.radius || 0 );
+          break;
+
+        case "ellipse":
+          g.drawEllipse( params.center[0] || 0, params.center[1] || 0, params.width || 0, params.height || 0 );
           break;
 
         case "rectangle":
           g.drawRect( params.corner[0] || 0, params.corner[1] || 0, params.width || 0, params.height || 0 );
+          break;
+
+        case "line":
           break;
 
         default:
@@ -70,6 +78,16 @@ package org.voisen.crayon
       }
 
       return params;
+    }
+
+    private function setupCanvas():void
+    {
+      canvas = {width:stage.stageWidth,height:stage.stageHeight};
+    }
+
+    private function handleStageResize( event:Event ):void
+    {
+      setupCanvas();
     }
   }
 }
