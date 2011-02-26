@@ -1,7 +1,7 @@
 *.DS_Store
 *.swp
 *.swf
-as3lib/bin
+lib/as3/bin
 examples/*.as
 env/bin-debug
 env/.settings
