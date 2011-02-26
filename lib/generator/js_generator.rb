@@ -18,26 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'generator/base_generator'
+
 module Crayon
-  module Parser
+  module Generator
+    
+    class JSGenerator < BaseGenerator
 
-    grammar Events
-      rule start_event
-        "do" space function:identifier space "on" space event_name <EventStart>
+      def initialize(program_name)
+        super(program_name)
       end
 
-      rule stop_event
-        "stop" space "doing" space function:identifier space "on" space event_name <EventStop>
+      def generate(statements)
+        preamble << conclusion
       end
 
-      rule event_name
-        mouse_event / "frame"
-      end
+      private
 
-      rule mouse_event
-        "mouse" space "up" / "mouse" space "down"
-      end
+        def preamble
+          format([
+            "(function(window)",
+            "{",
+            "  #{program_name} = function(canvas)",
+            "  {",
+            "    this.initialize(canvas);"
+          ])
+        end
+
+        def conclusion
+          format([
+            "  }",
+            "  var p = #{program_name}.prototype = new CrayonProgram();",
+            "}(window));"
+          ])
+        end
+
     end
-
   end
 end

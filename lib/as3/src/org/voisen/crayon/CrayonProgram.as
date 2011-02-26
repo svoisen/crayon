@@ -61,13 +61,25 @@ package org.voisen.crayon
     protected function print(params:Object):void
     {
       setupParams( "output", params );
-
       trace( params.output );
     }
 
     protected function random(params:Object):Number
     {
+      setupParams( "max", params );
       return Math.random()*(params.max - params.min) + params.min;
+    }
+
+    protected function sin(params:Object):Number
+    {
+      setupParams( "value", params );
+      return Math.sin( params.value );
+    }
+
+    protected function cos(params:Object):Number
+    {
+      setupParams( "value", params );
+      return Math.cos( params.value );
     }
 
     private function setupParams( defaultParamName:String, params:Object ):Object

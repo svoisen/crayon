@@ -1,16 +1,40 @@
 #!/usr/bin/env ruby
 
+# Copyright (c) 2010-2011 Sean Voisen.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 # == Synopsis
 #   Compiler for the Crayon programming language.
 #
 # == Usage
-#   crayonc.rb myscript.crayon
+#   crayonc myscript.crayon
 #   
 # == Options
 #   -h, --help        Displays help message
 #   -v, --version     Displays the version
+#   -i, --input       Specify source input file name
+#   -o, --output      Specify output file name
+#   -f, --format      Specify output format (html or swf)
 #   -k, --keep-temp   Keep temporary files 
 #   -V, --verbose     Verbose output
+#
 #   --with-mxmlc      Specify the location of the mxmlc compiler
 #
 # == Author
@@ -29,16 +53,20 @@ require 'ostruct'
 require 'date'
 require 'treetop'
 
+require 'packager/swf_packager'
 require 'generator/as3_generator'
 require 'parser/crayon'
 
 module Crayon
 
   class InvalidArgumentError < RuntimeError; end
+  class InvalidOptionError < RuntimeError; end
   class ParserError < RuntimeError; end
 
   class Compiler
     VERSION = '0.0.1'
+
+    FORMATS = %w[swf html]
 
     attr_reader :options
 
@@ -50,17 +78,21 @@ module Crayon
       @options = OpenStruct.new
       @options.keep_temp = false
       @options.verbose = false
+      @options.format = "swf"
+      @options.mxmlc = "mxmlc"
     end
 
     def run
       begin
         if parsed_options? && arguments_valid?
-          puts "Compilation started at #{DateTime.now}\n" if @options.verbose
+
+          if @options.verbose
+            puts "Compiling file #{@arguments[0]} with options:"
+            puts "\tOutput format: #{@options.format}"
+          end
 
           process_arguments
           process_command
-
-          puts "Compilation finished at #{DateTime.now}" if @options.verbose
         end
       rescue InvalidArgumentError => e
         puts e
@@ -69,36 +101,49 @@ module Crayon
 
     private
 
+      # Parses options and returns true if no errors are found
       def parsed_options?
         opts = OptionParser.new
 
-        opts.on('-v', '--version') do  
+        opts.on('-v', '--version', "Print version and exit") do  
           print_version
           exit 0
         end
 
-        opts.on('-h', '--help') do
-          print_help
+        opts.on('-h', '--help', "Print help and exit") do
+          puts opts
           exit 0
         end
 
-        opts.on('-k', '--keep-temp') do
+        opts.on('-k', '--keep-temp', "Keep temporary files") do
           @options.keep_temp = true
         end
 
-        opts.on('-V', '--verbose') do 
+        opts.on('-f', '--format [FORMAT]', String, "Specify output format") do |format|
+          raise InvalidOptionError, "Invalid format output #{format}" unless FORMATS.include? format
+          @options.format = format
+        end
+
+        opts.on('-V', '--verbose', "Run verbosely") do 
           @options.verbose = true
         end
 
-        opts.on('--with-mxmlc [PATH]') do |path|
-          @options.mxmlc_path = path
+        opts.on('--with-mxmlc [PATH]', String, "Specify the path to mxmlc") do |path|
+          raise InvalidOptionError, "Cannot find mxmlc in path #{path}" unless File.directory? path and Dir.entries(path).include? 'mxmlc'
+          @options.mxmlc = path + "/mxmlc"
         end
 
-        opts.parse!(@arguments) rescue return false
+        begin
+          opts.parse!(@arguments) 
+        rescue RuntimeError => e
+          $stderr.puts e
+          return false
+        end
 
         true
       end
 
+      # Returns true if the arguments provided are valid
       def arguments_valid?
         unless @arguments.length == 1 
           raise InvalidArgumentError, "No source file specified"
@@ -111,56 +156,63 @@ module Crayon
         true
       end
 
+      # Process and set up arguments
       def process_arguments
         @source = @arguments[0]
       end
 
+      # Process and run command
       def process_command
-        filename = File.basename(@source).split('.').first
-        dirname = File.dirname(@source)
-        outname = dirname + '/' + filename 
+        program_name = File.basename(@source).split('.').first
+        program_dir = File.dirname(@source)
+        output_path = program_dir + '/' + program_name
+        output_ext = case @options.format
+                     when "swf" then ".as"
+                     when "html" then ".js"
+                     end
 
+        # Read source
         code = IO.read(@source)
-        File.open(outname + '.as', 'w') {|f| f.write(compile(filename, code))}
-        `mxmlc -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3lib/bin #{outname}.as -o #{outname}.swf -debug=true -static-link-runtime-shared-libraries=true`
-
-        unless @options.keep_temp
-          File.delete("#{outname}.as")
-        end
+        
+        # Compile and save to disk
+        compile(output_path + output_ext, program_name, @options.format, code)
+        
+        # Package
+        package(output_path + output_ext, output_path, @options.format)
       end
 
-      def compile(name, code)
-        generator = Generator::AS3Generator.new(name)
+      # Compile source provided as String in code and save to disk at output_path
+      def compile(output_path, program_name, format, code)
         parser = Parser::CrayonParser.new
+        generator = case format
+                    when "swf" then Generator::AS3Generator.new(program_name)
+                    when "html" then Generator::JSGenerator.new(program_name)
+                    end
 
         if node = parser.parse(code)
-          node.compile(generator)
+          compiled = node.compile(generator)
         else
           raise ParserError, parser.failure_reason
         end
+
+        # Write to disk at output_path
+        File.open(output_path, 'w') {|f| f.write compiled}
       end
 
-      def print_options
-        puts "Options:\n"
+      # Package compiled code in specified container format
+      def package(input_path, output_path, format)
+        packager = case format
+                   when "swf" then Packager::SWFPackager.new(@options.mxmlc, @options.keep_temp)
+                   when "html" then Packager::HTMLPackager.new
+                   end
 
-        @options.marshal_dump.each do |name, value|
-          puts "  #{name} = #{value}"
-        end
-      end
-
-      def print_help
-        print_version
-        RDoc::usage() # exits app
+        packager.package(input_path, output_path)
       end
 
       def print_version
         puts "#{File.basename(__FILE__)} #{VERSION}"
       end
 
-      def print_usage
-        # Print usage from above RDoc comments
-        RDoc::usage('usage')
-      end
   end
 end
 

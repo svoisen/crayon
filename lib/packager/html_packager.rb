@@ -19,25 +19,10 @@
 # THE SOFTWARE.
 
 module Crayon
-  module Parser
+  module Packager
 
-    grammar Events
-      rule start_event
-        "do" space function:identifier space "on" space event_name <EventStart>
-      end
-
-      rule stop_event
-        "stop" space "doing" space function:identifier space "on" space event_name <EventStop>
-      end
-
-      rule event_name
-        mouse_event / "frame"
-      end
-
-      rule mouse_event
-        "mouse" space "up" / "mouse" space "down"
-      end
+    class HTMLPackager
     end
-
+    
   end
 end

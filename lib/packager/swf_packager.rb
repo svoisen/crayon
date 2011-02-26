@@ -19,23 +19,23 @@
 # THE SOFTWARE.
 
 module Crayon
-  module Parser
+  module Packager
 
-    grammar Events
-      rule start_event
-        "do" space function:identifier space "on" space event_name <EventStart>
+    class SWFPackager
+      attr_accessor :mxmlc
+      attr_accessor :keep_temp
+
+      def initialize(mxmlc, keep_temp=false)
+        @mxmlc = mxmlc
+        @keep_temp = keep_temp
       end
 
-      rule stop_event
-        "stop" space "doing" space function:identifier space "on" space event_name <EventStop>
-      end
+      def package(input, output)
+        `#{mxmlc} -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3/bin #{input} -o #{output}.swf -debug=true -static-link-runtime-shared-libraries=true`
 
-      rule event_name
-        mouse_event / "frame"
-      end
-
-      rule mouse_event
-        "mouse" space "up" / "mouse" space "down"
+        unless @keep_temp
+          File.delete input
+        end
       end
     end
 
