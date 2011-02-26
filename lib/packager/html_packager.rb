@@ -22,6 +22,14 @@ module Crayon
   module Packager
 
     class HTMLPackager
+      attr_accessor :template
+
+      def initialize(template)
+        @template = template
+      end
+
+      def package(input, output)
+      end
     end
     
   end

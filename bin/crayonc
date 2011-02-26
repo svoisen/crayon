@@ -48,13 +48,14 @@ $: << File.expand_path(File.dirname(__FILE__)) + "/../lib"
 
 require 'rubygems'
 require 'optparse'
-require 'rdoc/usage'
 require 'ostruct'
 require 'date'
 require 'treetop'
 
 require 'packager/swf_packager'
+require 'packager/html_packager'
 require 'generator/as3_generator'
+require 'generator/js_generator'
 require 'parser/crayon'
 
 module Crayon

@@ -19,25 +19,14 @@
 # THE SOFTWARE.
 
 require 'json'
-require 'generator/base_generator'
+require 'generator/ecmascript_generator'
 
 module Crayon
   module Generator
 
-
-    class AS3Generator < BaseGenerator
-      attr_reader :functions
-      attr_reader :class_vars
-
+    class AS3Generator < ECMAScriptGenerator
       def initialize(program_name)
         super(program_name)
-
-        reset
-      end
-
-      def reset
-        @functions = Array.new
-        @class_vars = Array.new
       end
 
       def generate(statements)
@@ -46,31 +35,7 @@ module Crayon
           format(@functions, 3, "\n\n") << conclusion
       end
 
-      def assign(varprop, value, terminate)
-        chain = varprop.split('.')
-        var = map_var(chain.first)
-
-        if in_scope?(var)
-          "#{varprop} = #{value}" + (terminate ? ";" : "")
-        elsif chain.length == 1
-          add_to_scope(var)
-          if @scope_stack.length == 1
-            @class_vars.push({:declaration => "private var #{var}:*;", :initializer => "#{var} = #{value};"})
-            # Return empty string in this case so class var is not added inline
-            ""
-          else
-            "var #{var}:* = #{value}" + (terminate ? ";" : "")
-          end
-        else
-          raise SyntaxError, "Access of undefined variable #{var}"
-        end
-      end
-
-      def compare(op, first, second)
-        "#{first} #{map_op(op)} #{second}"
-      end
-
-      def function(name, params = [], body = [], closure=false)
+      def function(name, params = [], body = [], closure = false)
         start_scope
         code = format([
                  (closure ? "" : "private ") + "function #{name}(params:Object):*",
@@ -90,112 +55,12 @@ module Crayon
         ""
       end
 
-      def array(items, terminate)
-        "[" + items.join(",") + "]" + (terminate ? ";" : "")
+      def class_var(var, value)
+        {:declaration => "private var #{var}:*;", :initializer => "#{var} = #{value};"}
       end
 
-      def array_item(index, array)
-        "#{array}[#{index}]"
-      end
-
-      def var(name)
-        map_var(name)
-      end
-
-      def unless(condition, statements)
-        format([
-          "if(!(#{condition}))",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-      end
-
-      def if(condition, statements)
-        format([
-          "if(#{condition})",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-      end
-
-      def else(statements)
-        format([
-          "",
-          "else",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-      end
-
-      def elseif(condition, statements)
-        format([
-          "",
-          "else if(#{condition})",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-      end
-
-      def loop(i, i_start, i_end, inclusive, statements)
-        start_scope
-        code = format([
-          "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-        end_scope
-        code
-      end
-
-      def while(condition, statements)
-        format([
-          "while(#{condition})",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-      end
-
-      def add_listener(function, event_name)
-        "addEventListener(#{map_event(event_name)}, #{function});"
-      end
-
-      def remove_listener(function, event_name)
-        "removeEventListener(#{map_event(event_name)}, #{function});"
-      end
-
-      def call(function_name, arglist, terminate)
-        "#{function_name}(#{arglist})" + (terminate ? ";" : "")
-      end
-
-      def arglist(args)
-        substitutions = {'"' => '', '\"' => '"'}
-        args.to_json.gsub(/\"|\\\"/){|match| substitutions[match]}
-      end
-
-      def calculate(operator, operand1, operand2)
-        "#{operand1} #{operator} #{operand2}"
-      end
-
-      def property(property, object)
-        "#{object}.#{property}"
-      end
-
-      def number(value)
-        value.to_s
-      end
-
-      def string(value)
-        "\"#{value}\""
-      end
-
-      def boolean(value)
-        value
+      def local_var(var, value)
+        "var #{var}:* = #{value};"
       end
 
       private
@@ -235,15 +100,6 @@ module Crayon
             "  }",
             "}"
           ])
-        end
-
-        def map_op(op)
-          case op
-          when "≤" then "<="
-          when "≥" then ">="
-          when "=" then "=="
-          else op
-          end
         end
 
         def map_event(event_name)
