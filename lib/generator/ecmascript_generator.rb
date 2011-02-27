@@ -150,14 +150,6 @@ module Crayon
         ])
       end
 
-      def add_listener(function, event_name)
-        "addEventListener(#{map_event(event_name)}, #{function});"
-      end
-
-      def remove_listener(function, event_name)
-        "removeEventListener(#{map_event(event_name)}, #{function});"
-      end
-
       private
 
         def var_exists?(name)

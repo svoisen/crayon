@@ -36,6 +36,7 @@ module Crayon
           begin
             Dir.mkdir(output_dir)
             FileUtils.cp_r(File.dirname(__FILE__) + "/../js/src/crayon", output_dir)
+            FileUtils.cp_r(File.dirname(__FILE__) + "/../js/src/easeljs", output_dir)
             FileUtils.cp(File.dirname(__FILE__) + "/template/html/#{template_name}.html", output_dir)
             FileUtils.mv(compiled_file, output_dir)
           rescue SystemCallError => e
@@ -48,7 +49,6 @@ module Crayon
           template = IO.read(template_path) 
           
           template.gsub! /\#\{title\}/, title
-          template.gsub! /\#\{library\}/, "crayon/CrayonProgram.js"
           template.gsub! /\#\{compiled\}/, "#{title}.js"
           template.gsub! /\#\{width\}/, width.to_s
           template.gsub! /\#\{height\}/, height.to_s

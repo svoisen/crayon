@@ -31,8 +31,8 @@ module Crayon
 
       def generate(statements)
         preamble << constructor(@class_vars.map{|v| v[:initializer]} + statements) << (@class_vars.length > 0 ? "\n\n" : "") <<
-          format(@class_vars.map{|v| v[:declaration]}, 3) << (@functions.length > 0 ? "\n\n" : "") << 
-          format(@functions, 3, "\n\n") << conclusion
+          format(@class_vars.map{|v| v[:declaration]}, 1) << (@functions.length > 0 ? "\n\n" : "") << 
+          format(@functions, 1, "\n\n") << "\n\n" << conclusion
       end
 
       def function(name, params = [], body = [], closure = false)
@@ -77,6 +77,14 @@ module Crayon
         "var #{var} = #{value};"
       end
 
+      def add_listener(function, event_name)
+        "this.addEventListener(\"#{event_name}\", this, \"#{function}\");"
+      end
+
+      def remove_listener(function, event_name)
+        "this.removeEventListener(\"#{event_name}\", this, \"#{function}\");"
+      end
+
       private
 
         def preamble
@@ -96,13 +104,11 @@ module Crayon
             "}",
             "",
             "var p = #{program_name}.prototype = new CrayonProgram();",
-            ""
           ], 1)
         end
 
         def conclusion
           format([
-            "",
             "  window.#{program_name} = #{program_name};",
             "",
             "}(window));"

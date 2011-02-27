@@ -36,7 +36,7 @@ package org.voisen.crayon
       switch( params.shape )
       {
         case "circle":
-          g.drawCircle( params.center[0], params.center[1], params.radius || 0 );
+          g.drawCircle( params.center[0] || 0, params.center[1] || 0, params.radius || 0 );
           break;
 
         case "ellipse":
