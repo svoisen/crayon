@@ -5,14 +5,15 @@
     <script type="text/javascript" src="#{library}"></script>
     <script type="text/javascript" src="#{compiled}"></script>
     <script type="text/javascript">
-      var init = function()
+      function init()
       {
-        new #{title}( document.getElementById("crayon_canvas") );
+        var canvas = document.getElementById("crayonCanvas"); 
+        new #{title}( canvas );
       }
     </script>
   </head>
 
-  <body onLoad="init();">
-    <canvas id="crayon_canvas" width="#{width}" height="#{height}"></canvas>
+  <body onload="init();">
+    <canvas id="crayonCanvas" width="#{width}" height="#{height}"></canvas>
   </body>
 </html>

@@ -95,12 +95,15 @@ module Crayon
             format(statements, 1),
             "}",
             "",
-            "var p = #{program_name}.prototype = new CrayonProgram();"
-          ], 3)
+            "var p = #{program_name}.prototype = new CrayonProgram();",
+            ""
+          ], 1)
         end
 
         def conclusion
           format([
+            "",
+            "  window.#{program_name} = #{program_name};",
             "",
             "}(window));"
           ])
