@@ -36,7 +36,6 @@ module Crayon
       end
 
       def function(name, params = [], body = [], closure = false)
-        start_scope
         code = format([
                  (closure ? "" : "p.") + "#{name} = function(params)",
                  "{",
@@ -44,7 +43,6 @@ module Crayon
                  format(body, 1),
                  "}"
         ])
-        end_scope
 
         return code if closure
 
@@ -53,11 +51,29 @@ module Crayon
         ""
       end
 
-      def class_var(var, value)
-        {:declaration => "p.#{var} = null;", :initializer => "this.#{var} = #{value};"}
+      def loop(i, i_start, i_end, inclusive, statements)
+        format([
+          "for(var #{i} = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
+          "{",
+          format(statements, 1),
+          "}"
+        ])
       end
 
-      def local_var(var, value)
+      def call(function_name, arglist, terminate)
+        # TODO: This won't work for closures
+        "this.#{function_name}(#{arglist})" + (terminate ? ";" : "")
+      end
+
+      def var(name)
+        class_var_exists?(name) ? "this." + map_var(name) : map_var(name)
+      end
+
+      def declare_class_var(var, value)
+        {:name => var, :declaration => "p.#{var} = null;", :initializer => "this.#{var} = #{value};"}
+      end
+
+      def declare_local_var(var, value)
         "var #{var} = #{value};"
       end
 
@@ -72,8 +88,7 @@ module Crayon
         end
 
         def constructor(statements)
-          start_scope
-          code = format([
+          format([
             "#{program_name} = function(canvas)",
             "{",
             "  this.initialize(canvas);",
@@ -82,8 +97,6 @@ module Crayon
             "",
             "var p = #{program_name}.prototype = new CrayonProgram();"
           ], 3)
-          end_scope
-          code
         end
 
         def conclusion

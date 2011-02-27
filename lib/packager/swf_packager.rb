@@ -22,18 +22,10 @@ module Crayon
   module Packager
 
     class SWFPackager
-      attr_accessor :mxmlc
-      attr_accessor :keep_temp
-
-      def initialize(mxmlc, keep_temp=false)
-        @mxmlc = mxmlc
-        @keep_temp = keep_temp
-      end
-
-      def package(input, output)
+      def package(input, output, mxmlc, keep_temp)
         `#{mxmlc} -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3/bin #{input} -o #{output}.swf -debug=true -static-link-runtime-shared-libraries=true`
 
-        unless @keep_temp
+        unless keep_temp
           File.delete input
         end
       end

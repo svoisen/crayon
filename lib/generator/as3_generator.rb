@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'json'
 require 'generator/ecmascript_generator'
 
 module Crayon
@@ -36,7 +35,6 @@ module Crayon
       end
 
       def function(name, params = [], body = [], closure = false)
-        start_scope
         code = format([
                  (closure ? "" : "private ") + "function #{name}(params:Object):*",
                  "{",
@@ -44,7 +42,6 @@ module Crayon
                  format(body, 1),
                  "}"
                ])
-        end_scope
 
         return code if closure
 
@@ -55,11 +52,28 @@ module Crayon
         ""
       end
 
-      def class_var(var, value)
-        {:declaration => "private var #{var}:*;", :initializer => "#{var} = #{value};"}
+      def loop(i, i_start, i_end, inclusive, statements)
+        format([
+          "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
+          "{",
+          format(statements, 1),
+          "}"
+        ])
       end
 
-      def local_var(var, value)
+      def call(function_name, arglist, terminate)
+        "#{function_name}(#{arglist})" + (terminate ? ";" : "")
+      end
+
+      def var(name)
+        map_var(name)
+      end
+
+      def declare_class_var(var, value)
+        {:name => var, :declaration => "private var #{var}:*;", :initializer => "#{var} = #{value};"}
+      end
+
+      def declare_local_var(var, value)
         "var #{var}:* = #{value};"
       end
 
@@ -83,15 +97,12 @@ module Crayon
         end
 
         def constructor(statements)
-          start_scope
-          code = format([
+          format([
             "public function #{program_name}()",
             "{",
             format(statements, 1),
             "}",
           ], 3)
-          end_scope
-          code
         end
 
         def conclusion

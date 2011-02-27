@@ -4,9 +4,15 @@
     <title>#{title}</title>
     <script type="text/javascript" src="#{library}"></script>
     <script type="text/javascript" src="#{compiled}"></script>
+    <script type="text/javascript">
+      var init = function()
+      {
+        new #{title}( document.getElementById("crayon_canvas") );
+      }
+    </script>
   </head>
 
-  <body>
+  <body onLoad="init();">
     <canvas id="crayon_canvas" width="#{width}" height="#{height}"></canvas>
   </body>
 </html>

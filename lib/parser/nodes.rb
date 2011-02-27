@@ -99,11 +99,14 @@ module Crayon
 
     class CountLoop < Node
       def codegen(generator, terminate=false)
-        generator.loop((!defined? counter or !defined? counter.varprop) ? "__i" : counter.varprop.codegen(generator),
+        generator.start_scope
+        code = generator.loop((!defined? counter or !defined? counter.varprop) ? "__i" : counter.varprop.codegen(generator),
                        (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
                        i_end.codegen(generator), 
                        (defined? i_start and !i_start.empty?), 
                        statements.map{|s| s.codegen(generator)})
+        generator.end_scope
+        code
       end
     end
 
@@ -115,7 +118,10 @@ module Crayon
 
     class WhileLoop < Node
       def codegen(generator, terminate=false)
-        generator.while condition.codegen(generator), statements.map{|s| s.codegen(generator)}
+        generator.start_scope
+        code = generator.while condition.codegen(generator), statements.map{|s| s.codegen(generator)}
+        generator.end_scope
+        code
       end
     end
 
@@ -140,13 +146,18 @@ module Crayon
     class Function < Node
       # TODO: Closures should probably be automatically determined somehow ...
       def codegen(generator, terminate=false, closure=false)
-        generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}, closure
+        generator.start_scope
+        code = generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}, closure
+        generator.end_scope
+        code
       end
     end
 
     class If < Node
       def codegen(generator, terminate=false)
+        generator.start_scope
         code = generator.if condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+        generator.end_scope
         if defined? els and !els.empty?
           code += els.codegen(generator)
         end
@@ -165,7 +176,9 @@ module Crayon
 
     class ElseIf < Node
       def codegen(generator, terminate=false)
+        generator.start_scope
         code = generator.elseif condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+        generator.end_scope
         if defined? elseif and !elseif.empty?
           code += elseif.codegen(generator)
         end
@@ -175,13 +188,19 @@ module Crayon
 
     class Else < Node
       def codegen(generator, terminate=false)
-        generator.else statements.map{|s| s.codegen(generator, true)}
+        generator.start_scope
+        code = generator.else statements.map{|s| s.codegen(generator, true)}
+        generator.end_scope
+        code
       end
     end
 
     class Unless < Node
       def codegen(generator, terminate=false)
-        generator.unless condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+        generator.start_scope
+        code = generator.unless condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
+        generator.end_scope
+        code
       end
     end
 

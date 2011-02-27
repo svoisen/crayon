@@ -179,7 +179,7 @@ module Crayon
         compile(output_path + output_ext, program_name, @options.format, code)
         
         # Package
-        package(output_path + output_ext, output_path, @options.format)
+        package(output_path + output_ext, output_path, program_name, @options.format)
       end
 
       # Compile source provided as String in code and save to disk at output_path
@@ -201,13 +201,13 @@ module Crayon
       end
 
       # Package compiled code in specified container format
-      def package(input_path, output_path, format)
-        packager = case format
-                   when "swf" then Packager::SWFPackager.new(@options.mxmlc, @options.keep_temp)
-                   when "html" then Packager::HTMLPackager.new
-                   end
-
-        packager.package(input_path, output_path)
+      def package(input_path, output_path, program_name, format)
+        case format
+        when "swf" then 
+          Packager::SWFPackager.new.package(input_path, output_path, @options.mxmlc, @options.keep_temp)
+        when "html" then 
+          Packager::HTMLPackager.new.package(input_path, output_path, "default", program_name)
+        end
       end
 
       def print_version

@@ -47,27 +47,27 @@ module Crayon
         chain = varprop.split('.')
         var = map_var(chain.first)
 
-        if in_scope?(var)
+        if class_var_exists?(var) or var_exists?(var)
           "#{varprop} = #{value}" + (terminate ? ";" : "")
+
         elsif chain.length == 1
-          add_to_scope(var)
-          if @scope_stack.length == 1
-            @class_vars.push(class_var(var, value))
+          # Constructor will have no scope, all variables in constructor assumed to
+          # be class variables
+          if @current_scope.nil?
+            @class_vars.push declare_class_var(var, value)
             # Return empty string in this case so class var is not added inline
             ""
           else
-            local_var(var, value)
+            add_to_scope(var)
+            declare_local_var(var, value)
           end
         else
           raise SyntaxError, "Access of undefined variable #{var}"
         end
       end
+
       def compare(op, first, second)
         "#{first} #{map_op(op)} #{second}"
-      end
-
-      def call(function_name, arglist, terminate)
-        "#{function_name}(#{arglist})" + (terminate ? ";" : "")
       end
 
       def calculate(operator, operand1, operand2)
@@ -141,18 +141,6 @@ module Crayon
         ])
       end
 
-      def loop(i, i_start, i_end, inclusive, statements)
-        start_scope
-        code = format([
-          "for(var #{i}:int = #{i_start}; #{i} #{inclusive ? '<=' : '<'} #{i_end}; #{i}++)",
-          "{",
-          format(statements, 1),
-          "}"
-        ])
-        end_scope
-        code
-      end
-
       def while(condition, statements)
         format([
           "while(#{condition})",
@@ -170,14 +158,18 @@ module Crayon
         "removeEventListener(#{map_event(event_name)}, #{function});"
       end
 
-      def var(name)
-        map_var(name)
-      end
-
       private
 
-        def map_var(name)
-          name
+        def var_exists?(name)
+          true if name == "this" or in_ancestral_scope?(name)
+        end
+
+        def class_var_exists?(name)
+          true if @class_vars.map{|v| v[:name]}.include?(name)
+        end
+
+        def map_var(var)
+          var
         end
 
         def map_op(op)
