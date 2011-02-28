@@ -156,6 +156,14 @@ module Crayon
       parse(EVENT_STOP).should_not be_nil
     end
 
+    it "should allow function names with question marks" do
+      parse("contains? \"hello\"").should_not be_nil
+    end
+
+    it "should allow variable names with question marks" do
+      parse("print my_var?").should_not be_nil
+    end
+
   end
 
 end

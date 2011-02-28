@@ -98,7 +98,7 @@ module Crayon
 
       rule identifier
         # This can be generated the same as a variable if need be
-        !(keyword (space / newline)) [a-zA-Z] [\w]* <Variable>
+        !(keyword (space / newline)) [a-zA-Z] [\w]* "?"? <Variable>
         {
           def identifier
             text_value
