@@ -25,6 +25,8 @@ module Crayon
     
     class JSGenerator < ECMAScriptGenerator
 
+      PREDEFINED_CLASS_VARS = %w[canvas]
+
       def initialize(program_name)
         super(program_name)
       end
@@ -66,7 +68,7 @@ module Crayon
       end
 
       def var(name)
-        class_var_exists?(name) ? "this." + map_var(name) : map_var(name)
+        (class_var_exists?(name) or predefined_class_var?(name)) ? "this." + map_var(name) : map_var(name)
       end
 
       def declare_class_var(var, value)
@@ -86,6 +88,10 @@ module Crayon
       end
 
       private
+        
+        def predefined_class_var?(name)
+          PREDEFINED_CLASS_VARS.include?(name)
+        end
 
         def preamble
           format([
