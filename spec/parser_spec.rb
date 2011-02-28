@@ -80,6 +80,10 @@ module Crayon
       parse(FUNC_CALL_NO_DEFAULT).should_not be_nil
     end
 
+    it "should parse function calls without any parameters" do
+      parse(FUNC_CALL_NO_PARAMS).should_not be_nil
+    end
+
     it "should parse simple loops" do
       parse(SIMPLE_LOOP).should_not be_nil
     end

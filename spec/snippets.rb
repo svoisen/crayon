@@ -31,6 +31,7 @@ module Crayon
   SINGLE_LINE_FUNC_CALL = "draw \"circle\" with radius as 10, color as \"black\""
   MULTILINE_FUNC_CALL = "draw \"circle\" with\n\tradius as 10\n\tcolor as \"black\"\nend"
   FUNC_CALL_NO_DEFAULT = "draw_circle with center as [50, 50]"
+  FUNC_CALL_NO_PARAMS = "clear!"
   SIMPLE_LOOP = "repeat 10 times\nend"
   SIMPLE_COUNTER_LOOP = "repeat 10 times with i\nend"
   LOOP = "repeat i from 0 to 10\nend"

@@ -69,13 +69,13 @@ module Crayon
 
     class Call < Node
       def codegen(generator, terminate=false)
-        generator.call function.value, arglist.codegen(generator), terminate
+        generator.call function.value, (defined? arglist and !arglist.empty?) ? arglist.codegen(generator) : "", terminate
       end
     end
 
     class InlineCall < Node
       def codegen(generator, terminate=false)
-        generator.call function.value, inline_arglist.codegen(generator), terminate
+        generator.call function.value, (defined? inline_arglist and !inline_arglist.empty?) ? inline_arglist.codegen(generator) : "", terminate
       end
     end
 

@@ -67,7 +67,7 @@ package org.voisen.crayon
     protected function random(params:Object):Number
     {
       setupParams( "max", params );
-      return Math.random()*(params.max - params.min) + params.min;
+      return Math.round( Math.random()*(params.max - params.min) + params.min );
     }
 
     protected function sin(params:Object):Number

@@ -110,11 +110,11 @@ module Crayon
     end
 
     it "should generate code for functions without parameters" do
-      @parser.parse(FUNCTION_WITHOUT_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world():*\n{\n\n  print({__default:\"hello world\"});\n}"
+      @parser.parse(FUNCTION_WITHOUT_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object=null):*\n{\n\n  print({__default:\"hello world\"});\n}"
     end
 
     it "should generate code for functions with parameters" do
-      @parser.parse(FUNCTION_WITH_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
+      @parser.parse(FUNCTION_WITH_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object=null):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
     end
 
     it "should generate code to listen for events" do
@@ -123,6 +123,14 @@ module Crayon
 
     it "should generate code to stop listening for events" do
       generate(EVENT_STOP).should == "removeEventListener(Event.ENTER_FRAME, my_function);"
+    end
+
+    it "should generate function calls without parameters" do
+      generate(FUNC_CALL_NO_PARAMS).should == "clear();"
+    end
+
+    it "should generate disambiguated function calls" do
+      generate("clear! if x > 0").should == "if(__x > 0)\n{\n  clear();\n}"
     end
 
   end

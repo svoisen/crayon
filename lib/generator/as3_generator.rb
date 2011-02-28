@@ -36,7 +36,7 @@ module Crayon
 
       def function(name, params = [], body = [], closure = false)
         code = format([
-                 (closure ? "" : "private ") + "function #{name}(params:Object):*",
+                 (closure ? "" : "private ") + "function #{name}(params:Object=null):*",
                  "{",
                  format(params.map{|name| add_to_scope(name); "var #{name}:* = params.#{name};"}, 1),
                  format(body, 1),
