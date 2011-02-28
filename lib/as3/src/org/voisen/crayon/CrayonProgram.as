@@ -82,6 +82,11 @@ package org.voisen.crayon
       return Math.cos( params.value );
     }
 
+    protected function get pi():Number
+    {
+      return Math.PI;
+    }
+
     private function setupParams( defaultParamName:String, params:Object ):Object
     {
       if( params.__default )
