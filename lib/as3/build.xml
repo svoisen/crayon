@@ -6,10 +6,9 @@
   <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 
   <target name="main">
-    <compc
-      output="./bin/Crayon.swc"
-      include-classes="org.voisen.crayon.CrayonProgram">
+    <compc output="./bin/Crayon.swc">
       <source-path path-element="./src" />
+      <include-sources dir="./src" includes="*" />
     </compc>
   </target>
 </project>
