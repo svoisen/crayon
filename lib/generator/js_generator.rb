@@ -41,7 +41,7 @@ module Crayon
         code = format([
                  (closure ? "" : "p.") + "#{name} = function(params)",
                  "{",
-                 format(params.map{|name| add_to_scope(name); "var #{name} = params.#{name};"}, 1),
+                 format(params.map{|name| "var #{name} = params.#{name};"}, 1),
                  format(body, 1),
                  "}"
         ])
@@ -68,7 +68,13 @@ module Crayon
       end
 
       def var(name)
-        (class_var_exists?(name) or predefined_class_var?(name)) ? "this." + map_var(name) : map_var(name)
+        if in_scope?(name) or in_ancestral_scope?(name) 
+          map_var(name)
+        elsif class_var_exists?(name) or predefined_class_var?(name) 
+          "this." + map_var(name)
+        else
+          map_var(name)
+        end
       end
 
       def declare_class_var(var, value)

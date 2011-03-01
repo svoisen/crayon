@@ -42,6 +42,22 @@ module Crayon
         @current_scope = @scope_stack.last
       end
 
+      def add_to_scope(var)
+        @current_scope.push(var)
+      end
+
+      def in_scope?(var)
+        @current_scope.nil? ? false : @current_scope.include?(var)
+      end
+
+      def in_ancestral_scope?(var)
+        @scope_stack.reverse.each do |scope|
+          return true if !scope.nil? and scope.include?(var)
+        end
+
+        false
+      end 
+
       private
 
         def format(code, level=0, glue="\n", appendix='')
@@ -60,21 +76,6 @@ module Crayon
           end
         end
 
-        def add_to_scope(var)
-          @current_scope.push(var)
-        end
-
-        def in_scope?(var)
-          @current_scope.nil? ? false : @current_scope.include?(var)
-        end
-
-        def in_ancestral_scope?(var)
-          @scope_stack.reverse.each do |scope|
-            return true if !scope.nil? and scope.include?(var)
-          end
-
-          false
-        end 
     end
 
   end

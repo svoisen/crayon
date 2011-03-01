@@ -153,6 +153,7 @@ module Crayon
       # TODO: Closures should probably be automatically determined somehow ...
       def codegen(generator, terminate=false, closure=false)
         generator.start_scope
+        args.each{|a| generator.add_to_scope(a.value)}
         code = generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}, closure
         generator.end_scope
         code
