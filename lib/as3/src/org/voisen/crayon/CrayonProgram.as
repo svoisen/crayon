@@ -1,15 +1,10 @@
 package org.voisen.crayon
 {
   import flash.display.Sprite;
-  import flash.display.Stage;
   import flash.display.Graphics;
-  import flash.display.StageScaleMode;
-  import flash.display.StageAlign;
 
   import flash.events.Event;
 
-  import flash.geom.Point;
-  
   import org.voisen.crayon.color.Colors;
 
   public class CrayonProgram extends Sprite
