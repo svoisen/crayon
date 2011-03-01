@@ -24,14 +24,12 @@ module Crayon
     grammar Functions
       rule call
         function:identifier space arglist <Call>
-        /
-        function:identifier "!" <Call>
+        / function:identifier "!" <Call>
       end
 
       rule inline_call
         function:identifier space inline_arglist <InlineCall>
-        /
-        function:identifier "!" <InlineCall>
+        / function:identifier "!" <InlineCall>
       end
 
       rule arglist

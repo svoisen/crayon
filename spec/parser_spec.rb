@@ -164,6 +164,18 @@ module Crayon
       parse("print my_var?").should_not be_nil
     end
 
+    it "should allow lists inside lists" do
+      parse("set centers to [[100,100],[200,200]]").should_not be_nil
+    end
+
+    it "should allow accessing lists inside lists" do
+      parse("set item 0 of item i of centers to 50").should_not be_nil
+    end
+
+    it "should parse method calls with no parameters" do
+      parse("tell my_list pop!").should_not be_nil
+    end
+
   end
 
 end

@@ -45,7 +45,7 @@ module Crayon
       end
 
       rule statement
-        comment / assignment / conditional / loop / function / start_event / stop_event / call 
+        comment / assignment / conditional / loop / function / start_event / stop_event / call / method
       end
 
       rule line_statement
@@ -53,7 +53,7 @@ module Crayon
       end
 
       rule expression
-        inline_call / object !(space? operator) <Object> / comparison / equation
+        inline_call / object !(space? operator) <Object> / comparison / equation / method
       end
 
       rule object
@@ -93,7 +93,9 @@ module Crayon
       end
 
       rule keyword
-        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "on" / "uses" / "times" / "if" / "else" / "while" / "and" / "or" / "true" / "false" / "nothing" / "item" / "of" 
+        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "on" / "uses" / 
+          "times" / "if" / "else" / "while" / "and" / "or" / "true" / "false" / "nothing" / 
+          "item" / "of" / "tell"
       end
 
       rule identifier

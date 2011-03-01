@@ -31,15 +31,15 @@ package org.voisen.crayon
       switch( params.shape )
       {
         case "circle":
-          g.drawCircle( params.center[0] || 0, params.center[1] || 0, params.radius || 0 );
+          g.drawCircle( params.center.item_at(0) || 0, params.center.item_at(1) || 0, params.radius || 0 );
           break;
 
         case "ellipse":
-          g.drawEllipse( params.center[0] || 0, params.center[1] || 0, params.width || 0, params.height || 0 );
+          g.drawEllipse( params.center.item_at(0) || 0, params.center.item_at(1) || 0, params.width || 0, params.height || 0 );
           break;
 
         case "rectangle":
-          g.drawRect( params.corner[0] || 0, params.corner[1] || 0, params.width || 0, params.height || 0 );
+          g.drawRect( params.corner.item_at(0) || 0, params.corner.item_at(1) || 0, params.width || 0, params.height || 0 );
           break;
 
         case "line":

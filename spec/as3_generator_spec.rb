@@ -36,7 +36,7 @@ module Crayon
 
     before(:all) do
       @parser = Parser::CrayonParser.new
-      @generator = Generator::AS3Generator.new("generator_spec")
+      @generator = Generator::AS3Generator.new("as3_generator_spec")
     end
 
     it "should generate basic function calls" do
@@ -51,7 +51,7 @@ module Crayon
 
     it "should generate list assignments" do
       generate(ARRAY_ASSIGN)
-      @generator.class_vars.first[:initializer].should == "a = [1,2,3,4,5,6,7];"
+      @generator.class_vars.first[:initializer].should == "a = new List([1,2,3,4,5,6,7]);"
       @generator.class_vars.first[:declaration].should == "private var a:*;"
     end
 
@@ -92,15 +92,15 @@ module Crayon
     end
 
     it "should generate code to access list items by number" do
-      generate(LIST_ITEM_NUMBER).should == "print({__default:list[5]});"
+      generate(LIST_ITEM_NUMBER).should == "print({__default:list.item_at(5)});"
     end
 
     it "should generate code to access list items by variable" do
-      generate(LIST_ITEM_VAR).should == "print({__default:list[i]});"
+      generate(LIST_ITEM_VAR).should == "print({__default:list.item_at(i)});"
     end
 
     it "should generate function calls without default parameters" do
-      generate(FUNC_CALL_NO_DEFAULT).should == "draw_circle({center:[50,50]});"
+      generate(FUNC_CALL_NO_DEFAULT).should == "draw_circle({center:new List([50,50])});"
     end
 
     it "should generate code to assign function results to variables" do
@@ -131,6 +131,10 @@ module Crayon
 
     it "should generate disambiguated function calls" do
       generate("clear! if x > 0").should == "if(__x > 0)\n{\n  clear();\n}"
+    end
+
+    it "should generate method calls with no parameters" do
+      generate("tell my_list pop!").should == "my_list.pop()"
     end
 
   end

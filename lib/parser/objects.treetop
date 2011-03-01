@@ -48,6 +48,10 @@ module Crayon
       rule property
         property:identifier space "of" space object:var <Property>
       end
+
+      rule method
+        "tell" space object:identifier space call <Method>
+      end
     end
 
   end

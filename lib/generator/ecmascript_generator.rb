@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # Copyright (c) 2010-2011 Sean Voisen.
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -78,6 +80,10 @@ module Crayon
         "#{object}.#{property}"
       end
 
+      def method(object, call)
+        "#{object}.#{call}"
+      end
+
       def number(value)
         value.to_s
       end
@@ -96,11 +102,11 @@ module Crayon
       end
 
       def array(items, terminate)
-        "[" + items.join(",") + "]" + (terminate ? ";" : "")
+        "new List([" + items.join(",") + "])" + (terminate ? ";" : "")
       end
 
       def array_item(index, array)
-        "#{array}[#{index}]"
+        "#{array}.item_at(#{index})"
       end
 
       def unless(condition, statements)

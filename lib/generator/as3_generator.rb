@@ -96,6 +96,7 @@ module Crayon
             "  import flash.events.MouseEvent;",
             "",
             "  import org.voisen.crayon.CrayonProgram;",
+            "  import org.voisen.crayon.core.*",
             "",
             "  [SWF(width='800', height='600', frameRate='30')]",
             "  public class #{program_name} extends CrayonProgram",

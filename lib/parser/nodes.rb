@@ -116,6 +116,12 @@ module Crayon
       end
     end
 
+    class Method < Node
+      def codegen(generator, terminate=false)
+        generator.method object.value, call.codegen(generator)
+      end
+    end
+
     class WhileLoop < Node
       def codegen(generator, terminate=false)
         generator.start_scope

@@ -54,13 +54,13 @@ module Crayon
         def indent(code, level=0)
           prefix = ''
           (level * @tab_width).times {prefix << ' '}
+          code = [code] if code.instance_of? String
           code.map do |block| 
             block.split("\n").map{|line| line.length == 0 ? nil : prefix + line}.compact.join("\n")
           end
         end
 
         def add_to_scope(var)
-          #start_scope if @current_scope.nil?
           @current_scope.push(var)
         end
 

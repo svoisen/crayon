@@ -1,5 +1,7 @@
 package org.voisen.crayon.core
 {
+  import org.voisen.crayon.util.ParamsUtil;
+
   public class List
   {
     protected var array:Array;
@@ -24,9 +26,10 @@ package org.voisen.crayon.core
       array.length = 0;
     }
 
-    public function push( item:Object ):void
+    public function push( params:Object ):void
     {
-      array.push( item );
+      params = ParamsUtil.setupParams( "item", params );
+      array.push( params.item );
     }
 
     public function pop():Object

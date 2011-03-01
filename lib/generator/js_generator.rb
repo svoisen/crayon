@@ -88,6 +88,13 @@ module Crayon
       end
 
       private
+
+        def map_var(var)
+          case var
+          when "pi" then "this.pi"
+          else var
+          end
+        end
         
         def predefined_class_var?(name)
           PREDEFINED_CLASS_VARS.include?(name)

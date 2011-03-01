@@ -29,6 +29,13 @@ module Crayon
             [item] + tail.elements.map{|e| e.item}
           end
         }
+        /
+        "[" space? "]" <List>
+        {
+          def items
+            []
+          end
+        }
       end
 
       rule list_item
