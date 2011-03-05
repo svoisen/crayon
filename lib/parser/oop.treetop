@@ -21,30 +21,14 @@
 module Crayon
   module Parser
 
-    grammar Objects
-      rule number
-        [0-9]+ !var <Number>
-        {
-          def value
-            text_value.to_i
-          end
-        } /
-        "0" [xX] [A-Fa-f0-9]+ <Number>
+    grammar OOP
+      rule property
+        property:identifier space "of" space object:var <Property>
       end
 
-      rule string
-        '"' (!'"' . / '\"')* '"' <String>
-        {
-          def value
-            text_value.gsub('"', '')
-          end
-        }
+      rule method
+        "tell" space object:identifier space call <Method>
       end
-
-      rule boolean
-        "false" <Boolean> / "true" <Boolean>
-      end
-
     end
 
   end

@@ -176,6 +176,14 @@ module Crayon
       parse("tell my_list pop!").should_not be_nil
     end
 
+    it "should parse parenthesized equations" do
+      parse("set y to ((cos x) + x)").should_not be_nil
+    end
+
+    it "should parse chained variable setting" do
+      parse("set x, y, z to 100").should_not be_nil
+    end
+
   end
 
 end

@@ -61,12 +61,6 @@ module Crayon
       end
     end
 
-    class Object < Node
-      def codegen(generator, terminate=false)
-        object.codegen(generator)
-      end
-    end
-
     class Call < Node
       def codegen(generator, terminate=false)
         generator.call function.value, (defined? arglist and !arglist.empty?) ? arglist.codegen(generator) : "", terminate
@@ -81,19 +75,19 @@ module Crayon
 
     class Assignment < Node
       def codegen(generator, terminate=false)
-        generator.assign varprop.codegen(generator), expression.codegen(generator), terminate
+        generator.assign vars.map{|v| v.codegen(generator)}, expression.codegen(generator), terminate
       end
     end
 
     class Comparison < Node
       def codegen(generator, terminate=false)
-        generator.compare compareop.value, object.codegen(generator), expression.codegen(generator) 
+        generator.compare compareop.value, value.codegen(generator), expression.codegen(generator) 
       end
     end
 
     class Equation < Node
       def codegen(generator, terminate=false)
-        generator.calculate mathop.value, object.codegen(generator), expression.codegen(generator)
+        generator.calculate mathop.value, value.codegen(generator), expression.codegen(generator)
       end
     end
 
@@ -177,7 +171,7 @@ module Crayon
 
     class InlineIf < Node
       def codegen(generator, terminate=false)
-        generator.if condition.codegen(generator), line_statement.codegen(generator, true)
+        generator.if condition.codegen(generator), inline_statement.codegen(generator, true)
       end
     end
 
@@ -213,7 +207,7 @@ module Crayon
 
     class InlineUnless < Node
       def codegen(generator, terminate=false)
-        generator.unless condition.codegen(generator), expression.codegen(generator, true)
+        generator.unless condition.codegen(generator), inline_statement.codegen(generator, true)
       end
     end
 

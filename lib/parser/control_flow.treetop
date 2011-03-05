@@ -64,7 +64,7 @@ module Crayon
             body.elements.map {|s| s.statement}
           end
         } /
-        line_statement space "if" space condition:expression <InlineIf> 
+        inline_statement space "if" space condition:expression <InlineIf> 
       end
 
       rule elseif
@@ -97,7 +97,7 @@ module Crayon
             body.elements.map {|s| s.statement}
           end
         } /
-        expression space "unless" space condition:expression <InlineUnless> 
+        inline_statement space "unless" space condition:expression <InlineUnless> 
       end
     end
 

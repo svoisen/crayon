@@ -137,5 +137,11 @@ module Crayon
       generate("tell my_list pop!").should == "my_list.pop()"
     end
 
+    it "should generate parenthesized equations" do
+      generate("set y to (cos x) + x")
+      @generator.class_vars.first[:initializer].should == "__y = cos({__default:__x}) + __x;"
+      @generator.class_vars.first[:declaration].should == "private var __y:*;"
+    end
+
   end
 end

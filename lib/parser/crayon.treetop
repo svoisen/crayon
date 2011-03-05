@@ -24,6 +24,7 @@ require 'parser/lists'
 require 'parser/control_flow'
 require 'parser/functions'
 require 'parser/events'
+require 'parser/oop'
 
 module Crayon
   module Parser
@@ -34,7 +35,9 @@ module Crayon
       include Functions
       include Events
       include Lists
+      include OOP
 
+      # Root node
       rule script
         newline* statement remaining_statements:(newline statement)* newline* <Script>
         {
@@ -44,38 +47,81 @@ module Crayon
         }
       end
 
+      # All possible statements in a script, multiline or single line
       rule statement
-        comment / assignment / conditional / loop / function / start_event / stop_event / call / method
+        comment / assignment / conditional / loop / function / event / call / method
       end
 
-      rule line_statement
-        assignment / start_event / stop_event / inline_call / object
+      # Single line statements used primarily for inline conditionals
+      rule inline_statement
+        "(" space? inline_statement space? ")" 
+        {
+          def codegen(generator, terminate=false)
+            inline_statement.codegen(generator, terminate)
+          end
+        }
+        / assignment / event / value
       end
 
+      # A portion of a statement that evaluates to a value (or null)
       rule expression
-        inline_call / object !(space? operator) <Object> / comparison / equation / method
+        value !(space? operator)
+        {
+          def codegen(generator, terminate=false)
+            value.codegen(generator, terminate)
+          end
+        }
+        / evaluation
       end
 
+      # Infix operator evaluations
+      rule evaluation
+        "(" space? evaluation space? ")" 
+        {
+          def codegen(generator, terminate=false)
+            evaluation.codegen(generator, terminate)
+          end
+        }
+        / comparison / equation 
+      end
+
+      # A portion of an evaluation or expression that evaluates to a value (or null)
+      # Note: Method calls apply, but only inline method calls as multiline method calls cannot
+      # be part of an expression.
+      rule value
+        "(" space? value space? ")" 
+        {
+          def codegen(generator, terminate=false)
+            value.codegen(generator, terminate)
+          end
+        }
+        / inline_call / varprop / object / method
+      end
+
+      # Core object types
       rule object
-        varprop / number / string / list / boolean / list_item 
+        number / string / list / boolean
       end
 
+      # Numeric evaluations
       rule numeric
         varprop / number / equation 
       end
 
+      # Variables and properties
       rule varprop
-        var / property
+        var / property / list_item
       end
 
       rule comparison
-        object space? !keyword compareop space? expression <Comparison>
+        value space? !keyword compareop space? expression <Comparison>
       end
 
       rule equation
-        object space? !keyword mathop space? expression <Equation>
+        value space? !keyword mathop space? expression <Equation>
       end
 
+      # All infix operators
       rule operator
         mathop / compareop
       end
@@ -89,7 +135,12 @@ module Crayon
       end
 
       rule assignment
-        "set" space varprop space "to" space expression <Assignment>
+        "set" space first_var:varprop remaining_vars:(space? "," space? varprop)* space "to" space expression <Assignment>
+        {
+          def vars
+            [first_var] + remaining_vars.elements.map{|e| e.varprop}
+          end
+        }
       end
 
       rule keyword
