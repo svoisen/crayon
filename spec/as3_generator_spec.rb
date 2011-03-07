@@ -143,5 +143,12 @@ module Crayon
       @generator.class_vars.first[:declaration].should == "private var __y:*;"
     end
 
+    it "should generate code for chained variable setting" do
+      generate("set x, y, z to 100")
+      @generator.class_vars[0][:initializer].should == "__x = 100;"
+      @generator.class_vars[1][:initializer].should == "__y = 100;"
+      @generator.class_vars[2][:initializer].should == "z = 100;"
+    end
+
   end
 end

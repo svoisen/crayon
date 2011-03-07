@@ -19,15 +19,21 @@
 # THE SOFTWARE.
 
 require 'fileutils'
+require 'packager/substitutor'
 
 module Crayon
   module Packager
 
     class HTMLPackager
 
-      def package(compiled_file, output_dir, template_name, program_name)
+      def package(compiled_file, output_dir, template_name, program_name, width, height, framerate)
+        # Update framerate in compiled file
+        compiled = IO.read(compiled_file)
+        Substitutor.substitute!( compiled, {'framerate' => framerate.to_s} )
+        File.open(compiled_file, 'w') {|f| f.write compiled}
+
         create_package_dir(compiled_file, output_dir, template_name)
-        complete_template(output_dir + "/#{template_name}.html", program_name, 800, 600)
+        complete_template(output_dir + "/#{template_name}.html", program_name, width, height)
       end
 
       private
@@ -47,12 +53,7 @@ module Crayon
 
         def complete_template(template_path, title, width, height)
           template = IO.read(template_path) 
-          
-          template.gsub! /\#\{title\}/, title
-          template.gsub! /\#\{compiled\}/, "#{title}.js"
-          template.gsub! /\#\{width\}/, width.to_s
-          template.gsub! /\#\{height\}/, height.to_s
-
+          Substitutor.substitute!( template, {'title' => title, 'compiled' => "#{title}.js", 'width' => width.to_s, 'height' => height.to_s} )
           File.open(template_path, 'w') {|f| f.write template}
         end
     end

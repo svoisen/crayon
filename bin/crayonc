@@ -29,8 +29,10 @@
 # == Options
 #   -h, --help        Displays help message
 #   -v, --version     Displays the version
-#   -i, --input       Specify source input file name
 #   -o, --output      Specify output file name
+#   -W, --width       Specify width
+#   -H, --height      Specify height
+#   -r, --frame-rate  Specify desired framerate
 #   -f, --format      Specify output format (html or swf)
 #   -k, --keep-temp   Keep temporary files 
 #   -V, --verbose     Verbose output
@@ -65,7 +67,7 @@ module Crayon
   class ParserError < RuntimeError; end
 
   class Compiler
-    VERSION = '0.0.1'
+    VERSION = '0.1.0'
 
     FORMATS = %w[swf html]
 
@@ -81,6 +83,9 @@ module Crayon
       @options.verbose = false
       @options.format = "swf"
       @options.mxmlc = "mxmlc"
+      @options.framerate = 30
+      @options.width = 800
+      @options.height = 600
     end
 
     def run
@@ -116,8 +121,20 @@ module Crayon
           exit 0
         end
 
-        opts.on('-k', '--keep-temp', "Keep temporary files") do
-          @options.keep_temp = true
+        opts.on('-o', '--output [PATH]', String, "Specify output path") do |path|
+          @options.output_path = path
+        end
+
+        opts.on('-W', '--width [WIDTH]', Integer, "Specify width of output") do |width|
+          @options.width = width
+        end
+
+        opts.on('-H', '--height [HEIGHT]', Integer, "Specify height of output") do |height|
+          @options.height = height
+        end
+
+        opts.on('-r', '--frame-rate [RATE]', Integer, "Specify desired framerate") do |framerate|
+          @options.framerate = framerate
         end
 
         opts.on('-f', '--format [FORMAT]', String, "Specify output format") do |format|
@@ -125,11 +142,15 @@ module Crayon
           @options.format = format
         end
 
+        opts.on('-k', '--keep-temp', "Keep temporary files") do
+          @options.keep_temp = true
+        end
+
         opts.on('-V', '--verbose', "Run verbosely") do 
           @options.verbose = true
         end
 
-        opts.on('--with-mxmlc [PATH]', String, "Specify the path to mxmlc") do |path|
+        opts.on('--with-mxmlc [PATH]', String, "Specify the path to mxmlc (when compiling swf)") do |path|
           raise InvalidOptionError, "Cannot find mxmlc in path #{path}" unless File.directory? path and Dir.entries(path).include? 'mxmlc'
           @options.mxmlc = path + "/mxmlc"
         end
@@ -179,7 +200,7 @@ module Crayon
         compile(output_path + output_ext, program_name, @options.format, code)
         
         # Package
-        package(output_path + output_ext, output_path, program_name, @options.format)
+        package(output_path + output_ext, output_path, program_name, @options.format, @options.width, @options.height, @options.framerate)
       end
 
       # Compile source provided as String in code and save to disk at output_path
@@ -201,12 +222,12 @@ module Crayon
       end
 
       # Package compiled code in specified container format
-      def package(input_path, output_path, program_name, format)
+      def package(input_path, output_path, program_name, format, width, height, framerate)
         case format
         when "swf" then 
-          Packager::SWFPackager.new.package(input_path, output_path, @options.mxmlc, @options.keep_temp)
+          Packager::SWFPackager.new.package(input_path, output_path, @options.mxmlc, @options.keep_temp, @options.width, @options.height, @options.framerate)
         when "html" then 
-          Packager::HTMLPackager.new.package(input_path, output_path, "default", program_name)
+          Packager::HTMLPackager.new.package(input_path, output_path, "default", program_name, @options.width, @options.height, @options.framerate)
         end
       end
 

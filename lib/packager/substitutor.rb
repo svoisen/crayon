@@ -18,23 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'packager/substitutor'
-
 module Crayon
   module Packager
 
-    class SWFPackager
-      def package(input, output, mxmlc, keep_temp, width, height, framerate)
-
-        # Replace width, height, framerate in compiled file
-        compiled = IO.read(input)
-        Substitutor.substitute!( compiled, {'width' => width.to_s, 'height' => height.to_s, 'framerate' => framerate.to_s} )
-        File.open(input, 'w') {|f| f.write compiled}
-
-        `#{mxmlc} -library-path+=#{File.expand_path(File.dirname(__FILE__))}/../as3/bin #{input} -o #{output}.swf -debug=true -static-link-runtime-shared-libraries=true`
-
-        unless keep_temp
-          File.delete input
+    class Substitutor
+      def self.substitute!(input, map)
+        map.each do |key, value|
+          input.gsub! /\#\{#{key}\}/, value
         end
       end
     end
