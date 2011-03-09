@@ -16,9 +16,15 @@ package org.voisen.crayon.core
       return array.length;
     }
 
-    public function item_at( index:int ):Object
+    public function get _collection():Array
     {
-      return array[index];
+      return array;
+    }
+
+    public function set_item( params:Object ):void
+    {
+      params = ParamsUtil.setupParams( "item", params )
+      array[params.index] = params.item;
     }
 
     public function empty():void
