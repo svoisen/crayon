@@ -108,7 +108,7 @@ module Crayon
       end
 
       def array_item(index, array)
-        "#{array}.item_at(#{index})"
+        "#{array}._collection[#{index}]"
       end
 
       def unless(condition, statements)
