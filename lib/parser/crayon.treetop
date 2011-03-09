@@ -105,7 +105,7 @@ module Crayon
 
       # Numeric evaluations
       rule numeric
-        varprop / number / equation 
+        equation / varprop / number 
       end
 
       # Variables and properties
@@ -131,7 +131,7 @@ module Crayon
       end
 
       rule compareop
-        "=" / "≠" / ">" / "<" / "≥" / "≤" / "and" / "or"
+        "=" / "≥" / ">" / "<" / "≤" / "≠" / "and" / "or"
       end
 
       rule assignment
