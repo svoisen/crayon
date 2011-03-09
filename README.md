@@ -35,7 +35,7 @@ Language Features
 * English-like syntax similar to HyperTalk or AppleScript, but less verbose than its predecessors
 * Named function parameters (no need to remember the order of parameters required by functions)
 * Dynamic typing
-* UTF-8 support, including the use of ≤ and ≥ as comparison operators
+* UTF-8 support, including the use of ≤, ≥ and ≠ as comparison operators
 * Ruby-like blocks; no C-style braces
 * Callback event style; no AS3 "addEventListener"
 * AS3 intermediate language for SWF output: All Crayon code is translated to ActionScript 3, then compiled using traditional ActionScript compilation tools
