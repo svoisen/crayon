@@ -27,6 +27,9 @@ module Crayon
   module Generator
 
     class ECMAScriptGenerator < BaseGenerator
+
+      PREDEFINED_CLASS_VARS = %w[canvas]
+
       attr_reader :functions
       attr_reader :class_vars
 
@@ -165,7 +168,11 @@ module Crayon
         end
 
         def class_var_exists?(name)
-          true if @class_vars.map{|v| v[:name]}.include?(name)
+          true if predefined_class_var?(name) or @class_vars.map{|v| v[:name]}.include?(name)
+        end
+
+        def predefined_class_var?(name)
+          PREDEFINED_CLASS_VARS.include?(name)
         end
 
         def map_var(var)
