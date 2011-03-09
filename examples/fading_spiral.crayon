@@ -7,11 +7,9 @@
 # Copyright (C) 2011 Jonnie Hallman
 #
 
-set center to width of canvas / 2
-set middle to height of canvas / 2
+set x, center to width of canvas / 2
+set y, middle to height of canvas / 2
 set i to 0
-set x to center 
-set y to middle
 
 function draw_dot uses center, color
   draw "circle" with
@@ -23,14 +21,8 @@ end
 
 function draw_dots 
   draw_dot with center as [x, y], color as i
-  set x to cos i
-  set x to x * i
-  set x to center + x
-
-  set y to sin i
-  set y to y * i
-  set y to middle + y
-
+  set x to (cos i) * i + center
+  set y to (sin i) * i + middle
   set i to i + 1
 end
 

@@ -118,6 +118,7 @@ module Crayon
           format([
             "#{program_name} = function(canvas)",
             "{",
+            "  Ticker.setFPS(\#{framerate})",
             "  this.initialize(canvas);",
             format(statements, 1),
             "}",

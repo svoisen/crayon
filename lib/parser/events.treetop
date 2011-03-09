@@ -22,6 +22,10 @@ module Crayon
   module Parser
 
     grammar Events
+      rule event
+        start_event / stop_event
+      end
+
       rule start_event
         "do" space function:identifier space "on" space event_name <EventStart>
       end

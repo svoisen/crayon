@@ -98,7 +98,7 @@ module Crayon
             "  import org.voisen.crayon.CrayonProgram;",
             "  import org.voisen.crayon.core.*",
             "",
-            "  [SWF(width='800', height='600', frameRate='30')]",
+            "  [SWF(width='\#{width}', height='\#{height}', frameRate='\#{framerate}')]",
             "  public class #{program_name} extends CrayonProgram",
             "  {",
             ""

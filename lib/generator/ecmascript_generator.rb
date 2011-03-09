@@ -45,27 +45,29 @@ module Crayon
         raise Error, "Do not generate from this class. Use AS3 or JS subclass generators."
       end
 
-      def assign(varprop, value, terminate)
-        chain = varprop.split('.')
-        var = map_var(chain.first)
+      def assign(varprops, value, terminate)
+        lines = []
+        varprops.each do |varprop|
+          chain = varprop.split('.')
+          var = map_var(chain.first)
 
-        if class_var_exists?(var) or var_exists?(var)
-          "#{varprop} = #{value}" + (terminate ? ";" : "")
+          if class_var_exists?(var) or var_exists?(var)
+            lines.push "#{varprop} = #{value}" + (terminate ? ";" : "")
 
-        elsif chain.length == 1
-          # Constructor will have no scope, all variables in constructor assumed to
-          # be class variables
-          if @current_scope.nil?
-            @class_vars.push declare_class_var(var, value)
-            # Return empty string in this case so class var is not added inline
-            ""
+          elsif chain.length == 1
+            # Constructor will have no scope, all variables in constructor assumed to
+            # be class variables
+            if @current_scope.nil?
+              @class_vars.push declare_class_var(var, value)
+            else
+              add_to_scope(var)
+              lines.push declare_local_var(var, value)
+            end
           else
-            add_to_scope(var)
-            declare_local_var(var, value)
+            raise SyntaxError, "Access of undefined variable #{var}"
           end
-        else
-          raise SyntaxError, "Access of undefined variable #{var}"
         end
+        lines.join("\n")
       end
 
       def compare(op, first, second)

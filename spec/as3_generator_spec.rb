@@ -137,5 +137,18 @@ module Crayon
       generate("tell my_list pop!").should == "my_list.pop()"
     end
 
+    it "should generate parenthesized equations" do
+      generate("set y to (cos x) + x")
+      @generator.class_vars.first[:initializer].should == "__y = cos({__default:__x}) + __x;"
+      @generator.class_vars.first[:declaration].should == "private var __y:*;"
+    end
+
+    it "should generate code for chained variable setting" do
+      generate("set x, y, z to 100")
+      @generator.class_vars[0][:initializer].should == "__x = 100;"
+      @generator.class_vars[1][:initializer].should == "__y = 100;"
+      @generator.class_vars[2][:initializer].should == "z = 100;"
+    end
+
   end
 end

@@ -19,32 +19,14 @@
 # THE SOFTWARE.
 
 module Crayon
-  module Parser
+  module Packager
 
-    grammar Objects
-      rule number
-        [0-9]+ !var <Number>
-        {
-          def value
-            text_value.to_i
-          end
-        } /
-        "0" [xX] [A-Fa-f0-9]+ <Number>
+    class Substitutor
+      def self.substitute!(input, map)
+        map.each do |key, value|
+          input.gsub! /\#\{#{key}\}/, value
+        end
       end
-
-      rule string
-        '"' (!'"' . / '\"')* '"' <String>
-        {
-          def value
-            text_value.gsub('"', '')
-          end
-        }
-      end
-
-      rule boolean
-        "false" <Boolean> / "true" <Boolean>
-      end
-
     end
 
   end
