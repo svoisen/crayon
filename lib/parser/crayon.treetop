@@ -56,8 +56,8 @@ module Crayon
       rule inline_statement
         "(" space? inline_statement space? ")" 
         {
-          def codegen(generator, terminate=false)
-            inline_statement.codegen(generator, terminate)
+          def codegen(generator, terminate=false, parenthesize=false)
+            inline_statement.codegen(generator, terminate, true)
           end
         }
         / assignment / event / value
@@ -67,8 +67,8 @@ module Crayon
       rule expression
         value !(space? operator)
         {
-          def codegen(generator, terminate=false)
-            value.codegen(generator, terminate)
+          def codegen(generator, terminate=false, parenthesize=false)
+            value.codegen(generator, terminate, parenthesize)
           end
         }
         / evaluation
@@ -78,8 +78,8 @@ module Crayon
       rule evaluation
         "(" space? evaluation space? ")" 
         {
-          def codegen(generator, terminate=false)
-            evaluation.codegen(generator, terminate)
+          def codegen(generator, terminate=false, parenthesize=false)
+            evaluation.codegen(generator, terminate, true)
           end
         }
         / comparison / equation 
@@ -91,8 +91,8 @@ module Crayon
       rule value
         "(" space? value space? ")" 
         {
-          def codegen(generator, terminate=false)
-            value.codegen(generator, terminate)
+          def codegen(generator, terminate=false, parenthesize=false)
+            value.codegen(generator, terminate, true)
           end
         }
         / inline_call / varprop / object / method

@@ -61,12 +61,14 @@ module Crayon
         ])
       end
 
-      def call(function_name, arglist, terminate)
-        "#{function_name}(#{arglist})" + (terminate ? ";" : "")
+      def call(function_name, arglist, terminate, parenthesize)
+        code = wrap "#{function_name}(#{arglist})", parenthesize
+        code += ";" if terminate
+        code
       end
 
-      def var(name)
-        map_var(name)
+      def var(name, parenthesize)
+        wrap map_var(name), parenthesize
       end
 
       def declare_class_var(var, value)

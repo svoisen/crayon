@@ -84,50 +84,6 @@ module Crayon
       parse(FUNC_CALL_NO_PARAMS).should_not be_nil
     end
 
-    it "should parse simple loops" do
-      parse(SIMPLE_LOOP).should_not be_nil
-    end
-
-    it "should parse simple loops with counters" do
-      parse(SIMPLE_COUNTER_LOOP).should_not be_nil
-    end
-
-    it "should parse loops with start/end" do
-      parse(LOOP).should_not be_nil
-    end
-
-    it "should parse while loops" do
-      parse(WHILE_LOOP).should_not be_nil
-    end
-
-    it "should parse if statements" do
-      parse(IF).should_not be_nil
-    end
-
-    it "should parse inline if statements" do
-      parse(INLINE_IF).should_not be_nil
-    end
-
-    it "should parse inline unless statements" do
-      parse(INLINE_UNLESS).should_not be_nil
-    end
-
-    it "should parse if ... else statements" do
-      parse(IF_ELSE).should_not be_nil
-    end
-
-    it "should parse if ... else if statements" do
-      parse(IF_ELSE_IF).should_not be_nil
-    end
-
-    it "should parse if ... else if ... else if ... statements" do
-      parse(IF_ELSE_IF_ELSE_IF).should_not be_nil
-    end
-
-    it "should parse unless statements" do
-      parse(UNLESS).should_not be_nil
-    end
-
     it "should parse function defintions that have parameters" do
       parse(FUNCTION_WITH_PARAMS).should_not be_nil
     end
@@ -140,22 +96,6 @@ module Crayon
       parse(OBJECT_PROPERTY).should_not be_nil
     end
 
-    it "should parse list item access by number" do
-      parse(LIST_ITEM_NUMBER).should_not be_nil
-    end
-
-    it "should parse list item access by variable" do
-      parse(LIST_ITEM_VAR).should_not be_nil
-    end
-
-    it "should parse start handling events" do
-      parse(EVENT_START).should_not be_nil
-    end
-
-    it "should parse stop handling events" do
-      parse(EVENT_STOP).should_not be_nil
-    end
-
     it "should allow function names with question marks" do
       parse("contains? \"hello\"").should_not be_nil
     end
@@ -163,15 +103,6 @@ module Crayon
     it "should allow variable names with question marks" do
       parse("print my_var?").should_not be_nil
     end
-
-    it "should allow lists inside lists" do
-      parse("set centers to [[100,100],[200,200]]").should_not be_nil
-    end
-
-    it "should allow accessing lists inside lists" do
-      parse("set item 0 of item i of centers to 50").should_not be_nil
-    end
-
     it "should parse method calls with no parameters" do
       parse("tell my_list pop!").should_not be_nil
     end

@@ -92,11 +92,11 @@ module Crayon
     end
 
     it "should generate code to access list items by number" do
-      generate(LIST_ITEM_NUMBER).should == "print({__default:list.item_at(5)});"
+      generate(LIST_ITEM_NUMBER).should == "print({__default:list._collection[5]});"
     end
 
     it "should generate code to access list items by variable" do
-      generate(LIST_ITEM_VAR).should == "print({__default:list.item_at(i)});"
+      generate(LIST_ITEM_VAR).should == "print({__default:list._collection[i]});"
     end
 
     it "should generate function calls without default parameters" do
@@ -110,11 +110,13 @@ module Crayon
     end
 
     it "should generate code for functions without parameters" do
-      @parser.parse(FUNCTION_WITHOUT_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object=null):*\n{\n\n  print({__default:\"hello world\"});\n}"
+      generate(FUNCTION_WITHOUT_PARAMS)
+      @generator.functions.first.should == "private function hello_world(params:Object=null):*\n{\n\n  print({__default:\"hello world\"});\n}"
     end
 
     it "should generate code for functions with parameters" do
-      @parser.parse(FUNCTION_WITH_PARAMS).statements.first.codegen(@generator, true, true).should == "function hello_world(params:Object=null):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
+      generate(FUNCTION_WITH_PARAMS)
+      @generator.functions.first.should == "private function hello_world(params:Object=null):*\n{\n  var saying:* = params.saying;\n  print({__default:saying});\n}"
     end
 
     it "should generate code to listen for events" do
@@ -139,7 +141,7 @@ module Crayon
 
     it "should generate parenthesized equations" do
       generate("set y to (cos x) + x")
-      @generator.class_vars.first[:initializer].should == "__y = cos({__default:__x}) + __x;"
+      @generator.class_vars.first[:initializer].should == "__y = (cos({__default:__x})) + __x;"
       @generator.class_vars.first[:declaration].should == "private var __y:*;"
     end
 
