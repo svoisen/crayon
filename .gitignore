@@ -2,6 +2,7 @@
 *.swp
 *.swf
 lib/as3/bin
+lib/as3/.settings
 examples/*.as
 env/bin-debug
 env/.settings
