@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/2.5">
+	<id>org.voisen.crayon</id>
+	<filename>Crayon</filename>
+	<name>Crayon</name>
+	<versionNumber>0.1.0</versionNumber>
+	<!-- <versionLabel></versionLabel> -->
+	<!-- <description></description> -->
+	<!-- <copyright></copyright> -->
+	
+	<initialWindow>
+		<content>bin/crayon.swf</content>
+		<title>Crayon</title>
+		<!-- <systemChrome></systemChrome> -->
+		<!-- <transparent></transparent> -->
+		<visible>true</visible>
+		<!-- <minimizable></minimizable> -->
+		<!-- <maximizable></maximizable> -->
+		<!-- <resizable></resizable> -->
+		<!-- <width></width> -->
+		<!-- <height></height> -->
+		<!-- <x></x> -->
+		<!-- <y></y> -->
+		<!-- <minSize></minSize> -->
+		<!-- <maxSize></maxSize> -->
+	</initialWindow>
+
+	<supportedProfiles>desktop extendedDesktop</supportedProfiles>
+
+	<!-- <installFolder></installFolder> -->
+	<!-- <programMenuFolder></programMenuFolder> -->
+
+	<!-- <icon>
+		<image16x16></image16x16>
+		<image32x32></image32x32>
+		<image36x36></image36x36>
+		<image48x48></image48x48>
+		<image72x72></image72x72>
+		<image114x114></image114x114>
+		<image128x128></image128x128>
+	</icon> -->
+
+	<!-- <customUpdateUI></customUpdateUI> -->
+	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
+
+	<!-- <fileTypes> -->
+		<!-- <fileType> -->
+			<!-- <name></name> -->
+			<!-- <extension></extension> -->
+			<!-- <description></description> -->
+			<!-- <contentType></contentType> -->
+			<!-- <icon>
+				<image16x16></image16x16>
+				<image32x32></image32x32>
+				<image48x48></image48x48>
+				<image128x128></image128x128>
+			</icon> -->
+		<!-- </fileType> -->
+	<!-- </fileTypes> -->
+
+</application>

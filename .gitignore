@@ -2,6 +2,8 @@
 *.swp
 *.swf
 lib/as3/bin
+ide/bin*
+ide/release
+ide/report
+ide/build/cert.p12
 examples/*.as
-env/bin-debug
-env/.settings
