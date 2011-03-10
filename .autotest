@@ -1,5 +1,5 @@
 Autotest.add_hook :initialize do |at|
   at.add_mapping(%r%^lib/(generator|parser)/.*rb$%, true) do |f, _|
-    at.files_matching(%r%^spec/.*_spec.rb$%)
+    at.files_matching(%r%^spec/(generator|parser)/.*_spec.rb$%)
   end
 end

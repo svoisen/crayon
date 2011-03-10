@@ -25,8 +25,6 @@ module Crayon
     
     class JSGenerator < ECMAScriptGenerator
 
-      PREDEFINED_CLASS_VARS = %w[canvas]
-
       def initialize(program_name)
         super(program_name)
       end
@@ -62,19 +60,22 @@ module Crayon
         ])
       end
 
-      def call(function_name, arglist, terminate)
+      def call(function_name, arglist, terminate, parenthesize)
         # TODO: This won't work for closures
-        "this.#{function_name}(#{arglist})" + (terminate ? ";" : "")
+        code = wrap "this.#{function_name}(#{arglist})", parenthesize
+        code += ";" if terminate
+        code
       end
 
-      def var(name)
-        if in_scope?(name) or in_ancestral_scope?(name) 
+      def var(name, parenthesize)
+        code = if in_scope?(name) or in_ancestral_scope?(name) 
           map_var(name)
-        elsif class_var_exists?(name) or predefined_class_var?(name) 
+        elsif class_var_exists?(name)
           "this." + map_var(name)
         else
           map_var(name)
         end
+        wrap code, parenthesize
       end
 
       def declare_class_var(var, value)
@@ -102,10 +103,6 @@ module Crayon
           end
         end
         
-        def predefined_class_var?(name)
-          PREDEFINED_CLASS_VARS.include?(name)
-        end
-
         def preamble
           format([
             "(function(window)",

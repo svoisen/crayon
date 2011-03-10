@@ -27,6 +27,9 @@ module Crayon
   module Generator
 
     class ECMAScriptGenerator < BaseGenerator
+
+      PREDEFINED_CLASS_VARS = %w[canvas]
+
       attr_reader :functions
       attr_reader :class_vars
 
@@ -70,32 +73,32 @@ module Crayon
         lines.join("\n")
       end
 
-      def compare(op, first, second)
-        "#{first} #{map_op(op)} #{second}"
+      def compare(op, first, second, parenthesize)
+        wrap "#{first} #{map_op(op)} #{second}", parenthesize
       end
 
-      def calculate(operator, operand1, operand2)
-        "#{operand1} #{operator} #{operand2}"
+      def calculate(operator, operand1, operand2, parenthesize)
+        wrap "#{operand1} #{operator} #{operand2}", parenthesize
       end
 
-      def property(property, object)
-        "#{object}.#{property}"
+      def property(property, object, parenthesize)
+        wrap "#{object}.#{property}", parenthesize
       end
 
-      def method(object, call)
+      def method(object, call, parenthesize)
         "#{object}.#{call}"
       end
 
-      def number(value)
-        value.to_s
+      def number(value, parenthesize)
+        wrap value.to_s, parenthesize
       end
 
-      def string(value)
-        "\"#{value}\""
+      def string(value, parenthesize)
+        wrap "\"#{value}\"", parenthesize
       end
 
       def boolean(value)
-        value
+        wrap value, parenthesize
       end
 
       def arglist(args)
@@ -103,12 +106,12 @@ module Crayon
         args.to_json.gsub(/\"|\\\"/){|match| substitutions[match]}
       end
 
-      def array(items, terminate)
-        "new List([" + items.join(",") + "])" + (terminate ? ";" : "")
+      def array(items, terminate, parenthesize)
+        wrap("new List([" + items.join(",") + "])", parenthesize) + (terminate ? ";" : "")
       end
 
-      def array_item(index, array)
-        "#{array}.item_at(#{index})"
+      def array_item(index, array, parenthesize)
+        wrap "#{array}._collection[#{index}]", parenthesize
       end
 
       def unless(condition, statements)
@@ -165,11 +168,23 @@ module Crayon
         end
 
         def class_var_exists?(name)
-          true if @class_vars.map{|v| v[:name]}.include?(name)
+          true if predefined_class_var?(name) or @class_vars.map{|v| v[:name]}.include?(name)
+        end
+
+        def predefined_class_var?(name)
+          PREDEFINED_CLASS_VARS.include?(name)
         end
 
         def map_var(var)
           var
+        end
+
+        def wrap(code, parenthesize)
+          if parenthesize
+            "(" + code + ")"
+          else
+            code
+          end
         end
 
         def map_op(op)

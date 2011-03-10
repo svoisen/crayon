@@ -46,7 +46,7 @@ class ::Treetop::Runtime::SyntaxNode
   # Generate code for this node. The terminate parameter should
   # be true if this is a statement that should be terminated by
   # the generator (i.e. a semi-colon for C-style languages).
-  def codegen(context, terminate=false)
+  def codegen(context, terminate=false, parenthesize=false)
     raise "Method codegen not defined in #{self} : #{value}"
   end
 end
@@ -62,100 +62,99 @@ module Crayon
     end
 
     class Call < Node
-      def codegen(generator, terminate=false)
-        generator.call function.value, (defined? arglist and !arglist.empty?) ? arglist.codegen(generator) : "", terminate
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.call function.value, (defined? arglist and !arglist.empty?) ? arglist.codegen(generator) : "", terminate, parenthesize
       end
     end
 
     class InlineCall < Node
-      def codegen(generator, terminate=false)
-        generator.call function.value, (defined? inline_arglist and !inline_arglist.empty?) ? inline_arglist.codegen(generator) : "", terminate
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.call function.value, (defined? inline_arglist and !inline_arglist.empty?) ? inline_arglist.codegen(generator) : "", terminate, parenthesize
       end
     end
 
     class Assignment < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.assign vars.map{|v| v.codegen(generator)}, expression.codegen(generator), terminate
       end
     end
 
     class Comparison < Node
-      def codegen(generator, terminate=false)
-        generator.compare compareop.value, value.codegen(generator), expression.codegen(generator) 
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.compare compareop.value, value.codegen(generator), expression.codegen(generator), parenthesize 
       end
     end
 
     class Equation < Node
-      def codegen(generator, terminate=false)
-        generator.calculate mathop.value, value.codegen(generator), expression.codegen(generator)
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.calculate mathop.value, value.codegen(generator), expression.codegen(generator), parenthesize
       end
     end
 
     class CountLoop < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.loop((!defined? counter or !defined? counter.varprop) ? "__i" : counter.varprop.codegen(generator),
                        (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
                        i_end.codegen(generator), 
                        (defined? i_start and !i_start.empty?), 
-                       statements.map{|s| s.codegen(generator)})
+                       statements.map{|s| s.codegen(generator, true)})
         generator.end_scope
         code
       end
     end
 
     class Property < Node
-      def codegen(generator, terminate=false)
-        generator.property property.value, object.codegen(generator)
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.property property.value, object.codegen(generator), parenthesize
       end
     end
 
     class Method < Node
-      def codegen(generator, terminate=false)
-        generator.method object.value, call.codegen(generator)
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.method object.value, call.codegen(generator), parenthesize
       end
     end
 
     class WhileLoop < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
-        code = generator.while condition.codegen(generator), statements.map{|s| s.codegen(generator)}
+        code = generator.while condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
         code
       end
     end
 
     class Variable < Node
-      def codegen(generator, terminate=false)
-        generator.var identifier.value
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.var identifier.value, parenthesize
       end
     end
 
     class List < Node
-      def codegen(generator, terminate=false)
-        generator.array items.map{|i| i.codegen(generator)}, terminate
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.array items.map{|i| i.codegen(generator)}, terminate, parenthesize
       end
     end
 
     class ListItem < Node
-      def codegen(generator, terminate=false)
-        generator.array_item item.codegen(generator), list.codegen(generator)
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.array_item item.codegen(generator), list.codegen(generator), parenthesize
       end
     end
 
     class Function < Node
-      # TODO: Closures should probably be automatically determined somehow ...
-      def codegen(generator, terminate=false, closure=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         args.each{|a| generator.add_to_scope(a.value)}
-        code = generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}, closure
+        code = generator.function name.codegen(generator), args.map{|a| a.value}, statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
         code
       end
     end
 
     class If < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.if condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
@@ -170,13 +169,13 @@ module Crayon
     end
 
     class InlineIf < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.if condition.codegen(generator), inline_statement.codegen(generator, true)
       end
     end
 
     class ElseIf < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.elseif condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
@@ -188,7 +187,7 @@ module Crayon
     end
 
     class Else < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.else statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
@@ -197,7 +196,7 @@ module Crayon
     end
 
     class Unless < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.unless condition.codegen(generator), statements.map{|s| s.codegen(generator, true)}
         generator.end_scope
@@ -206,37 +205,37 @@ module Crayon
     end
 
     class InlineUnless < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.unless condition.codegen(generator), inline_statement.codegen(generator, true)
       end
     end
 
     class EventStart < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.add_listener function.codegen(generator), event_name.value
       end
     end
 
     class EventStop < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         generator.remove_listener function.codegen(generator), event_name.value
       end
     end
 
     class String < Node
-      def codegen(generator, terminate=false)
-        generator.string value
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.string value, parenthesize
       end
     end
 
     class Boolean < Node
-      def codegen(generator, terminate=false)
-        generator.boolean value
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.boolean value, parenthesize
       end
     end
 
     class Arglist < Node
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         named_args = Hash.new
         args.each do |id,val|
           # TODO: This shouldn't be empty, so there is a problem with the grammar
@@ -250,14 +249,14 @@ module Crayon
     end
 
     class Number < Node
-      def codegen(generator, terminate=false)
-        generator.number value
+      def codegen(generator, terminate=false, parenthesize=false)
+        generator.number value, parenthesize
       end
     end
 
     class Comment < Node
       # Generate nothing for comments :)
-      def codegen(generator, terminate=false)
+      def codegen(generator, terminate=false, parenthesize=false)
         ""
       end
     end
