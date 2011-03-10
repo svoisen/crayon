@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<testsuite name="org.voisen.crayon.PassingTest" tests="1" failures="0" errors="0" skipped="0" time="0.027" hostname="jhallman-MacBookPro" timestamp="2011-03-10T08:39:16">
-  <testcase classname="org.voisen.crayon::PassingTest" name="should_pass" time="0.027"/>
-</testsuite>

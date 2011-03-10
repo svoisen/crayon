@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:BeanProvider
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:swiz="http://swiz.swizframework.org" 
+	xmlns:model="org.voisen.crayon.view.component.model.*" 
+	xmlns:controller="org.voisen.crayon.controller.*" 
+	xmlns:viewModel="org.voisen.crayon.view.model.*" 
+	xmlns:signal="org.voisen.crayon.signal.*">
+	
+	<!-- Presentation Models -->
+	<viewModel:EditorViewModel />
+	
+	<!-- Controller -->
+	<controller:EditorController />
+	
+	<!-- Signal Bus -->
+	<signal:EditorSignalBus />
+
+</swiz:BeanProvider>

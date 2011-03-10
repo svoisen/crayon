@@ -1,0 +1,46 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+@font-face
+{
+	src: url("assets/fonts/DejaVuSansMono.ttf");
+	fontFamily: mono;
+	fontWeight: normal;
+	fontStyle: normal;
+}
+
+.editorGutter
+{
+	contentBackgroundColor: #cccccc;
+	color: #666666;
+	textAlign: right;
+	fontFamily: mono;
+	fontSize: 12;
+	focusSkin: ClassReference("null");
+	borderVisible: false;
+}
+
+.editorHeader
+{
+	fontSize: 20;
+	color: #666666;
+}
+
+.editor
+{
+	fontFamily: mono;
+	fontSize: 12;
+	focusSkin: ClassReference("null");
+	borderVisible: false;
+}
+
+.consoleOutput
+{
+	contentBackgroundColor: #333333;
+	color: #ffffff;
+	fontFamily: mono;
+	fontSize: 12;
+	focusSkin: ClassReference("null");
+	borderVisible: false;
+}

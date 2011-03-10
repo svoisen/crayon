@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:component="org.voisen.crayon.view.component.*" 
+					   xmlns:swiz="http://swiz.swizframework.org" 
+					   xmlns:beans="org.voisen.crayon.beans.*" 
+					   xmlns:view="org.voisen.crayon.view.*"
+					   applicationComplete="init()">
+	<fx:Declarations>
+		<swiz:Swiz>
+			<swiz:beanProviders>
+				<beans:ApplicationBeans />
+				<beans:EditorBeans />
+			</swiz:beanProviders>
+			<swiz:config>
+				<swiz:SwizConfig
+					viewPackages="org.voisen.crayon.view"
+					strict="true" />
+			</swiz:config>
+		</swiz:Swiz>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.voisen.crayon.signal.ApplicationSignalBus;
+			
+			[Inject]
+			public var signalBus:ApplicationSignalBus;
+			
+			private function init():void
+			{
+				signalBus.initializeApplicationSignal.dispatch( stage );
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="styles/application.css" />
+	
+	<view:EditorView width="100%" height="100%" />
+	
+</s:WindowedApplication>
