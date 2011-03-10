@@ -3,5 +3,8 @@
 *.swf
 lib/as3/bin
 examples/*.as
-env/bin-debug
-env/.settings
+ide/.*
+ide/bin*
+ide/release
+ide/report
+ide/build/cert.p12
