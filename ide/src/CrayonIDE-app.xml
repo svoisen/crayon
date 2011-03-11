@@ -11,18 +11,6 @@
 	<initialWindow>
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
 		<title>Crayon</title>
-		<!-- <systemChrome></systemChrome> -->
-		<!-- <transparent></transparent> -->
-		<visible>true</visible>
-		<!-- <minimizable></minimizable> -->
-		<!-- <maximizable></maximizable> -->
-		<!-- <resizable></resizable> -->
-		<!-- <width></width> -->
-		<!-- <height></height> -->
-		<!-- <x></x> -->
-		<!-- <y></y> -->
-		<!-- <minSize></minSize> -->
-		<!-- <maxSize></maxSize> -->
 	</initialWindow>
 
 	<supportedProfiles>desktop extendedDesktop</supportedProfiles>

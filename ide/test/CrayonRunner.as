@@ -1,7 +1,5 @@
 package
 {
-	import org.voisen.crayon.CrayonSuite;
-	
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -11,6 +9,7 @@ package
 	import org.flexunit.listeners.CIListener;
 	import org.flexunit.runner.FlexUnitCore;
 	import org.flexunit.runner.notification.async.XMLListener;
+	import org.voisen.crayon.CrayonSuite;
 	
 	public class CrayonRunner extends Sprite
 	{
@@ -18,6 +17,8 @@ package
 		
 		public function CrayonRunner()
 		{
+			NativeApplication.nativeApplication.autoExit = false;
+			
 			core = new FlexUnitCore();
 			
             core.addListener(new TraceListener());

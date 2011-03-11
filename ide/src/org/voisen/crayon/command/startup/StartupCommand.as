@@ -20,45 +20,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package
+package org.voisen.crayon.command.startup
 {
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowType;
-	import flash.display.Sprite;
+	import org.robotlegs.mvcs.CompositeSignalCommand;
 	
-	import org.robotlegs.core.ISignalContext;
-	import org.voisen.crayon.context.ApplicationContext;
-
-	public class CrayonIDE extends Sprite
+	public class StartupCommand extends CompositeSignalCommand
 	{
-		//--------------------------------------------------------------------------
-		//
-		//  Properties
-		//
-		//--------------------------------------------------------------------------
-		
-		protected var context:ISignalContext;
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function CrayonIDE()
+		public function StartupCommand()
 		{
-			createProperties();
 		}
 		
 		//--------------------------------------------------------------------------
 		//
-		//  Protected Methods
+		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createProperties():void
+		override public function execute():void
 		{
-			context = new ApplicationContext(this);
+			addCommand(MapModelsCommand);
+			//TODO - check for updates
+			addCommand(CreateWindowsCommand);
+			
+			super.execute();
 		}
 	}
 }

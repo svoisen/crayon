@@ -20,45 +20,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package
+package org.voisen.crayon.view.editor
 {
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowType;
-	import flash.display.Sprite;
-	
-	import org.robotlegs.core.ISignalContext;
-	import org.voisen.crayon.context.ApplicationContext;
+	import com.destroytoday.window.Window;
 
-	public class CrayonIDE extends Sprite
+	public class EditorWindow extends Window
 	{
-		//--------------------------------------------------------------------------
-		//
-		//  Properties
-		//
-		//--------------------------------------------------------------------------
-		
-		protected var context:ISignalContext;
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function CrayonIDE()
+		public function EditorWindow()
 		{
-			createProperties();
-		}
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Protected Methods
-		//
-		//--------------------------------------------------------------------------
-		
-		protected function createProperties():void
-		{
-			context = new ApplicationContext(this);
 		}
 	}
 }

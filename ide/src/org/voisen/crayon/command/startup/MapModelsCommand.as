@@ -20,24 +20,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package
+package org.voisen.crayon.command.startup
 {
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowType;
-	import flash.display.Sprite;
+	import com.destroytoday.model.ApplicationModel;
+	import com.destroytoday.model.IApplicationModel;
 	
-	import org.robotlegs.core.ISignalContext;
-	import org.voisen.crayon.context.ApplicationContext;
-
-	public class CrayonIDE extends Sprite
+	import org.robotlegs.core.IInjector;
+	import org.robotlegs.core.ISignalCommandMap;
+	import org.robotlegs.mvcs.SignalCommand;
+	
+	public class MapModelsCommand extends SignalCommand
 	{
 		//--------------------------------------------------------------------------
 		//
-		//  Properties
+		//  Injections
 		//
 		//--------------------------------------------------------------------------
 		
-		protected var context:ISignalContext;
+		[Inject]
+		public var injector:IInjector;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -45,20 +46,19 @@ package
 		//
 		//--------------------------------------------------------------------------
 		
-		public function CrayonIDE()
+		public function MapModelsCommand()
 		{
-			createProperties();
 		}
 		
 		//--------------------------------------------------------------------------
 		//
-		//  Protected Methods
+		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createProperties():void
+		override public function execute():void
 		{
-			context = new ApplicationContext(this);
+			injector.mapSingletonOf(IApplicationModel, ApplicationModel);
 		}
 	}
 }

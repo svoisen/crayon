@@ -20,24 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package
+package org.voisen.crayon.command.startup
 {
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowType;
-	import flash.display.Sprite;
+	import org.robotlegs.core.IMediatorMap;
+	import org.robotlegs.mvcs.SignalCommand;
+	import org.voisen.crayon.view.editor.EditorWindow;
 	
-	import org.robotlegs.core.ISignalContext;
-	import org.voisen.crayon.context.ApplicationContext;
-
-	public class CrayonIDE extends Sprite
+	public class CreateWindowsCommand extends SignalCommand
 	{
 		//--------------------------------------------------------------------------
 		//
-		//  Properties
+		//  Injections
 		//
 		//--------------------------------------------------------------------------
 		
-		protected var context:ISignalContext;
+		[Inject]
+		public var mediatorMap:IMediatorMap;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -45,20 +43,23 @@ package
 		//
 		//--------------------------------------------------------------------------
 		
-		public function CrayonIDE()
+		public function CreateWindowsCommand()
 		{
-			createProperties();
 		}
 		
 		//--------------------------------------------------------------------------
 		//
-		//  Protected Methods
+		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createProperties():void
+		override public function execute():void
 		{
-			context = new ApplicationContext(this);
+			var editorWindow:EditorWindow = new EditorWindow();
+			
+			mediatorMap.createMediator(editorWindow.stage);
+			
+			editorWindow.activate();
 		}
 	}
 }
