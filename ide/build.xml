@@ -115,17 +115,18 @@
      </target>
 	
     <target name="test-swf">
-        <mxmlc file="${test.loc}/${test.runner}"
+		<mxmlc file="${test.loc}/${test.runner}"
             output="${bin.loc}/${ant.project.name}-test.swf"
-			actionscript-file-encoding="UTF-8"
-			keep-generated-actionscript="false"
-			static-link-runtime-shared-libraries="true"
-			debug="true">
-            <load-config filename="${FLEX_HOME}/frameworks/air-config.xml" />
-			<compiler.source-path path-element="${src.loc}" />
-			<compiler.library-path dir="${lib.loc}" append="true">
-				<include name="*.swc" />
-			</compiler.library-path>
+            static-rsls="true"
+            accessible="true"
+            configname="air"
+            debug="true"
+            failonerror="true"
+            fork="true"
+            maxmemory="512m">
+            <source-path path-element="${src.loc}"/>
+            <external-library-path file="${FLEX_HOME}/frameworks/libs/air/airglobal.swc" append="true"/>
+            <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
         </mxmlc>
 
 		<flexunit 

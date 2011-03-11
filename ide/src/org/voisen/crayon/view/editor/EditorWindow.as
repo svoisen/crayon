@@ -23,6 +23,8 @@ THE SOFTWARE.
 package org.voisen.crayon.view.editor
 {
 	import com.destroytoday.window.Window;
+	
+	import flash.display.Screen;
 
 	public class EditorWindow extends Window
 	{
@@ -34,6 +36,23 @@ package org.voisen.crayon.view.editor
 		
 		public function EditorWindow()
 		{
+			setup();
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Protected Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function setup():void
+		{
+			title = 'Crayon';
+			
+			stage.stageWidth = 600.0;
+			stage.stageHeight = 600.0;
+			
+			center(Screen.mainScreen.visibleBounds);
 		}
 	}
 }
