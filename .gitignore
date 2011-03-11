@@ -4,5 +4,8 @@
 lib/as3/bin
 lib/as3/.settings
 examples/*.as
-env/bin-debug
-env/.settings
+ide/.*
+ide/bin*
+ide/release
+ide/report
+ide/build/cert.p12
