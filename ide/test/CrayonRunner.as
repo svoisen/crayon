@@ -3,7 +3,6 @@ package
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.UncaughtErrorEvent;
 	
 	import org.flexunit.internals.TraceListener;
 	import org.flexunit.listeners.CIListener;
