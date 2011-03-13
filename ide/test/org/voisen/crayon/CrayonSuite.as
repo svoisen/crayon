@@ -1,6 +1,6 @@
 package org.voisen.crayon
 {
-	import org.voisen.crayon.command.startup.CreateWindowsCommandTest;
+	import org.voisen.crayon.command.startup.CreateWorkspaceCommandTest;
 	import org.voisen.crayon.view.editor.EditorWindowTest;
 	
 	[Suite]
@@ -13,7 +13,7 @@ package org.voisen.crayon
 		//
 		//--------------------------------------------------------------------------
 		
-		public var createWindowsCommandTest:CreateWindowsCommandTest;
+		public var createWindowsCommandTest:CreateWorkspaceCommandTest;
 		
 		//--------------------------------------------------------------------------
 		//

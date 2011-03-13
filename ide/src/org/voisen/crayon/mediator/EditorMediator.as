@@ -20,33 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.command.startup
+package org.voisen.crayon.mediator
 {
-	import com.destroytoday.model.ApplicationModel;
-	import com.destroytoday.model.IApplicationModel;
+	import org.robotlegs.mvcs.Mediator;
 	
-	import org.robotlegs.core.IInjector;
-	import org.robotlegs.core.ISignalCommandMap;
-	import org.robotlegs.mvcs.SignalCommand;
-	
-	public class MapModelsCommand extends SignalCommand
+	public class EditorMediator extends Mediator
 	{
-		//--------------------------------------------------------------------------
-		//
-		//  Injections
-		//
-		//--------------------------------------------------------------------------
-		
-		[Inject]
-		public var injector:IInjector;
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function MapModelsCommand()
+		public function EditorMediator()
 		{
 		}
 		
@@ -56,9 +42,14 @@ package org.voisen.crayon.command.startup
 		//
 		//--------------------------------------------------------------------------
 		
-		override public function execute():void
+		override public function onRegister():void
 		{
-			injector.mapSingletonOf(IApplicationModel, ApplicationModel);
+			trace("EditorMediator.onRegister()");
+		}
+		
+		override public function onRemove():void
+		{
+			
 		}
 	}
 }

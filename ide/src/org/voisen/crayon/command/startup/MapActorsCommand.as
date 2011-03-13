@@ -22,17 +22,36 @@ THE SOFTWARE.
 
 package org.voisen.crayon.command.startup
 {
-	import org.robotlegs.mvcs.CompositeSignalCommand;
+	import com.destroytoday.model.ApplicationModel;
+	import com.destroytoday.model.IApplicationModel;
 	
-	public class StartupCommand extends CompositeSignalCommand
+	import org.robotlegs.core.IInjector;
+	import org.robotlegs.core.IMediatorMap;
+	import org.robotlegs.mvcs.SignalCommand;
+	import org.voisen.crayon.mediator.EditorMediator;
+	import org.voisen.crayon.view.editor.EditorView;
+	
+	public class MapActorsCommand extends SignalCommand
 	{
+		//--------------------------------------------------------------------------
+		//
+		//  Injections
+		//
+		//--------------------------------------------------------------------------
+		
+		[Inject]
+		public var injector:IInjector;
+		
+		[Inject]
+		public var mediatorMap:IMediatorMap;
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function StartupCommand()
+		public function MapActorsCommand()
 		{
 		}
 		
@@ -44,11 +63,15 @@ package org.voisen.crayon.command.startup
 		
 		override public function execute():void
 		{
-			addCommand(MapModelsCommand);
-			//TODO - check for updates
-			addCommand(CreateWindowsCommand);
-			
-			super.execute();
+			//--------------------------------------
+			//  Models
+			//--------------------------------------
+			injector.mapSingletonOf(IApplicationModel, ApplicationModel);
+
+			//--------------------------------------
+			//  Views
+			//--------------------------------------
+			mediatorMap.mapView(EditorView, EditorMediator);
 		}
 	}
 }

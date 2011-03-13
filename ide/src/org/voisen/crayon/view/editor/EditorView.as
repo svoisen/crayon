@@ -20,46 +20,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.command.startup
+package org.voisen.crayon.view.editor
 {
-	import org.robotlegs.core.IMediatorMap;
-	import org.robotlegs.mvcs.SignalCommand;
-	import org.voisen.crayon.view.editor.EditorWindow;
+	import com.destroytoday.display.MeasuredSprite;
 	
-	public class CreateWindowsCommand extends SignalCommand
+	public class EditorView extends MeasuredSprite
 	{
-		//--------------------------------------------------------------------------
-		//
-		//  Injections
-		//
-		//--------------------------------------------------------------------------
-		
-		[Inject]
-		public var mediatorMap:IMediatorMap;
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function CreateWindowsCommand()
+		public function EditorView()
 		{
-		}
-		
-		//--------------------------------------------------------------------------
-		//
-		//  Public Methods
-		//
-		//--------------------------------------------------------------------------
-		
-		override public function execute():void
-		{
-			var editorWindow:EditorWindow = new EditorWindow();
-			
-			mediatorMap.createMediator(editorWindow.stage);
-			
-			editorWindow.activate();
 		}
 	}
 }

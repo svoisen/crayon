@@ -20,47 +20,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.view.editor
+package org.voisen.crayon.command.startup
 {
-	import com.destroytoday.window.Window;
-
-	public class EditorWindow extends Window
+	import org.robotlegs.mvcs.CompositeSignalCommand;
+	
+	public class StartupApplicationCommand extends CompositeSignalCommand
 	{
-		//--------------------------------------------------------------------------
-		//
-		//  Properties
-		//
-		//--------------------------------------------------------------------------
-		
-		public var view:EditorView;
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorWindow()
+		public function StartupApplicationCommand()
 		{
-			createChildren();
-			setupSize();
 		}
 		
 		//--------------------------------------------------------------------------
 		//
-		//  Protected Methods
+		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createChildren():void
+		override public function execute():void
 		{
-			view = stage.addChild(new EditorView()) as EditorView;
-		}
-		
-		protected function setupSize():void
-		{
-			stage.stageWidth = 600.0;
-			stage.stageHeight = 600.0;
+			addCommand(MapActorsCommand);
+			//TODO - check for updates
+			addCommand(CreateWorkspaceCommand);
+			
+			super.execute();
 		}
 	}
 }

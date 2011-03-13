@@ -8,8 +8,8 @@
 	<taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-4.1.0_RC2-x.jar"/>
 	
 	<target name="clean">
-		<delete dir="${bin.loc}" />
-		<delete dir="${report.loc}" />
+		<!--<delete dir="${bin.loc}" />-->
+		<!--<delete dir="${report.loc}" />-->
 	</target>
 	
 	<target name="init">
@@ -31,7 +31,8 @@
             debug="false"
             failonerror="true"
             fork="true"
-            maxmemory="512m">
+            maxmemory="512m"
+			incremental="true">
             <source-path path-element="${src.loc}"/>
             <external-library-path file="${FLEX_HOME}/frameworks/libs/air/airglobal.swc" append="true"/>
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
@@ -48,7 +49,8 @@
 			verbose-stacktraces="true"
             failonerror="true"
             fork="true"
-            maxmemory="512m">
+            maxmemory="512m"
+			incremental="true">
             <source-path path-element="${src.loc}"/>
             <external-library-path file="${FLEX_HOME}/frameworks/libs/air/airglobal.swc" append="true"/>
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
@@ -123,7 +125,8 @@
             debug="true"
             failonerror="true"
             fork="true"
-            maxmemory="512m">
+            maxmemory="512m"
+			incremental="true">
             <source-path path-element="${src.loc}"/>
             <external-library-path file="${FLEX_HOME}/frameworks/libs/air/airglobal.swc" append="true"/>
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>

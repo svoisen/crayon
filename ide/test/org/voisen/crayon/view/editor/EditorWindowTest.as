@@ -26,6 +26,12 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
+		[Before]
+		public function setUp():void
+		{
+			window = new EditorWindow();
+		}
+		
 		[After]
 		public function tearDown():void
 		{
@@ -55,34 +61,20 @@ package org.voisen.crayon.view.editor
 		[Test]
 		public function should_extend_window():void
 		{
-			window = new EditorWindow();
-			
 			assertThat(window is Window);
-		}
-		
-		[Test]
-		public function should_have_title_crayon_by_default():void
-		{
-			window = new EditorWindow();
-			
-			assertThat(window.title, equalTo('Crayon'));
 		}
 		
 		[Test]
 		public function should_have_600_x_600_stage_dimensions_by_default():void
 		{
-			window = new EditorWindow();
-			
 			assertThat(window.stage.stageWidth, equalTo(600.0));
 			assertThat(window.stage.stageHeight, equalTo(600.0));
 		}
 		
 		[Test]
-		public function should_center_on_main_screen_by_default():void
+		public function should_add_editor_view_to_stage():void
 		{
-			var window:MockCenteredEditorWindow = new MockCenteredEditorWindow();
-			
-			assertThat(window.centeredRect.equals(Screen.mainScreen.visibleBounds));
+			assertThat(window.stage.getChildAt(0) is EditorView);
 		}
 	}
 }

@@ -20,19 +20,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.view.editor
+package org.voisen.crayon.command.startup
 {
-	import com.destroytoday.window.Window;
-
-	public class EditorWindow extends Window
+	import com.destroytoday.model.IApplicationModel;
+	
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Screen;
+	
+	import org.robotlegs.core.IInjector;
+	import org.robotlegs.core.IMediatorMap;
+	import org.robotlegs.mvcs.SignalCommand;
+	import org.voisen.crayon.view.editor.EditorWindow;
+	
+	public class CreateWorkspaceCommand extends SignalCommand
 	{
 		//--------------------------------------------------------------------------
 		//
-		//  Properties
+		//  Injections
 		//
 		//--------------------------------------------------------------------------
 		
-		public var view:EditorView;
+		[Inject]
+		public var injector:IInjector;
+		
+		[Inject]
+		public var mediatorMap:IMediatorMap;
+		
+		[Inject]
+		public var applicationModel:IApplicationModel;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -40,27 +55,30 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorWindow()
+		public function CreateWorkspaceCommand()
 		{
-			createChildren();
-			setupSize();
 		}
 		
 		//--------------------------------------------------------------------------
 		//
-		//  Protected Methods
+		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createChildren():void
+		override public function execute():void
 		{
-			view = stage.addChild(new EditorView()) as EditorView;
-		}
-		
-		protected function setupSize():void
-		{
-			stage.stageWidth = 600.0;
-			stage.stageHeight = 600.0;
+			var editorWindow:EditorWindow = new EditorWindow();
+			
+			injector.mapValue(DisplayObjectContainer, editorWindow.stage);
+			mediatorMap.contextView = editorWindow.stage;
+			mediatorMap.createMediator(editorWindow.view);
+			
+			editorWindow.title = applicationModel.name;
+			//TODO - load saved window size
+			
+			editorWindow.center(Screen.mainScreen.visibleBounds);
+
+			editorWindow.activate();
 		}
 	}
 }
