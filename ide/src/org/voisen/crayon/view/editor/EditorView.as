@@ -24,6 +24,8 @@ package org.voisen.crayon.view.editor
 {
 	import com.destroytoday.display.MeasuredSprite;
 	
+	import flash.display.Graphics;
+	
 	public class EditorView extends MeasuredSprite
 	{
 		//--------------------------------------------------------------------------
@@ -34,6 +36,34 @@ package org.voisen.crayon.view.editor
 		
 		public function EditorView()
 		{
+			mapFlags();
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Protected Methods
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function mapFlags():void
+		{
+			flagManager.mapMethod(drawBackground, sizeFlag);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Invalidation
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function drawBackground():void
+		{
+			var graphics:Graphics = this.graphics;
+
+			graphics.clear();
+			graphics.beginFill(0x222222);
+			graphics.drawRect(0.0, 0.0, width, height);
+			graphics.endFill();
 		}
 	}
 }
