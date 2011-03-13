@@ -44,6 +44,8 @@ package org.voisen.crayon.command.startup
 		
 		override public function execute():void
 		{
+			trace("Starting up...");
+			
 			addCommand(MapActorsCommand);
 			//TODO - check for updates
 			addCommand(CreateWorkspaceCommand);

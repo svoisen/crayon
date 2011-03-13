@@ -20,19 +20,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.mediator
+package org.voisen.crayon.command.shutdown
 {
-	import org.robotlegs.mvcs.Mediator;
+	import flash.desktop.NativeApplication;
+	import flash.display.Shape;
+	import flash.events.Event;
 	
-	public class EditorMediator extends Mediator
+	import org.robotlegs.mvcs.AsyncSignalCommand;
+	
+	public class ExitApplicationCommand extends AsyncSignalCommand
 	{
+		//--------------------------------------------------------------------------
+		//
+		//  Properties
+		//
+		//--------------------------------------------------------------------------
+		
+		protected var shape:Shape = new Shape();
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorMediator()
+		public function ExitApplicationCommand()
 		{
 		}
 		
@@ -42,13 +54,27 @@ package org.voisen.crayon.mediator
 		//
 		//--------------------------------------------------------------------------
 		
-		override public function onRegister():void
+		override public function execute():void
 		{
+			// Defer exit() to the next frame because
+			// preventDefault() in CrayonIDE's listener prevents
+			// exit() from executing in the current frame.
+			shape.addEventListener(Event.ENTER_FRAME, shape_enterframeHandler);
 		}
 		
-		override public function onRemove():void
+		//--------------------------------------------------------------------------
+		//
+		//  Handlers
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function shape_enterframeHandler(event:Event):void
 		{
+			shape.removeEventListener(Event.ENTER_FRAME, shape_enterframeHandler);
 			
+			NativeApplication.nativeApplication.exit();
+			
+			dispatchComplete();
 		}
 	}
 }

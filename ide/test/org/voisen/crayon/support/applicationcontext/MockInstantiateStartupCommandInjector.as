@@ -1,9 +1,9 @@
 package org.voisen.crayon.support.applicationcontext
 {
-	import org.swiftsuspenders.Injector;
+	import org.robotlegs.adapters.SwiftSuspendersInjector;
 	import org.voisen.crayon.command.startup.StartupApplicationCommand;
 	
-	public class MockInstantiateStartupCommandInjector extends Injector
+	public class MockInstantiateStartupCommandInjector extends SwiftSuspendersInjector
 	{
 		public var hasInstantiatedStartupCommand:Boolean;
 		

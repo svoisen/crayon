@@ -22,11 +22,10 @@ THE SOFTWARE.
 
 package
 {
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowType;
+	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	
-	import org.robotlegs.core.ISignalContext;
 	import org.voisen.crayon.context.ApplicationContext;
 
 	public class CrayonIDE extends Sprite
@@ -37,7 +36,7 @@ package
 		//
 		//--------------------------------------------------------------------------
 		
-		protected var context:ISignalContext;
+		protected var context:ApplicationContext;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -48,6 +47,7 @@ package
 		public function CrayonIDE()
 		{
 			createProperties();
+			addListeners();
 		}
 		
 		//--------------------------------------------------------------------------
@@ -59,6 +59,24 @@ package
 		protected function createProperties():void
 		{
 			context = new ApplicationContext(this);
+		}
+		
+		protected function addListeners():void
+		{
+			NativeApplication.nativeApplication.addEventListener(Event.EXITING, application_exitingHandler);
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Handlers
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function application_exitingHandler(event:Event):void
+		{
+			NativeApplication.nativeApplication.removeEventListener(Event.EXITING, application_exitingHandler);
+			event.preventDefault();
+			context.shutdown();
 		}
 	}
 }

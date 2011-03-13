@@ -24,6 +24,8 @@ package org.voisen.crayon.command.startup
 {
 	import com.destroytoday.model.ApplicationModel;
 	import com.destroytoday.model.IApplicationModel;
+	import com.destroytoday.window.IWindowManager;
+	import com.destroytoday.window.WindowManager;
 	
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.IMediatorMap;
@@ -67,7 +69,12 @@ package org.voisen.crayon.command.startup
 			//  Models
 			//--------------------------------------
 			injector.mapSingletonOf(IApplicationModel, ApplicationModel);
-
+			
+			//--------------------------------------
+			//  Managers
+			//--------------------------------------
+			injector.mapSingletonOf(IWindowManager, WindowManager);
+			
 			//--------------------------------------
 			//  Views
 			//--------------------------------------

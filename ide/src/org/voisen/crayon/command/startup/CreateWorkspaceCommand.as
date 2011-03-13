@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.voisen.crayon.command.startup
 {
 	import com.destroytoday.model.IApplicationModel;
+	import com.destroytoday.window.IWindowManager;
 	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Screen;
@@ -47,6 +48,9 @@ package org.voisen.crayon.command.startup
 		public var mediatorMap:IMediatorMap;
 		
 		[Inject]
+		public var windowManager:IWindowManager;
+		
+		[Inject]
 		public var applicationModel:IApplicationModel;
 		
 		//--------------------------------------------------------------------------
@@ -69,6 +73,8 @@ package org.voisen.crayon.command.startup
 		{
 			var editorWindow:EditorWindow = new EditorWindow();
 			
+			windowManager.addWindow(editorWindow);
+			
 			injector.mapValue(DisplayObjectContainer, editorWindow.stage);
 			mediatorMap.contextView = editorWindow.stage;
 			mediatorMap.createMediator(editorWindow.view);
@@ -77,7 +83,6 @@ package org.voisen.crayon.command.startup
 			//TODO - load saved window size
 			
 			editorWindow.center(Screen.mainScreen.visibleBounds);
-
 			editorWindow.activate();
 		}
 	}

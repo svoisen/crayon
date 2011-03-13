@@ -1,6 +1,7 @@
 package org.voisen.crayon.command.startup
 {
 	import com.destroytoday.model.ApplicationModel;
+	import com.destroytoday.window.WindowManager;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.DisplayObjectContainer;
@@ -43,7 +44,7 @@ package org.voisen.crayon.command.startup
 		{
 			command = new CreateWorkspaceCommand();
 			
-			Async.proceedOnEvent(this, prepare(SwiftSuspendersInjector, MediatorMap, ApplicationModel), Event.COMPLETE);
+			Async.proceedOnEvent(this, prepare(SwiftSuspendersInjector, MediatorMap, WindowManager, ApplicationModel), Event.COMPLETE);
 		}
 		
 		[Before(order=1)]
@@ -51,6 +52,7 @@ package org.voisen.crayon.command.startup
 		{
 			command.injector = nice(SwiftSuspendersInjector);
 			command.mediatorMap = nice(MediatorMap);
+			command.windowManager = nice(WindowManager);
 			command.applicationModel = nice(ApplicationModel);
 		}
 		
@@ -133,6 +135,16 @@ package org.voisen.crayon.command.startup
 			var editorWindow:EditorWindow = getWindowInstance(EditorWindow) as EditorWindow;
 			
 			assertThat(command.mediatorMap, received().method('createMediator').arg(editorWindow.view).once());
+		}
+		
+		[Test]
+		public function should_add_editor_window_to_window_manager():void
+		{
+			command.execute();
+			
+			var editorWindow:EditorWindow = getWindowInstance(EditorWindow) as EditorWindow;
+			
+			assertThat(command.windowManager, received().method('addWindow').arg(editorWindow));
 		}
 		
 		[Test]

@@ -1,6 +1,8 @@
 package org.voisen.crayon
 {
+	import org.voisen.crayon.command.shutdown.CloseAllWindowsCommandTest;
 	import org.voisen.crayon.command.startup.CreateWorkspaceCommandTest;
+	import org.voisen.crayon.context.ApplicationContextTest;
 	import org.voisen.crayon.view.editor.EditorWindowTest;
 	
 	[Suite]
@@ -9,11 +11,21 @@ package org.voisen.crayon
 	{
 		//--------------------------------------------------------------------------
 		//
+		//  Contexts
+		//
+		//--------------------------------------------------------------------------
+		
+		public var applicationContextTest:ApplicationContextTest;
+		
+		//--------------------------------------------------------------------------
+		//
 		//  Commands
 		//
 		//--------------------------------------------------------------------------
 		
 		public var createWindowsCommandTest:CreateWorkspaceCommandTest;
+		
+		public var closeAllWindowsCommandTest:CloseAllWindowsCommandTest;
 		
 		//--------------------------------------------------------------------------
 		//

@@ -20,19 +20,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.mediator
+package org.voisen.crayon.command.shutdown
 {
-	import org.robotlegs.mvcs.Mediator;
+	import com.destroytoday.window.IWindowManager;
 	
-	public class EditorMediator extends Mediator
+	import org.robotlegs.mvcs.SignalCommand;
+	
+	public class CloseAllWindowsCommand extends SignalCommand
 	{
+		//--------------------------------------------------------------------------
+		//
+		//  Injections
+		//
+		//--------------------------------------------------------------------------
+		
+		[Inject]
+		public var windowManager:IWindowManager;
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorMediator()
+		public function CloseAllWindowsCommand()
 		{
 		}
 		
@@ -42,13 +53,9 @@ package org.voisen.crayon.mediator
 		//
 		//--------------------------------------------------------------------------
 		
-		override public function onRegister():void
+		override public function execute():void
 		{
-		}
-		
-		override public function onRemove():void
-		{
-			
+			windowManager.closeAllWindows();
 		}
 	}
 }
