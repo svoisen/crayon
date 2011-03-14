@@ -20,23 +20,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.view.editor
+package org.voisen.crayon.view.editor.toolbar
 {
+	import com.destroytoday.component.button.ButtonAdapter;
+	import com.destroytoday.component.button.IButtonAdapter;
 	import com.destroytoday.display.MeasuredSprite;
+	import com.destroytoday.graphics.IDecoratable;
+	import com.destroytoday.invalidation.InvalidationFlag;
 	
-	import flash.display.Graphics;
-	
-	import org.voisen.crayon.view.editor.toolbar.Toolbar;
-	
-	public class EditorView extends MeasuredSprite
+	public class ToolbarButton extends MeasuredSprite implements IDecoratable
 	{
 		//--------------------------------------------------------------------------
 		//
-		//  Views
+		//  Properties
 		//
 		//--------------------------------------------------------------------------
 		
-		protected var toolbar:Toolbar;
+		protected var _buttonAdapter:ButtonAdapter;
+		
+		protected var decorator:ToolbarButtonDecorator;
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Flags
+		//
+		//--------------------------------------------------------------------------
+		
+		protected var stateFlag:InvalidationFlag;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -44,10 +54,23 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorView()
+		public function ToolbarButton()
 		{
-			createChildren();
+			createProperties();
 			mapFlags();
+			addListeners();
+			layoutView();
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		//  Getters / Setters
+		//
+		//--------------------------------------------------------------------------
+		
+		public function get buttonAdapter():IButtonAdapter
+		{
+			return _buttonAdapter;
 		}
 		
 		//--------------------------------------------------------------------------
@@ -56,15 +79,27 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function createChildren():void
+		protected function createProperties():void
 		{
-			toolbar = addChild(new Toolbar()) as Toolbar;
+			_buttonAdapter = new ButtonAdapter(this);
+			decorator = new ToolbarButtonDecorator(this);
+			stateFlag = new InvalidationFlag('state');
 		}
 		
 		protected function mapFlags():void
 		{
-			flagManager.mapMethod(drawBackground, sizeFlag);
-			flagManager.mapMethod(layoutChildren, sizeFlag);
+			flagManager.mapMethod(updateView, sizeFlag, stateFlag);
+		}
+		
+		protected function addListeners():void
+		{
+			_buttonAdapter.stateChanged.add(buttonAdapter_stateChangedHandler);
+		}
+		
+		protected function layoutView():void
+		{
+			width = 40.0;
+			height = 40.0;
 		}
 		
 		//--------------------------------------------------------------------------
@@ -73,19 +108,22 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
-		protected function drawBackground():void
+		protected function updateView():void
 		{
-			var graphics:Graphics = this.graphics;
-
-			graphics.clear();
-			graphics.beginFill(0x333333);
-			graphics.drawRect(0.0, 0.0, width, height);
-			graphics.endFill();
+			decorator.state = _buttonAdapter.state;
+			
+			decorator.draw();
 		}
 		
-		protected function layoutChildren():void
+		//--------------------------------------------------------------------------
+		//
+		//  Handlers
+		//
+		//--------------------------------------------------------------------------
+		
+		protected function buttonAdapter_stateChangedHandler(buttonAdapter:IButtonAdapter):void
 		{
-			toolbar.width = width;
+			flagManager.invalidate(stateFlag);
 		}
 	}
 }

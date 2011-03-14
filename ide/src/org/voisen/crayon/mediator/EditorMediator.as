@@ -44,6 +44,7 @@ package org.voisen.crayon.mediator
 		
 		override public function onRegister():void
 		{
+			
 		}
 		
 		override public function onRemove():void

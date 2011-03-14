@@ -20,23 +20,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.voisen.crayon.view.editor
+package org.voisen.crayon.view.editor.toolbar
 {
 	import com.destroytoday.display.MeasuredSprite;
 	
 	import flash.display.Graphics;
 	
-	import org.voisen.crayon.view.editor.toolbar.Toolbar;
-	
-	public class EditorView extends MeasuredSprite
+	public class Toolbar extends MeasuredSprite
 	{
 		//--------------------------------------------------------------------------
 		//
-		//  Views
+		//  Components
 		//
 		//--------------------------------------------------------------------------
 		
-		protected var toolbar:Toolbar;
+		protected var saveButton:ToolbarButton;
+
+		protected var runButton:ToolbarButton;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -44,10 +44,11 @@ package org.voisen.crayon.view.editor
 		//
 		//--------------------------------------------------------------------------
 		
-		public function EditorView()
+		public function Toolbar()
 		{
 			createChildren();
 			mapFlags();
+			layoutView();
 		}
 		
 		//--------------------------------------------------------------------------
@@ -58,13 +59,19 @@ package org.voisen.crayon.view.editor
 		
 		protected function createChildren():void
 		{
-			toolbar = addChild(new Toolbar()) as Toolbar;
+			saveButton = addChild(new ToolbarButton()) as ToolbarButton;
+			runButton = addChild(new ToolbarButton()) as ToolbarButton;
 		}
 		
 		protected function mapFlags():void
 		{
 			flagManager.mapMethod(drawBackground, sizeFlag);
 			flagManager.mapMethod(layoutChildren, sizeFlag);
+		}
+		
+		protected function layoutView():void
+		{
+			height = 40.0;
 		}
 		
 		//--------------------------------------------------------------------------
@@ -76,16 +83,20 @@ package org.voisen.crayon.view.editor
 		protected function drawBackground():void
 		{
 			var graphics:Graphics = this.graphics;
-
+			
 			graphics.clear();
-			graphics.beginFill(0x333333);
+			graphics.beginFill(0x222222);
 			graphics.drawRect(0.0, 0.0, width, height);
 			graphics.endFill();
 		}
 		
 		protected function layoutChildren():void
 		{
-			toolbar.width = width;
+			runButton.x = width - runButton.width;
+			runButton.height = height;
+			
+			saveButton.x = runButton.x - saveButton.width;
+			saveButton.height = height;
 		}
 	}
 }
