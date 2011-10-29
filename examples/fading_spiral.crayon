@@ -19,7 +19,7 @@ function draw_dot uses center, color
   end
 end
 
-function draw_dots 
+function draw_dots
   draw_dot with center as [x, y], color as i
   set x to (cos i) * i + center
   set y to (sin i) * i + middle

@@ -2,7 +2,7 @@
 # sine_wave.crayon
 #
 # Draws animated sine wave
-# 
+#
 # Author: Sean Voisen
 #
 
@@ -16,7 +16,7 @@ function animate
   repeat num_circles times with i
     set x to i * 2 * radius + radius / 2
     set y to middle of canvas + 100 * (sin theta + i * (2 * pi / num_circles))
-    draw "circle" with 
+    draw "circle" with
       radius as radius
       color as i * (0xFF / num_circles)
       center as [x, y]

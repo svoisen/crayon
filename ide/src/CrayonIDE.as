@@ -25,7 +25,7 @@ package
 	import flash.display.NativeWindowInitOptions;
 	import flash.display.NativeWindowType;
 	import flash.display.Sprite;
-	
+
 	import org.robotlegs.core.ISignalContext;
 	import org.voisen.crayon.context.ApplicationContext;
 
@@ -36,26 +36,26 @@ package
 		//  Properties
 		//
 		//--------------------------------------------------------------------------
-		
+
 		protected var context:ISignalContext;
-		
+
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
-		
+
 		public function CrayonIDE()
 		{
 			createProperties();
 		}
-		
+
 		//--------------------------------------------------------------------------
 		//
 		//  Protected Methods
 		//
 		//--------------------------------------------------------------------------
-		
+
 		protected function createProperties():void
 		{
 			context = new ApplicationContext(this);

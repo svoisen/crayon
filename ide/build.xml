@@ -3,25 +3,25 @@
     <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 	<property file="${basedir}/build/build.properties" />
 	<available file="${cert.loc}" property="cert.exists"/>
-	
+
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
 	<taskdef resource="flexUnitTasks.tasks" classpath="${build.loc}/flexUnitTasks-4.1.0_RC2-x.jar"/>
-	
+
 	<target name="clean">
 		<delete dir="${bin.loc}" />
 		<delete dir="${report.loc}" />
 	</target>
-	
+
 	<target name="init">
 		<mkdir dir="${bin.loc}" />
 		<mkdir dir="${report.loc}" />
 		<mkdir dir="${release.loc}" />
 		<copy file="${src.loc}/${app.descriptor}" todir="${bin.loc}" />
-		<replace file="${bin.loc}/${app.descriptor}" 
+		<replace file="${bin.loc}/${app.descriptor}"
 			token="[This value will be overwritten by Flash Builder in the output app.xml]"
 			value="${bin.dir}/${ant.project.name}.swf" />
 	</target>
-	
+
 	<target name="compile-swf">
 		<mxmlc file="${src.loc}/${app.class}"
             output="${bin.loc}/${ant.project.name}.swf"
@@ -37,7 +37,7 @@
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
         </mxmlc>
 	</target>
-	
+
 	<target name="compile-debug-swf">
 		<mxmlc file="${src.loc}/${app.class}"
             output="${bin.loc}/${ant.project.name}.swf"
@@ -54,7 +54,7 @@
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
         </mxmlc>
 	</target>
-	
+
 	<target name="debug-swf">
         <exec executable="${FLEX_HOME}/bin/adl">
             <arg value="${bin.loc}/${app.descriptor}"/>
@@ -68,7 +68,7 @@
             <arg value="."/>
         </exec>
     </target>
-	
+
 	<target name="cert" unless="cert.exists">
         <java jar="${FLEX_HOME}/lib/adt.jar" fork="true" failonerror="true">
             <arg value="-certificate"/>
@@ -84,8 +84,8 @@
             <arg value="${cert.loc}"/>
             <arg value="${cert.pass}"/>
         </java>
-    </target>	
-	
+    </target>
+
     <target name="package-air">
         <java jar="${FLEX_HOME}/lib/adt.jar" fork="true"
             failonerror="true"
@@ -103,17 +103,17 @@
             <arg value="${embed.loc}"/>
         </java>
     </target>
-	
+
 	<target name="package-dmg">
         <java jar="${FLEX_HOME}/lib/adt.jar" fork="true" failonerror="true" maxmemory="512m">
             <arg value="-package"/>
             <arg value="-target"/>
             <arg value="native"/>
             <arg value="${release.loc}/${ant.project.name}.dmg"/>
-            <arg value="${release.loc}/${ant.project.name}.air"/>           
+            <arg value="${release.loc}/${ant.project.name}.air"/>
         </java>
      </target>
-	
+
     <target name="test-swf">
 		<mxmlc file="${test.loc}/${test.runner}"
             output="${bin.loc}/${ant.project.name}-test.swf"
@@ -129,14 +129,14 @@
             <library-path dir="${lib.loc}" includes="*.swc" append="true"/>
         </mxmlc>
 
-		<flexunit 
+		<flexunit
 			player="air"
-            swf="${bin.loc}/${ant.project.name}-test.swf" 
+            swf="${bin.loc}/${ant.project.name}-test.swf"
 			toDir="${report.loc}"
-            haltonfailure="true" 
+            haltonfailure="true"
             verbose="true" />
     </target>
-    
+
 	<target name="debug" depends="clean, init, compile-debug-swf, debug-swf" />
 	<target name="run" depends="clean, init, compile-swf, run-swf" />
 	<target name="test" depends="clean, init, compile-swf, test-swf" />

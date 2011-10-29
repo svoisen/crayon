@@ -6,10 +6,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,10 +33,10 @@ module Crayon
       end
 
       rule arglist
-        default_arg:(expression space)? "with" newline 
+        default_arg:(expression space)? "with" newline
           arg:argument newline
           remaining_args:(argument newline)*
-        "end" <Arglist> 
+        "end" <Arglist>
         {
           def args
             args = {arg.identifier => arg.expression}
@@ -49,7 +49,7 @@ module Crayon
       end
 
       rule inline_arglist
-        default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist> 
+        default_arg:(expression space)? "with" space arg:argument remaining_args:(space? "," space? arg:argument)* <Arglist>
         {
           def args
             args = {arg.identifier => arg.expression}
@@ -57,7 +57,7 @@ module Crayon
             remaining_args.elements.each {|e| args.merge!({e.arg.identifier => e.arg.expression})}
             args
           end
-        } / 
+        } /
         space? default_arg:expression <Arglist>
         {
           def args

@@ -7,8 +7,8 @@
 # Copyright (C) 2011 Sean Voisen
 #
 
-set x to 10 
-set y to 10 
+set x to 10
+set y to 10
 
 function draw_dot uses center
   draw "circle" with
@@ -18,7 +18,7 @@ function draw_dot uses center
   end
 end
 
-function draw_dots 
+function draw_dots
   draw_dot with center as [x, y]
   set x to x + 20
 

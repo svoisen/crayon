@@ -24,11 +24,11 @@ package org.voisen.crayon.command.startup
 {
 	import com.destroytoday.model.ApplicationModel;
 	import com.destroytoday.model.IApplicationModel;
-	
+
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.ISignalCommandMap;
 	import org.robotlegs.mvcs.SignalCommand;
-	
+
 	public class MapModelsCommand extends SignalCommand
 	{
 		//--------------------------------------------------------------------------
@@ -36,26 +36,26 @@ package org.voisen.crayon.command.startup
 		//  Injections
 		//
 		//--------------------------------------------------------------------------
-		
+
 		[Inject]
 		public var injector:IInjector;
-		
+
 		//--------------------------------------------------------------------------
 		//
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
-		
+
 		public function MapModelsCommand()
 		{
 		}
-		
+
 		//--------------------------------------------------------------------------
 		//
 		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
-		
+
 		override public function execute():void
 		{
 			injector.mapSingletonOf(IApplicationModel, ApplicationModel);

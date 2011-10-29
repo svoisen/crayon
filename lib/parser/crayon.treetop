@@ -6,10 +6,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,7 +54,7 @@ module Crayon
 
       # Single line statements used primarily for inline conditionals
       rule inline_statement
-        "(" space? inline_statement space? ")" 
+        "(" space? inline_statement space? ")"
         {
           def codegen(generator, terminate=false, parenthesize=false)
             inline_statement.codegen(generator, terminate, true)
@@ -76,20 +76,20 @@ module Crayon
 
       # Infix operator evaluations
       rule evaluation
-        "(" space? evaluation space? ")" 
+        "(" space? evaluation space? ")"
         {
           def codegen(generator, terminate=false, parenthesize=false)
             evaluation.codegen(generator, terminate, true)
           end
         }
-        / comparison / equation 
+        / comparison / equation
       end
 
       # A portion of an evaluation or expression that evaluates to a value (or null)
       # Note: Method calls apply, but only inline method calls as multiline method calls cannot
       # be part of an expression.
       rule value
-        "(" space? value space? ")" 
+        "(" space? value space? ")"
         {
           def codegen(generator, terminate=false, parenthesize=false)
             value.codegen(generator, terminate, true)
@@ -105,7 +105,7 @@ module Crayon
 
       # Numeric evaluations
       rule numeric
-        equation / varprop / number 
+        equation / varprop / number
       end
 
       # Variables and properties
@@ -127,7 +127,7 @@ module Crayon
       end
 
       rule mathop
-        [\+\-\/\*] 
+        [\+\-\/\*]
       end
 
       rule compareop
@@ -144,8 +144,8 @@ module Crayon
       end
 
       rule keyword
-        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "on" / "uses" / 
-          "times" / "if" / "else" / "while" / "and" / "or" / "true" / "false" / "nothing" / 
+        "set" / "end" / "function" / "repeat" / "with" / "as" / "to" / "on" / "uses" /
+          "times" / "if" / "else" / "while" / "and" / "or" / "true" / "false" / "nothing" /
           "item" / "of" / "tell"
       end
 
