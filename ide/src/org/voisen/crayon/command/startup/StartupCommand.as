@@ -23,7 +23,7 @@ THE SOFTWARE.
 package org.voisen.crayon.command.startup
 {
 	import org.robotlegs.mvcs.CompositeSignalCommand;
-	
+
 	public class StartupCommand extends CompositeSignalCommand
 	{
 		//--------------------------------------------------------------------------
@@ -31,23 +31,23 @@ package org.voisen.crayon.command.startup
 		//  Constructor
 		//
 		//--------------------------------------------------------------------------
-		
+
 		public function StartupCommand()
 		{
 		}
-		
+
 		//--------------------------------------------------------------------------
 		//
 		//  Public Methods
 		//
 		//--------------------------------------------------------------------------
-		
+
 		override public function execute():void
 		{
 			addCommand(MapModelsCommand);
 			//TODO - check for updates
 			addCommand(CreateWindowsCommand);
-			
+
 			super.execute();
 		}
 	}

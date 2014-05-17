@@ -10,7 +10,7 @@ set list to [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 set sum to 0
 
 repeat length of list times with i
-  set sum to sum + item i of list 
+  set sum to sum + item i of list
 end
 
 print sum

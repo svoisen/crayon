@@ -6,10 +6,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,7 +56,7 @@ module Crayon
         end
 
         false
-      end 
+      end
 
       private
 
@@ -65,13 +65,13 @@ module Crayon
         end
 
         # Indents an array of code blocks to a specific indentation
-        # level, where level is the number of tabs (as spaces) to 
+        # level, where level is the number of tabs (as spaces) to
         # indent
         def indent(code, level=0)
           prefix = ''
           (level * @tab_width).times {prefix << ' '}
           code = [code] if code.instance_of? String
-          code.map do |block| 
+          code.map do |block|
             block.split("\n").map{|line| line.length == 0 ? nil : prefix + line}.compact.join("\n")
           end
         end

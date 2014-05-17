@@ -6,10 +6,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,7 +22,7 @@ require 'generator/ecmascript_generator'
 
 module Crayon
   module Generator
-    
+
     class JSGenerator < ECMAScriptGenerator
 
       def initialize(program_name)
@@ -31,7 +31,7 @@ module Crayon
 
       def generate(statements)
         preamble << constructor(@class_vars.map{|v| v[:initializer]} + statements) << (@class_vars.length > 0 ? "\n\n" : "") <<
-          format(@class_vars.map{|v| v[:declaration]}, 1) << (@functions.length > 0 ? "\n\n" : "") << 
+          format(@class_vars.map{|v| v[:declaration]}, 1) << (@functions.length > 0 ? "\n\n" : "") <<
           format(@functions, 1, "\n\n") << "\n\n" << conclusion
       end
 
@@ -68,7 +68,7 @@ module Crayon
       end
 
       def var(name, parenthesize)
-        code = if in_scope?(name) or in_ancestral_scope?(name) 
+        code = if in_scope?(name) or in_ancestral_scope?(name)
           map_var(name)
         elsif class_var_exists?(name)
           "this." + map_var(name)
@@ -102,7 +102,7 @@ module Crayon
           else var
           end
         end
-        
+
         def preamble
           format([
             "(function(window)",

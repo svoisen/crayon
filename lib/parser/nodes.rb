@@ -6,10 +6,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -81,7 +81,7 @@ module Crayon
 
     class Comparison < Node
       def codegen(generator, terminate=false, parenthesize=false)
-        generator.compare compareop.value, value.codegen(generator), expression.codegen(generator), parenthesize 
+        generator.compare compareop.value, value.codegen(generator), expression.codegen(generator), parenthesize
       end
     end
 
@@ -95,9 +95,9 @@ module Crayon
       def codegen(generator, terminate=false, parenthesize=false)
         generator.start_scope
         code = generator.loop((!defined? counter or !defined? counter.varprop) ? "__i" : counter.varprop.codegen(generator),
-                       (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator), 
-                       i_end.codegen(generator), 
-                       (defined? i_start and !i_start.empty?), 
+                       (!defined? i_start or i_start.empty?) ? 0 : i_start.codegen(generator),
+                       i_end.codegen(generator),
+                       (defined? i_start and !i_start.empty?),
                        statements.map{|s| s.codegen(generator, true)})
         generator.end_scope
         code
